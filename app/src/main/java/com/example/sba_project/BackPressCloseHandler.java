@@ -19,7 +19,10 @@ public class BackPressCloseHandler {
             return;
         }
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-            activity.finish();
+            activity.finish();        // 해당 액티비티 종료
+            //activity.finishAffinity(); // 해당 앱의 루트 액티비티를 종료시킨다.
+            //System.runFinalization();  // 현재 작업중인 쓰레드가 다 종료되면, 종료 시키라는 명령어.
+            //System.exit(0);    // 현재 액티비티를 종료시킨다.
             toast.cancel();
         }
     }

@@ -48,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
 
+        login_progress = findViewById(R.id.login_progress);
+
         // 파이어베이스에 로그인된 유저가 있을 경우 바로 메인으로..
         if(CurUser != null)
         {
@@ -120,15 +122,14 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "인증 실패", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(LoginActivity.this, "구글 로그인 인증 성공", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
+                            ToMainActivity();
                         }
                     }
                 });
     }
 
     private void userLogin(String email, String password){
-        //login_progress.setVisibility(View.VISIBLE);
+        login_progress.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -136,10 +137,8 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
                         if(task.isSuccessful()) {
-                            //login_progress.setVisibility(View.GONE);
-                            Intent menuIntent = new Intent(LoginActivity.this, MainActivity.class);
-                            LoginActivity.this.startActivity(menuIntent);
-                            finish();
+                            login_progress.setVisibility(View.GONE);
+                            ToMainActivity();
                         }
 
                         // If sign in fails, display a message to the user. If sign in succeeds
@@ -155,5 +154,11 @@ public class LoginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    private void ToMainActivity(){
+        Intent menuIntent = new Intent(LoginActivity.this, MainActivity.class);
+        LoginActivity.this.startActivity(menuIntent);
+        finish();
     }
 }
