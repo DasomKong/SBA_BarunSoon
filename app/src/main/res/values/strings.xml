@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">바른순프로젝트</string>
+
+    <string name="btn_signup">e-mail Sign Up</string>
+    <string name="btn_signin">Sign In</string>
+    <string name="hint_email">input your e-mail</string>
+    <string name="hint_password">input your password</string>
+    <string name="success_signup">Signed Up Successfully!</string>
+    <string name="failed_signup">Failed Signup</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
