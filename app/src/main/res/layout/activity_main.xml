@@ -55,4 +55,11 @@
         android:text="signout"
         android:translationY="100dp" />
 
+    <Button
+        android:id="@+id/Additional"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Additional"
+        android:translationY="150dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

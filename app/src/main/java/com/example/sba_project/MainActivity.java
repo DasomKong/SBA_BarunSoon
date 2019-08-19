@@ -24,6 +24,19 @@ public class MainActivity extends AppCompatActivity {
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
+        SetViews();
+        SetUserStat();
+    }
+
+    private void SetUserStat() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        ((TextView) findViewById(R.id.name)).setText(currentUser.getDisplayName());
+        ((TextView) findViewById(R.id.email)).setText(currentUser.getEmail());
+    }
+
+    private void SetViews()
+    {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -36,8 +49,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        SetUserStat();
+        SetTestButtons();
+    }
 
+    private void SetTestButtons()
+    {
         // Test SignOut
         findViewById(R.id.signout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,13 +64,15 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
 
-    private void SetUserStat() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        ((TextView) findViewById(R.id.name)).setText(currentUser.getDisplayName());
-        ((TextView) findViewById(R.id.email)).setText(currentUser.getEmail());
+        // 이미 작성된 적 있다면 할 필요없도록 예외 처리 추가되어야함.
+        findViewById(R.id.Additional).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addreg_intent = new Intent(MainActivity.this, Additional_data.class);
+                startActivity(addreg_intent);
+            }
+        });
     }
 
     @Override
