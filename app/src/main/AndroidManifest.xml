@@ -11,13 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Additional_data"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".RegisterActivity" />
-
-        <!-- android:noHistory="true" 이용하면 스택트레이스에 남기지 않을 수 있음 -->
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".RegisterActivity" /> <!-- android:noHistory="true" 이용하면 스택트레이스에 남기지 않을 수 있음 -->
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

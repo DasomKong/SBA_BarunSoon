@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "인증 실패", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(LoginActivity.this, "구글 로그인 인증 성공", Toast.LENGTH_SHORT).show();
-                            ToMainActivity();
+                            ToAdditionalRegister();
                         }
                     }
                 });
@@ -158,7 +158,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void ToMainActivity(){
         Intent menuIntent = new Intent(LoginActivity.this, MainActivity.class);
-        LoginActivity.this.startActivity(menuIntent);
         finish();
+        LoginActivity.this.startActivity(menuIntent);
+    }
+
+    private void ToAdditionalRegister()
+    {
+        Intent intent = new Intent(LoginActivity.this, Additional_data.class);
+        startActivity(intent);
     }
 }

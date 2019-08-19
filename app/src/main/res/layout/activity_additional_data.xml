@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="150dp"
+        android:text="AdditionalRegister"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/txt_NickName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NickName"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/NickName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:importantForAutofill="no"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:textColor="#ff000000" />
+
+    <TextView
+        android:id="@+id/txt_Age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Age"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/Age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/txt_Address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/Address"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
+        android:padding="10dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_additionalRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ea4c88"
+            android:text="Register"
+            android:textColor="#ffffffff"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_marginRight="20dp"
+            />
+
+        <Button
+            android:id="@+id/btn_nexttime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ea4c88"
+            android:text="Next Time"
+            android:textColor="#ffffffff"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            />
+    </LinearLayout>
+
+</LinearLayout>
