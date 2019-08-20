@@ -10,19 +10,13 @@
 
     <cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager
         android:id="@+id/autoViewPager"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="127dp"
-        app:layout_constraintBottom_toTopOf="@+id/signout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
 
     </cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager>
 
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
@@ -30,7 +24,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
