@@ -22,6 +22,8 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     TextView NickName;
     TextView Age;
     TextView Address;
+    ValueEventListener listener;
+    DatabaseReference users_ref;
 
     private static final int SEARCH_ADDRESS_ACTIVITY = 10000;
 
@@ -85,8 +87,10 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
     // nickname 검사
     private boolean CheckNickName(final String newNickName){
-        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference().child("users");
-        ValueEventListener listener;
+        if(users_ref == null)
+        {
+            users_ref = FirebaseDatabase.getInstance().getReference().child("users");
+        }
 
         class RS{
             boolean result = true;
@@ -94,6 +98,7 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
         final RS rs = new RS();
 
+        // 비동기일 경우 다르게 처리해야함.
         listener =  users_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -116,8 +121,12 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        users_ref.removeEventListener(listener);
         return rs.result;
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        users_ref.removeEventListener(listener);
     }
 
     // 주소 검색 후 반환.
