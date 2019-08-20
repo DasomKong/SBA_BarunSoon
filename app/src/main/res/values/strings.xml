@@ -9,5 +9,7 @@
     <string name="failed_signup">Failed Signup</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="방만들기">방만들기</string>
+    <string name="초대하기">초대하기</string>
 
 </resources>
