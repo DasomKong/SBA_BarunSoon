@@ -129,6 +129,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void userLogin(String email, String password){
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this,"값을 입력해주세요.",Toast.LENGTH_SHORT).show();
+            return;
+        }
         login_progress.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
