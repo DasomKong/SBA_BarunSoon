@@ -36,6 +36,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail;
@@ -156,6 +158,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
+        // 어센티케이션에서 메일 있는지 확인할 것.
+        if(CheckSameID(acct.getEmail()))
+            return;
+
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -171,12 +177,31 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    private boolean CheckSameID(String ID){
+        // db 에 e-mail 도 등록시킬 것.
+        DatabaseReference curData_ref = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().toString());
+        DatabaseReference eMail_ref = curData_ref.child("eMail");
+
+        if(eMail_ref.toString().equals(ID))
+        {
+            Toast.makeText(LoginActivity.this, "같은 이메일이 존재합니다.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else
+            return false;
+    }
+
     private void userLogin(String email, String password){
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this,"값을 입력해주세요.",Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if(CheckSameID(email))
+            return;
+
         login_progress.setVisibility(View.VISIBLE);
+
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -212,6 +237,7 @@ public class LoginActivity extends AppCompatActivity {
     private void ToAdditionalRegister()
     {
         Intent intent = new Intent(LoginActivity.this, Additional_data.class);
+        finish();
         startActivity(intent);
     }
 

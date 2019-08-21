@@ -9,12 +9,14 @@ public class MyUserData {
     public String Address;
     public String PhotoUrl = "";
     public int Age;
+    public String eMail;
 
     public MyUserData (){}
 
-    public MyUserData (String nickName, String address, int age) {
+    public MyUserData (String nickName, String address, int age, String email) {
         NickName = nickName;
         Address = address;
         Age = age;
+        eMail = email;
     }
 }

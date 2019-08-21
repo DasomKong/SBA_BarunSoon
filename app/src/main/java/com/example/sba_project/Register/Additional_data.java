@@ -110,9 +110,10 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
         if (!_nickname.isEmpty() && !_age.isEmpty() && !_address.isEmpty()
                 && CheckNickName(_nickname) && _age.matches("^[0-9]+$")) {
+            String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
             // 파이어베이스 유저 아이디 루트로 등록.
-            MyUserData newUserData = new MyUserData(_nickname, _address, Integer.parseInt(_age));
+            MyUserData newUserData = new MyUserData(_nickname, _address, Integer.parseInt(_age), email);
 
             DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference().child("users");
             user_ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(newUserData);
