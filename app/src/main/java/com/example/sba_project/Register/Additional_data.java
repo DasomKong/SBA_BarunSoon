@@ -1,4 +1,4 @@
-package com.example.sba_project;
+package com.example.sba_project.Register;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sba_project.Main.MainActivity;
+import com.example.sba_project.R;
 import com.example.sba_project.Userdata.MyUserData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +44,9 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                 AdditionalRegister();
                 break;
             case R.id.btn_nexttime:
+                Intent intent = new Intent(Additional_data.this, MainActivity.class);
                 finish();
+                startActivity(intent);
                 break;
             case R.id.btn_searchaddress:
                 // 웹서버를 올려야 하므로 현재 사용 안하고 일단 텍스트로 대체.

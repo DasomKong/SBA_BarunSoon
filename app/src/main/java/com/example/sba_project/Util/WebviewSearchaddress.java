@@ -1,4 +1,4 @@
-package com.example.sba_project;
+package com.example.sba_project.Util;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.example.sba_project.R;
 
 public class WebviewSearchaddress extends AppCompatActivity {
     private WebView browser;
