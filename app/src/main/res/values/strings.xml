@@ -31,5 +31,12 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="직위">직위</string>
+    <string name="todo">TODO</string>
+    <string name="팀원추가">+ 팀원추가</string>
+    <string name="팀원">팀원</string>
+    <string name="addTeam">팀원추가</string>
+    <string name="cancle">취소</string>
+    <string name="ok">확인</string>
 
 </resources>

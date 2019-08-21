@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GameRoomActivity"></activity>
+        <activity android:name=".GameRoomPopup"></activity>
+        <activity android:name=".GameRoomActivity" />
         <activity android:name=".WebviewSearchaddress" />
         <activity android:name=".Additional_data" />
         <activity
@@ -38,7 +39,8 @@
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
-            <intent-filter><action android:name="android.intent.action.VIEW" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -46,8 +48,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".SubActivity"></activity>
+        <activity android:name=".SubActivity" />
     </application>
 
 </manifest>

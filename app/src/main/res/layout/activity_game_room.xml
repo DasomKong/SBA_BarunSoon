@@ -6,46 +6,88 @@
     android:layout_height="match_parent"
     tools:context=".GameRoomActivity">
 
-    <Button
-        android:id="@+id/makeroom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="177dp"
-        android:layout_marginBottom="506dp"
-        android:text="@string/방만들기"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/invitegamer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="178dp"
-        android:layout_marginEnd="108dp"
-        android:layout_marginBottom="506dp"
-        android:text="@string/초대하기"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="99dp"
-        android:layout_marginTop="62dp"
-        android:layout_marginEnd="99dp"
-        android:layout_marginBottom="71dp"
-        android:ems="10"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        android:text="입력해주세요"
-        app:layout_constraintBottom_toTopOf="@+id/makeroom"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="68dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="95dp"
+        android:background="#FFC002"
+        android:text="@string/직위"
+        android:textColor="#ffffff"
+        android:textSize="36sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="80dp"
+        android:layout_height="86dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="495dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:srcCompat="@drawable/lusplash"
+        android:contentDescription="@string/todo" />
+
+    <Spinner
+        android:id="@+id/gameselect"
+        android:layout_width="93dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="148dp"
+        android:spinnerMode="dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/addteam"
+        android:layout_width="96dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="158dp"
+        android:background="#7B3EBC"
+        android:text="@string/팀원추가"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/gameselect" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="331dp"
+        android:background="#FFC002"
+        android:text="@string/팀원"
+        android:textColor="#ffffff"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <ScrollView
+        android:layout_width="395dp"
+        android:layout_height="424dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
