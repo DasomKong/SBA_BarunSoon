@@ -2,17 +2,22 @@ package com.example.sba_project;
 
 import android.os.Bundle;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -28,13 +33,58 @@ import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private BackPressCloseHandler backPressCloseHandler;
     AutoScrollViewPager autoViewPager;
+    private AccessTokenTracker accessTokenTracker;
+    private FirebaseAuth.AuthStateListener authListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SetListenerTracker();
+        SetViews();
+    }
+
+    private void SetListenerTracker() {
+        backPressCloseHandler = new BackPressCloseHandler(this);
+
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(
+                    AccessToken oldAccessToken,
+                    AccessToken currentAccessToken) {
+
+                if (currentAccessToken == null) {
+                    FirebaseAuth.getInstance().signOut();
+                }
+            }
+        };
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+//                    emailText.setText(user.getEmail());
+//                    statusText.setText("Signed In");
+//
+//                    if (user.getPhotoUrl() != null) {
+//                        displayImage(user.getPhotoUrl());
+//                    }
+                } else {
+//                    emailText.setText("");
+//                    statusText.setText("Signed Out");
+//                    imageView.setImageResource(
+//                            R.drawable.com_facebook_profile_picture_blank_square);
+                }
+            }
+        };
+    }
+
+    private void SetViews()
+    {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -56,8 +106,19 @@ public class MainActivity extends AppCompatActivity
         autoViewPager.setAdapter(scrollAdapter); //Auto Viewpager에 Adapter 장착
         autoViewPager.setInterval(5000); // 페이지 넘어갈 시간 간격 설정
         autoViewPager.startAutoScroll(); //Auto Scroll 시작
+    }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(authListener);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (authListener != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(authListener);
+        }
     }
 
     @Override
@@ -66,7 +127,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
+            backPressCloseHandler.onBackPressed();
         }
     }
 

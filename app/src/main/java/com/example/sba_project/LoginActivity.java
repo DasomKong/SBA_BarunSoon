@@ -11,6 +11,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -21,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -31,8 +40,11 @@ public class LoginActivity extends AppCompatActivity {
 
     ProgressBar login_progress;
     String TAG = "LoginActivity";
+
+    // 페이스북
+    private CallbackManager callbackManager;
+
     // 파이어베이스 인증 객체 생성
-    private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 100;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -41,14 +53,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAuth = FirebaseAuth.getInstance();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
-        FirebaseUser CurUser = mAuth.getCurrentUser();
-
-        inputEmail = findViewById(R.id.email);
-        inputPassword = findViewById(R.id.password);
-
-        login_progress = findViewById(R.id.login_progress);
+        FirebaseUser CurUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // 파이어베이스에 로그인된 유저가 있을 경우 바로 메인으로..
         if(CurUser != null)
@@ -59,12 +67,43 @@ public class LoginActivity extends AppCompatActivity {
         }
         else{
             // 최초 로그인일 경우 계정 연동 세팅.
+            SetViews();
             SetGoogleLogin();
             SetSignInAndUp();
+            SetFaceBookLogin();
         }
     }
 
     // class methods
+    private void SetViews() {
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
+        login_progress = findViewById(R.id.login_progress);
+    }
+
+    private void SetFaceBookLogin() {
+        callbackManager = CallbackManager.Factory.create();
+
+        LoginButton loginButton = (LoginButton)findViewById(R.id.buttonFacebookLogin);
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(LoginActivity.this, "Facebook Cancle", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(LoginActivity.this, "Facebook Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void SetGoogleLogin(){
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -102,6 +141,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode,resultCode,data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -114,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
-        mAuth.signInWithCredential(credential)
+        FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -134,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         login_progress.setVisibility(View.VISIBLE);
-        mAuth.signInWithEmailAndPassword(email, password)
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -170,5 +210,23 @@ public class LoginActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(LoginActivity.this, Additional_data.class);
         startActivity(intent);
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // 로그인 성공
+                            Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
+                            ToMainActivity();
+                        } else {
+                            // 로그인 실패
+                            Toast.makeText(LoginActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

@@ -19,6 +19,12 @@
     <string name="방만들기">방만들기</string>
     <string name="초대하기">초대하기</string>
 
+    <string name="success_login">Login Success!</string>
+    <string name="failed_login">Login Failed !</string>
+
+    <string name="facebook_app_id">359271694989738</string>
+    <string name="fb_login_protocol_scheme">fb359271694989738</string>
+
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
