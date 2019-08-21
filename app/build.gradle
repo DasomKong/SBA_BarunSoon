@@ -44,4 +44,6 @@ dependencies {
         exclude module: 'support-v4'
     }
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation "gun0912.ted:tedpermission:2.1.0"
+
 }
