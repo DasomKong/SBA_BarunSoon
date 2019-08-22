@@ -232,8 +232,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void ToMainActivity(){
         Intent menuIntent = new Intent(LoginActivity.this, MainActivity.class);
-        LoginActivity.this.startActivity(menuIntent);
         finish();
+        LoginActivity.this.startActivity(menuIntent);
     }
 
     private void ToAdditionalRegister()
