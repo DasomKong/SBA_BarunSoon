@@ -24,13 +24,23 @@ import android.widget.Toast;
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
 import com.example.sba_project.Userdata.MyUserData;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -42,6 +52,8 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     private CircleImageView ProifleImg;
     private ValueEventListener listener;
     private DatabaseReference users_ref;
+
+    private String ImgPath;
 
     private String cameraPermission[];
     private String storagePermission[];
@@ -138,27 +150,67 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     }
 
     void AdditionalRegister() {
-        String _nickname = NickName.getText().toString().trim();
-        String _age = Age.getText().toString().trim();
-        String _address = Address.getText().toString().trim();
+        final String _nickname = NickName.getText().toString().trim();
+        final String _age = Age.getText().toString().trim();
+        final String _address = Address.getText().toString().trim();
 
         if (!_nickname.isEmpty() && !_age.isEmpty() && !_address.isEmpty()
                 && CheckNickName(_nickname) && _age.matches("^[0-9]+$")) {
-            String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
+            class tmpStr{
+                public String tmpString = "";
+            }
             // 파이어베이스 유저 아이디 루트로 등록.
-            MyUserData newUserData = new MyUserData(_nickname, _address, Integer.parseInt(_age), email);
+            // Storage 에 프로필 사진 등록
+            FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+            final StorageReference UserStorage_ref = FirebaseStorage.getInstance().getReference(curUser.getUid()).child("profile.jpg");
 
-            DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference().child("users");
-            user_ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(newUserData);
+            UploadTask uploadTask = UserStorage_ref.putFile(Uri.fromFile(new File(ImgPath)));
 
-            // 로긴 창으로 돌아가자.
-            Toast.makeText(this, "등록 성공", Toast.LENGTH_SHORT).show();
+            final tmpStr urlRs = new tmpStr();
 
-            finish();
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    // Continue with the task to get the download URL
+                    return UserStorage_ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        urlRs.tmpString = task.getResult().toString();
+                        UploadUserData(_nickname,_address, Integer.parseInt(_age), urlRs.tmpString);
+                    } else {
+                        // Handle failures
+                        // ...
+                        Toast.makeText(Additional_data.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
         } else {
             Toast.makeText(this, "Fill all texts", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void UploadUserData(String _nickname, String _address, int _age, String photourl){
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        String email = curUser.getEmail();
+
+        MyUserData newUserData = new MyUserData(_nickname, _address, _age, email, photourl);
+
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference().child("users");
+        user_ref.child(curUser.getUid()).setValue(newUserData);
+
+        // 로긴 창으로 돌아가자.
+        Toast.makeText(this, "등록 성공", Toast.LENGTH_SHORT).show();
+
+        finish();
     }
 
     // nickname 검사
@@ -243,6 +295,7 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         int exifDegree = exifOrientationToDegrees(exifOrientation);
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath); //경로를 통해 비트맵으로 전환
         ProifleImg.setImageBitmap(rotate(bitmap, exifDegree));
+        ImgPath = imagePath;
     }
 
     private int exifOrientationToDegrees(int exifOrientation) {

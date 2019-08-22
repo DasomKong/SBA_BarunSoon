@@ -12,11 +12,11 @@ public class MyUserData {
     public String eMail;
 
     public MyUserData (){}
-
-    public MyUserData (String nickName, String address, int age, String email) {
+    public MyUserData(String nickName, String address, int age, String eMail, String photoUrl) {
         NickName = nickName;
         Address = address;
+        PhotoUrl = photoUrl;
         Age = age;
-        eMail = email;
+        this.eMail = eMail;
     }
 }
