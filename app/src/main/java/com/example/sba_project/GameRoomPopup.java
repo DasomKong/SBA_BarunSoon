@@ -10,7 +10,6 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
 
     private Button mConfirm;
     private Button mCancel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

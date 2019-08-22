@@ -4,6 +4,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,8 +23,9 @@ public class GameRoomActivity extends AppCompatActivity {
     private Spinner gameselc;
     private TextView jicwi;
     private TextView teamone;
-    private ImageView pro_Image;
+    private ImageView master_pro_Image;
     private Button add_team;
+    private ScrollView teamone_scoll;
     ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
 
@@ -46,7 +49,13 @@ public class GameRoomActivity extends AppCompatActivity {
 
         arrayAdapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,arrayList);
         gameselc = (Spinner)findViewById(R.id.gameselect);
+        jicwi = (TextView)findViewById(R.id.textView2);
+        teamone = (TextView)findViewById(R.id.textView4);
+        master_pro_Image = (ImageView)findViewById(R.id.imageView2);
+        add_team = (Button)findViewById(R.id.addteam);
+        teamone_scoll = (ScrollView)findViewById(R.id.scrollView3);
         gameselc.setAdapter(arrayAdapter);
+
         gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -57,6 +66,15 @@ public class GameRoomActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        
+
+        jicwi.setText("바꾸는 예");
+        findViewById(R.id.addteam).setOnClickListener(new Button.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getApplicationContext(),GameRoomPopup.class);
+                        startActivity(intent);
+                    }
+                }
+        );
     }
 }

@@ -38,5 +38,9 @@
     <string name="addTeam">팀원추가</string>
     <string name="cancle">취소</string>
     <string name="ok">확인</string>
+    <string name="n">n명</string>
+    <string name="nickname">NickName</string>
+    <string name="강퇴">강퇴</string>
+    <string name="추천">추천</string>
 
 </resources>
