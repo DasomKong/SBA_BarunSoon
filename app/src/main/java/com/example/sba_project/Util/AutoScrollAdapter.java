@@ -1,4 +1,4 @@
-package com.example.sba_project;
+package com.example.sba_project.Util;
 
 
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
+import com.example.sba_project.R;
+import com.example.sba_project.SubActivity;
 
 import java.util.ArrayList;
 

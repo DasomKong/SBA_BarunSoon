@@ -3,6 +3,10 @@
     package="com.example.sba_project">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- camera, gallery -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,15 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GameRoomPopup"></activity>
-        <activity android:name=".GameRoomActivity" />
-        <activity android:name=".WebviewSearchaddress" />
-        <activity android:name=".Additional_data" />
+        <activity android:name=".GameRoomActivity"></activity>
+        <activity android:name=".Util.WebviewSearchaddress" />
+        <activity android:name=".Register.Additional_data" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Main.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RegisterActivity" /> <!-- android:noHistory="true" 이용하면 스택트레이스에 남기지 않을 수 있음 -->
+        <activity android:name=".Register.RegisterActivity" /> <!-- android:noHistory="true" 이용하면 스택트레이스에 남기지 않을 수 있음 -->
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,8 +42,7 @@
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+            <intent-filter><action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -48,7 +50,8 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".SubActivity" />
+
+        <activity android:name=".SubActivity"></activity>
     </application>
 
 </manifest>

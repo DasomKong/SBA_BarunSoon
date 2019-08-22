@@ -1,13 +1,15 @@
-package com.example.sba_project;
+package com.example.sba_project.Main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.sba_project.LoginActivity;
+import com.example.sba_project.Register.Additional_data;
+import com.example.sba_project.Util.AutoScrollAdapter;
+import com.example.sba_project.Util.BackPressCloseHandler;
+import com.example.sba_project.R;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
+import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +28,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -94,6 +99,39 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        // signout 버튼
+        navigationView.getHeaderView(0).findViewById(R.id.signout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(curUser != null)
+                {
+                    FirebaseAuth.getInstance().signOut();
+                    LoginManager.getInstance().logOut();
+                    Toast.makeText(MainActivity.this,"signout!",Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(MainActivity.this,"signout failed!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // additional register
+        navigationView.getHeaderView(0).findViewById(R.id.AddRegi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(curUser != null)
+                {
+                    Intent addregi_intent = new Intent(MainActivity.this, Additional_data.class);
+                    startActivity(addregi_intent);
+                }
+            }
+        });
 
         ArrayList<String> data = new ArrayList<>(); //이미지 url를 저장하는 arraylist
         data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/twins_uho36t.png");

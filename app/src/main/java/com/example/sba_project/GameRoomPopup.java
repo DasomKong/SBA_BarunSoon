@@ -29,6 +29,7 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnConfirm:
+
                 this.finish();
                 break;
             case R.id.btnCancel:

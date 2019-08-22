@@ -6,7 +6,7 @@ android {
     buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "com.example.sba_project"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -43,4 +43,7 @@ dependencies {
     api('cn.trinea.android.view.autoscrollviewpager:android-auto-scroll-view-pager:1.1.2') {
         exclude module: 'support-v4'
     }
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation "gun0912.ted:tedpermission:2.1.0"
+
 }

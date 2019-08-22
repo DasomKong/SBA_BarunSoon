@@ -10,13 +10,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class GameRoomActivity extends AppCompatActivity {
-    private Spinner spinner;
+    private Spinner gameselc;
+    private TextView jicwi;
+    private TextView teamone;
+    private ImageView pro_Image;
+    private Button add_team;
     ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
 
@@ -39,9 +45,9 @@ public class GameRoomActivity extends AppCompatActivity {
         arrayList.add("용병");
 
         arrayAdapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,arrayList);
-        spinner = (Spinner)findViewById(R.id.gameselect);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        gameselc = (Spinner)findViewById(R.id.gameselect);
+        gameselc.setAdapter(arrayAdapter);
+        gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다.",
