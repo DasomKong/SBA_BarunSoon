@@ -12,12 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameRoomActivity extends AppCompatActivity {
     private Spinner gameselc;
@@ -26,9 +28,15 @@ public class GameRoomActivity extends AppCompatActivity {
     private ImageView master_pro_Image;
     private Button add_team;
     private ScrollView teamone_scoll;
+    ArrayList<String> spinnerAdapter;
     ArrayList<String> arrayList;
-    ArrayAdapter<String> arrayAdapter;
 
+
+    ArrayAdapter<String> arrayAdapter;
+    static boolean calledAlready = false;
+    private ListView listView;
+    List fileList = new ArrayList<>();
+    ArrayAdapter adapter;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
 
@@ -37,7 +45,11 @@ public class GameRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_room);
 
-
+        if(!calledAlready) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            calledAlready = true;
+        }
+        gameselc.setPrompt("게임선택");
         final ArrayList arrayList = new ArrayList<>(); // 파이널 달린거 주의
         arrayList.add("철수");
         arrayList.add("영희");
