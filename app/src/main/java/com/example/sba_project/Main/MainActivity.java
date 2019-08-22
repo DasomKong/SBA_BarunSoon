@@ -3,6 +3,7 @@ package com.example.sba_project.Main;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.sba_project.GameRoomActivity;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.Register.Additional_data;
 import com.example.sba_project.Util.AutoScrollAdapter;
@@ -197,20 +198,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (item.getItemId())
+        {
+            case R.id.nav_home:
+                break;
+            case R.id.nav_gallery:
+                break;
+            case R.id.nav_slideshow:
+                break;
+            case R.id.nav_tools:
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
+                break;
+            case R.id.nav_createroom:
+                Intent intent = new Intent(MainActivity.this, GameRoomActivity.class);
+                startActivity(intent);
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
