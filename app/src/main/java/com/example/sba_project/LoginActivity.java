@@ -239,8 +239,9 @@ public class LoginActivity extends AppCompatActivity {
     private void ToAdditionalRegister()
     {
         Intent intent = new Intent(LoginActivity.this, Additional_data.class);
-        finish();
+        intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_LOGIN.getValue());
         startActivity(intent);
+        finish();
     }
 
     private void handleFacebookAccessToken(AccessToken token) {

@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity
                 if(curUser != null)
                 {
                     Intent addregi_intent = new Intent(MainActivity.this, Additional_data.class);
+                    addregi_intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_MAIN.getValue());
                     startActivity(addregi_intent);
                 }
             }

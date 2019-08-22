@@ -49,12 +49,40 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     private static final int SEARCH_ADDRESS_ACTIVITY = 10000;
     private static final int GET_FROM_GALLERY = 100;
     private static final int STORAGE_REQUEST_CODE = 400;
+
+    public enum KEY_WHERE{
+        FROM_LOGIN(0), FROM_MAIN(1);
+
+        private final int value;
+
+        private KEY_WHERE(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public static String FROM_KEY = "from_where";
+
+    // 0 : primary login, 1 : after login
+    private int activity_flag = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_additional_data);
 
+        SetActivityFlag();
+
         SetViews();
+    }
+
+    // 어디서 왔냐에 따라 다르게 처리
+    void SetActivityFlag(){
+        Intent intent = getIntent();
+
+        activity_flag = intent.getExtras().getInt(FROM_KEY);
     }
 
     @Override
@@ -64,9 +92,15 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                 AdditionalRegister();
                 break;
             case R.id.btn_nexttime:
-                Intent intent = new Intent(Additional_data.this, MainActivity.class);
-                finish();
-                startActivity(intent);
+                switch (activity_flag)
+                {
+                    case 0:
+                        Intent intent = new Intent(Additional_data.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case 1: finish(); break;
+                }
                 break;
             case R.id.btn_searchaddress:
                 // 웹서버를 올려야 하므로 현재 사용 안하고 일단 텍스트로 대체.
@@ -166,7 +200,8 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
     protected void onDestroy() {
         super.onDestroy();
-        users_ref.removeEventListener(listener);
+        if(null != listener)
+            users_ref.removeEventListener(listener);
     }
 
     // 주소 검색 후 반환.
