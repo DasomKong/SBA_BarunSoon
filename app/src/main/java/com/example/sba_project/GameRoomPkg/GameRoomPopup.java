@@ -1,12 +1,16 @@
-package com.example.sba_project;
+package com.example.sba_project.GameRoomPkg;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-public class GameRoomPopup extends AppCompatActivity implements View.OnClickListener {
+import com.example.sba_project.R;
+
+public class GameRoomPopup extends Activity implements View.OnClickListener {
 
     private Button mConfirm;
     private Button mCancel;

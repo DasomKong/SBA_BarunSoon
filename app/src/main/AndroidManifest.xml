@@ -15,7 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GameRoomActivity"></activity>
+        <activity android:name=".GameRoomPkg.GameRoomActivity"></activity>
+        <activity android:name=".GameRoomPkg.GameRoomPopup">
+            <!--android:theme="@android:style/Theme.Dialog"-->
+            </activity>
+
         <activity android:name=".Util.WebviewSearchaddress" />
         <activity android:name=".Register.Additional_data" />
         <activity
