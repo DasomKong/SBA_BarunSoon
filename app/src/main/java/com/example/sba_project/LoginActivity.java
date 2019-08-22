@@ -159,8 +159,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
         // 어센티케이션에서 메일 있는지 확인할 것.
-        if(CheckSameID(acct.getEmail()))
-            return;
+//        if(CheckSameID(acct.getEmail()))
+//            return;
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
@@ -179,6 +179,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean CheckSameID(String ID){
         // db 에 e-mail 도 등록시킬 것.
+        String name = FirebaseAuth.getInstance().getCurrentUser().toString();
+
         DatabaseReference curData_ref = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().toString());
         DatabaseReference eMail_ref = curData_ref.child("eMail");
 
@@ -197,8 +199,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        if(CheckSameID(email))
-            return;
+//        if(CheckSameID(email))
+//            return;
 
         login_progress.setVisibility(View.VISIBLE);
 
