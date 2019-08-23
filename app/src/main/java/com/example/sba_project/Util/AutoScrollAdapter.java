@@ -36,7 +36,7 @@ public class AutoScrollAdapter extends PagerAdapter {
 //        v.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                Intent intent = new Intent(context.getApplicationContext(), GameplusActivity.class);
+//                Intent intent = new Intent(context.getApplicationContext(), GameintroductionActivity.class);
 //                context.startActivity(intent);
 //            }
 //        });

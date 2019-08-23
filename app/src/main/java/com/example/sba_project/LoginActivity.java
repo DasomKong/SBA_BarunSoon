@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                Toast.makeText(LoginActivity.this, "Facebook Cancle", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Facebook Cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     private void SetSignInAndUp(){
-        findViewById(R.id.btn_signin).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.signIn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userLogin(inputEmail.getText().toString().trim(), inputPassword.getText().toString().trim());
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        findViewById(R.id.btn_signup).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);

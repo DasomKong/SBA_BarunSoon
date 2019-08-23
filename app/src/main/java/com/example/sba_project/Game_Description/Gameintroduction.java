@@ -1,47 +1,25 @@
 package com.example.sba_project.Game_Description;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.media.MediaSession2;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.sba_project.R;
-import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.database.ChildEventListener;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.datatype.Duration;
-
-import com.google.android.youtube.player.YouTubeBaseActivity;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
 
 
 //YouTubeBaseActivity로 상속 받는것에 유의
-public class GameplusActivity extends YouTubeBaseActivity {
+public class Gameintroduction extends YouTubeBaseActivity {
 
 
 
@@ -59,11 +37,8 @@ public class GameplusActivity extends YouTubeBaseActivity {
 
         Intent intent = getIntent();
         String title = intent.getExtras().getString("title");
-        System.out.println("abcd" + title);
 
-
-
-        databaseReference.child("Game").child("title").child("TOUCHDOWN").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Game").child("title").child(title).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -130,9 +105,5 @@ public class GameplusActivity extends YouTubeBaseActivity {
         });
 
 
-
-
-
     }
 }
-

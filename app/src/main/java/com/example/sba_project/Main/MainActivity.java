@@ -109,13 +109,13 @@ public class MainActivity extends AppCompatActivity
                 {
                     FirebaseAuth.getInstance().signOut();
                     LoginManager.getInstance().logOut();
-                    Toast.makeText(MainActivity.this,"signout!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"로그아웃!",Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(MainActivity.this,"signout failed!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"로그아웃 실패!",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_tools) {
+        } else if (id == R.id.signOut) {
 
         } else if (id == R.id.nav_share) {
 
