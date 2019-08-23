@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.sba_project.Game_Description.Gameintroduction;
@@ -21,12 +20,6 @@ public class MainActivityFragment extends Fragment {
     ImageView imageView;
 
     public MainActivityFragment() {
-
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -36,10 +29,11 @@ public class MainActivityFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.content_main,container,false);
         imageView = rootView.findViewById(R.id.aimageview1);
         imageView.setOnClickListener(new View.OnClickListener(){
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
-                intent.putExtra("title","DUNK");
+                intent.putExtra("title","TOUCHDOWN");
                 startActivity(intent);
             }
         });
