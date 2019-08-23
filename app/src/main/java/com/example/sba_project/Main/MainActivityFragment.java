@@ -21,10 +21,15 @@ import java.util.ArrayList;
  */
 public class MainActivityFragment extends Fragment {
 
-    ArrayList<ImageView> Image = new ArrayList<>();
     ImageView imageView;
 
     public MainActivityFragment() {
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -37,7 +42,7 @@ public class MainActivityFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), GameplusActivity.class);
+                Intent intent = new Intent((MainActivity)getActivity(), GameplusActivity.class);
                 intent.putExtra("title","dunk");
                 startActivity(intent);
             }
@@ -47,11 +52,4 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-
-    }
 }
