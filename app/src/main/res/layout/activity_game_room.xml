@@ -25,11 +25,11 @@
         android:layout_height="86dp"
         android:layout_marginStart="36dp"
         android:layout_marginBottom="495dp"
+        android:contentDescription="@string/todo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:srcCompat="@drawable/lusplash"
-        android:contentDescription="@string/todo" />
+        app:srcCompat="@drawable/lusplash" />
 
     <Spinner
         android:id="@+id/gameselect"
@@ -51,8 +51,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="158dp"
         android:background="#7B3EBC"
-        android:textColor="#ffffff"
         android:text="@string/팀원추가"
+        android:textColor="#ffffff"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -73,6 +73,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="430dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/space"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -85,52 +94,13 @@
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="110dp"
-        android:layout_height="65dp"
-        android:text="@string/nickname"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteY="304dp" />
-
-    <Button
-        android:id="@+id/button_exit"
-        android:layout_width="100dp"
-        android:layout_height="65dp"
-        android:layout_weight="1"
-        android:background="#F35B55"
-        android:text="@string/강퇴"
-        android:textColor="#ffffff"
-        android:textSize="36sp"
-        tools:layout_editor_absoluteY="304dp" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:contentDescription="@string/todo"
-        app:srcCompat="@drawable/lusplash"
-        tools:layout_editor_absoluteY="304dp" />
-
-    <Button
-        android:id="@+id/button_chu"
-        android:layout_width="100dp"
-        android:layout_height="65dp"
-        android:layout_weight="1"
-        android:background="#7B3EBC"
-        android:text="@string/추천"
-        android:textColor="#ffffff"
-        android:textSize="36sp"
-        tools:layout_editor_absoluteY="304dp" />
-
-    <ListView
-        android:id="@+id/listview"
-        android:layout_width="411dp"
-        android:layout_height="427dp"
+    <Space
+        android:id="@+id/space"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </ListView>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

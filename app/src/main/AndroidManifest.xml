@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.sba_project">
 
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- camera, gallery -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- camera, gallery -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -14,12 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".listview_item"></activity>
-        <activity android:name=".GameRoomPkg.GameRoomActivity" />
-        <activity android:name=".GameRoomPkg.GameRoomPopup">
+        <activity android:name=".GameRoomPkg.GameRoomActivity"></activity>
+        <activity android:name=".GameRoomPkg.GameRoomPopup"
+            android:theme="@style/Theme.MyDialog">
+            </activity>
 
-            <!-- android:theme="@android:style/Theme.Dialog" -->
-        </activity>
         <activity android:name=".Util.WebviewSearchaddress" />
         <activity android:name=".Register.Additional_data" />
         <activity
@@ -46,8 +46,7 @@
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+            <intent-filter><action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -55,6 +54,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <activity android:name=".SubActivity"></activity>
     </application>
 

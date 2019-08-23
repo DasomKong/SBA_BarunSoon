@@ -1,24 +1,19 @@
 package com.example.sba_project.GameRoomPkg;
-import com.example.sba_project.GameRoomPkg.GameRoomPopup;
-import com.example.sba_project.R;
-import com.example.sba_project.Userdata.MyUserData;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+import com.example.sba_project.Adapter.PlayerItem;
+import com.example.sba_project.R;
+import com.example.sba_project.Userdata.ExtendedMyUserData;
+import com.google.firebase.database.FirebaseDatabase;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -27,32 +22,53 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameRoomActivity extends AppCompatActivity {
     private Spinner gameselc;
     private TextView jicwi;
-    private ImageView user_image;
     private TextView teamone;
-    private ImageView master_user_Image;
+    private ImageView master_pro_Image;
     private Button add_team;
     private ScrollView teamone_scoll;
-    private TextView nickname;
-    private ListView user_list;
 
-    ArrayList<String> arrayList;
+    private ListView PlayerListView;
+    PlayerItem PlayersList = null;
+
     ArrayAdapter<String> arrayAdapter;
 
+    // Request Code
+    static final int INVITE = 100;
+
+    // Result Code
+    static final int INVITE_RESULT_OK = 200;
+    static final int INVITE_RESULT_FAIL = 201;
+    // Tag
+    static final String USER_DATA = "UserData";
+
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mReference;
-    private ChildEventListener mChild; //수신대기를 위한 Child
+    //private DatabaseReference databaseReference = firebaseDatabase.getReference();
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    private ListView listView;
-    private ArrayAdapter<String> adapter;
-    List<Object> Array = new ArrayList<Object>();
+        switch (requestCode) {
+            case INVITE:
+                switch (resultCode) {
+                    case INVITE_RESULT_OK:
+                        ExtendedMyUserData InvitedUser = (ExtendedMyUserData) data.getSerializableExtra(USER_DATA);
+                        // 만약 같은 유저가 방 안에 있으면 예외 처리 추가해야 함.
+                        PlayersList.addItem(InvitedUser);
+                        PlayerListView.setAdapter(PlayersList);
+                        Toast.makeText(GameRoomActivity.this, "초대 성공!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case INVITE_RESULT_FAIL:
+                        Toast.makeText(GameRoomActivity.this, "초대 실패!", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                break;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +77,18 @@ public class GameRoomActivity extends AppCompatActivity {
 
         SetViews();
 
-        findViewById(R.id.addteam).setOnClickListener(new Button.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(GameRoomActivity.this , GameRoomPopup.class);
-                        startActivity(intent);
-                    }
-                }
+        findViewById(R.id.addteam).setOnClickListener(new Button.OnClickListener() {
+                                                          @Override
+                                                          public void onClick(View view) {
+                                                              Intent intent = new Intent(GameRoomActivity.this, GameRoomPopup.class);
+                                                              startActivityForResult(intent, INVITE);
+                                                          }
+                                                      }
         );
     }
 
-    private void SetViews(){
-        initDatabase();
-
-        ArrayList arrayList = new ArrayList<>(); // 파이널 달린거 주의
+    private void SetViews() {
+        final ArrayList arrayList = new ArrayList<>(); // 파이널 달린거 주의
         arrayList.add("철수");
         arrayList.add("영희");
         arrayList.add("람휘");
@@ -82,101 +96,33 @@ public class GameRoomActivity extends AppCompatActivity {
         arrayList.add("치치");
         arrayList.add("양가");
         arrayList.add("용병");
-        gameselc = (Spinner)findViewById(R.id.gameselect);
-        jicwi = (TextView)findViewById(R.id.textView2);
-        teamone = (TextView)findViewById(R.id.textView4);
-        master_user_Image = (ImageView)findViewById(R.id.imageView2);
-        user_image = (ImageView)findViewById(R.id.imageView4);
-        user_list = (ListView)findViewById(R.id.listview);
-        add_team = (Button)findViewById(R.id.addteam);
-        gameselc.setAdapter(arrayAdapter);
-        nickname = (TextView)findViewById(R.id.textView3);
-        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_dropdown_item_1line,arrayList);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>());
-        //Spinner 드랍다운 아니고 다이얼로그 썻음
-        user_list.setAdapter(adapter);
-        gameselc.setAdapter(adapter);
-        mReference = firebaseDatabase.getReference("user");
-        mReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                adapter.clear(); //스피너(어댑터)에 값을 넣기 전 초기화
-                for (DataSnapshot messageData : dataSnapshot.getChildren()) {
-                    MyUserData myUserData = messageData.getValue(MyUserData.class);
-                    String msg2 = messageData.getValue().toString();
-                    Array.add(msg2);
-                    adapter.add(msg2);
-                    // child 내에 있는 데이터만큼 반복합니다.
-                }
-                adapter.notifyDataSetChanged();
-                gameselc.setSelection(adapter.getCount() - 1);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayList);
+        gameselc = (Spinner) findViewById(R.id.gameselect);
+        jicwi = (TextView) findViewById(R.id.textView2);
+        teamone = (TextView) findViewById(R.id.textView4);
+        master_pro_Image = (ImageView) findViewById(R.id.imageView2);
+        add_team = (Button) findViewById(R.id.addteam);
+        teamone_scoll = (ScrollView) findViewById(R.id.scrollView);
+        gameselc.setAdapter(arrayAdapter);
+        jicwi.setText("바꾸는 예");
+        gameselc.setPrompt("hi");
 
         gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다.",
-                        //Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), arrayList.get(i) + "가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
 
-        jicwi.setText("바꾸는 예");
-        findViewById(R.id.addteam).setOnClickListener(new Button.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(),GameRoomPopup.class);
-                        startActivity(intent);
-                    }
-                }
-        );
-    }
+        PlayerListView = findViewById(R.id.listview);
 
-    private void initDatabase() {
-        mDatabase = FirebaseDatabase.getInstance();
-
-        mReference = mDatabase.getReference("log");
-        mReference.child("log").setValue("check");
-
-        mChild = new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        mReference.addChildEventListener(mChild);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mReference.removeEventListener(mChild);
+        PlayersList = new PlayerItem();
+        PlayersList.SetActivity(this);
     }
 }
