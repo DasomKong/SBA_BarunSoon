@@ -14,8 +14,8 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 
-import com.example.sba_project.R;
-import com.example.sba_project.Userdata.MyUserData;
+import com.example.sba_project.Userdata.ExtendedMyUserData;
+import com.example.sba_project.Util.UtilValues;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +36,7 @@ public class GameRoom {
     ValueEventListener postListener = new ValueEventListener() { //경로의 전체 내용에 대한 변경 사항을 읽고 수신 대기합니다.
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            MyUserData post = dataSnapshot.getValue(MyUserData.class);
+            ExtendedMyUserData post = UtilValues.GetUserDataFromDatabase(dataSnapshot);
         }
 
         @Override

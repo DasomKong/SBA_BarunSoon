@@ -16,8 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".GameRoomPkg.GameRoomActivity"></activity>
-        <activity android:name=".GameRoomPkg.GameRoomPopup">
-            <!--android:theme="@android:style/Theme.Dialog"-->
+        <activity android:name=".GameRoomPkg.GameRoomPopup"
+            android:theme="@style/Theme.MyDialog">
             </activity>
 
         <activity android:name=".Util.WebviewSearchaddress" />

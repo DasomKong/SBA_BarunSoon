@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
-import com.example.sba_project.Userdata.MyUserData;
+import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -197,16 +197,17 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     private void UploadUserData(String _nickname, String _address, int _age, String photourl){
         FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        String email = curUser.getEmail();
-
-        MyUserData newUserData = new MyUserData(_nickname, _address, _age, email, photourl);
-
         DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference().child("users");
-        user_ref.child(curUser.getUid()).setValue(newUserData);
+
+        // 데이터 문제로 하나씩 적용
+        user_ref.child(curUser.getUid()).child("Address").setValue(_address);
+        user_ref.child(curUser.getUid()).child("Age").setValue(_age);
+        user_ref.child(curUser.getUid()).child("NickName").setValue(_nickname);
+        user_ref.child(curUser.getUid()).child("PhotoUrl").setValue(photourl);
+        user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
 
         // 로긴 창으로 돌아가자.
         Toast.makeText(this, "등록 성공", Toast.LENGTH_SHORT).show();
-
         finish();
     }
 
@@ -228,11 +229,11 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     // mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon), "name_" + i, "contents_" + i);
-                    MyUserData tmp = snapshot.getValue(MyUserData.class);
+                    String tmpStr = snapshot.child("NickName").getValue().toString();
 
                     // 동일한 닉네임이 이미 존재한다면..
-                    if (!tmp.NickName.isEmpty() && tmp.NickName.equals(newNickName)) {
-                        Toast.makeText(getApplicationContext(), tmp.NickName + " already exists.", Toast.LENGTH_SHORT).show();
+                    if (!tmpStr.isEmpty() && tmpStr.equals(newNickName)) {
+                        Toast.makeText(getApplicationContext(), tmpStr + " already exists.", Toast.LENGTH_SHORT).show();
                         rs.result = false;
                     }
                 }
@@ -262,7 +263,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                     String data = intent.getExtras().getString("data");
                     if (data != null)
                         Address.setText(data);
-
                 }
                 break;
             case GET_FROM_GALLERY: {
