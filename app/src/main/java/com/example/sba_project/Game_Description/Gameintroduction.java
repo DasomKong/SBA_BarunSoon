@@ -41,7 +41,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 
 //YouTubeBaseActivity로 상속 받는것에 유의
-public class GameplusActivity extends YouTubeBaseActivity {
+public class Gameintroduction extends YouTubeBaseActivity {
 
 
 
@@ -59,11 +59,8 @@ public class GameplusActivity extends YouTubeBaseActivity {
 
         Intent intent = getIntent();
         String title = intent.getExtras().getString("title");
-        System.out.println("abcd" + title);
 
-
-
-        databaseReference.child("Game").child("title").child("TOUCHDOWN").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Game").child("title").child(title).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -130,9 +127,5 @@ public class GameplusActivity extends YouTubeBaseActivity {
         });
 
 
-
-
-
     }
 }
-

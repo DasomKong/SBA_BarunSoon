@@ -2,7 +2,6 @@ package com.example.sba_project.Util;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
-import com.example.sba_project.Game_Description.GameplusActivity;
 import com.example.sba_project.R;
 
 import java.util.ArrayList;
@@ -35,13 +33,13 @@ public class AutoScrollAdapter extends PagerAdapter {
         View v = inflater.inflate(R.layout.auto_viewpager,null);
         ImageView image_container = (ImageView) v.findViewById(R.id.image_container);
 
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context.getApplicationContext(), GameplusActivity.class);
-                context.startActivity(intent);
-            }
-        });
+//        v.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(context.getApplicationContext(), GameintroductionActivity.class);
+//                context.startActivity(intent);
+//            }
+//        });
 
         Glide.with(context).load(data.get(position)).into(image_container);
         container.addView(v);
