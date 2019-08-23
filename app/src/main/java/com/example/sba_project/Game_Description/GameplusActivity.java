@@ -1,4 +1,4 @@
-package com.example.sba_project;
+package com.example.sba_project.Game_Description;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.sba_project.R;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +41,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 
 //YouTubeBaseActivity로 상속 받는것에 유의
-public class SubActivity extends YouTubeBaseActivity {
+public class GameplusActivity extends YouTubeBaseActivity {
 
 
 

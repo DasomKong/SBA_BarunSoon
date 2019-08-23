@@ -5,15 +5,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.sba_project.Game_Description.GameplusActivity;
 import com.example.sba_project.R;
-import com.example.sba_project.SubActivity;
 
 import java.util.ArrayList;
 
@@ -38,7 +37,7 @@ public class MainActivityFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), SubActivity.class);
+                Intent intent = new Intent(getActivity(), GameplusActivity.class);
                 intent.putExtra("title","dunk");
                 startActivity(intent);
             }

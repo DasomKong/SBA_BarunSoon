@@ -51,7 +51,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SubActivity"></activity>
+        <activity android:name=".Game_Description.GameplusActivity"></activity>
     </application>
 
 </manifest>
