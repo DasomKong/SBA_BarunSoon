@@ -35,13 +35,13 @@ public class AutoScrollAdapter extends PagerAdapter {
         View v = inflater.inflate(R.layout.auto_viewpager,null);
         ImageView image_container = (ImageView) v.findViewById(R.id.image_container);
 
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context.getApplicationContext(), SubActivity.class);
-                context.startActivity(intent);
-            }
-        });
+//        v.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(context.getApplicationContext(), SubActivity.class);
+//                context.startActivity(intent);
+//            }
+//        });
 
         Glide.with(context).load(data.get(position)).into(image_container);
         container.addView(v);
