@@ -72,8 +72,6 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
                 Bundle bundle = new Bundle();
 
                 bundle.putSerializable(GameRoomActivity.USER_DATA, SelectedUser);
-                //bundle.putSerializable(GameRoomActivity.USER_DATA, new ExtendedMyUserData(SelectedUser));
-
                 intent.putExtras(bundle);
                 setResult(GameRoomActivity.INVITE_RESULT_OK, intent);
                 this.finish();
