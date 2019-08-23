@@ -3,7 +3,7 @@ package com.example.sba_project.Main;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.sba_project.GameRoomActivity;
+import com.example.sba_project.GameRoomPkg.GameRoomActivity;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.Register.Additional_data;
 import com.example.sba_project.Util.AutoScrollAdapter;

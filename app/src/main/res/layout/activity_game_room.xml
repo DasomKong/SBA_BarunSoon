@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameRoomActivity">
+    tools:context=".GameRoomPkg.GameRoomActivity">
 
     <TextView
         android:id="@+id/textView2"
@@ -73,55 +73,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-    <ScrollView
-        android:id="@+id/scrollView3"
-        android:layout_width="395dp"
-        android:layout_height="433dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
-                app:srcCompat="@drawable/lusplash"
-                android:contentDescription="@string/todo" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="110dp"
-                android:layout_height="42dp"
-                android:text="@string/nickname"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/button_chu"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#7B3EBC"
-                android:text="@string/추천"
-                android:textColor="#ffffff"
-                android:textSize="36sp" />
-
-            <Button
-                android:id="@+id/button_exit"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#F35B55"
-                android:text="@string/강퇴"
-                android:textColor="#ffffff"
-                android:textSize="36sp" />
-
-        </LinearLayout>
-    </ScrollView>
-
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -129,11 +80,57 @@
         android:layout_marginStart="279dp"
         android:layout_marginTop="272dp"
         android:layout_marginEnd="31dp"
-        android:layout_marginBottom="7dp"
         android:text="@string/n"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="110dp"
+        android:layout_height="65dp"
+        android:text="@string/nickname"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteY="304dp" />
+
+    <Button
+        android:id="@+id/button_exit"
+        android:layout_width="100dp"
+        android:layout_height="65dp"
+        android:layout_weight="1"
+        android:background="#F35B55"
+        android:text="@string/강퇴"
+        android:textColor="#ffffff"
+        android:textSize="36sp"
+        tools:layout_editor_absoluteY="304dp" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:contentDescription="@string/todo"
+        app:srcCompat="@drawable/lusplash"
+        tools:layout_editor_absoluteY="304dp" />
+
+    <Button
+        android:id="@+id/button_chu"
+        android:layout_width="100dp"
+        android:layout_height="65dp"
+        android:layout_weight="1"
+        android:background="#7B3EBC"
+        android:text="@string/추천"
+        android:textColor="#ffffff"
+        android:textSize="36sp"
+        tools:layout_editor_absoluteY="304dp" />
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="411dp"
+        android:layout_height="427dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
