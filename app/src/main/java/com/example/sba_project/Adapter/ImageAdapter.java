@@ -14,13 +14,20 @@ public class ImageAdapter extends BaseAdapter {
 
     Context context;
 
-    private Integer[] gameThumb ={
-            R.drawable.chrono1,R.drawable.dunk1,R.drawable.gaia1,
-            R.drawable.jam1, R.drawable.constello1, R.drawable.corner1,
-            R.drawable.gaia1, R.drawable.gaia1, R.drawable.gaia1,
-            R.drawable.gaia1, R.drawable.gaia1, R.drawable.gaia1,
-            R.drawable.gaia1, R.drawable.gaia1, R.drawable.gaia1,
-            R.drawable.gaia1, R.drawable.gaia1, R.drawable.gaia1
+    public Integer[] gameThumb ={
+            R.drawable.chrono1,
+            R.drawable.constello1, R.drawable.corner1,
+            R.drawable.danza1, R.drawable.dojo,
+            R.drawable.dunk1, R.drawable.gaia1,
+            R.drawable.galactic1, R.drawable.germ1,
+            R.drawable.jam1, R.drawable.mineword1,
+            R.drawable.newton1, R.drawable.pila1,
+            R.drawable.puzz1, R.drawable.rele1,
+            R.drawable.roar1, R.drawable.scala1,
+            R.drawable.scboard1, R.drawable.swet1,
+            R.drawable.target1, R.drawable.touchdown1,
+            R.drawable.twins1, R.drawable.vika1,
+            R.drawable.wak1, R.drawable.zoo1
     };
 
     public ImageAdapter(Context context){
@@ -46,13 +53,15 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         ImageView imageView;
 
         if(convertView == null){
             imageView = new ImageView(context);
             imageView.setLayoutParams(new GridView.LayoutParams(300,300));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        }else{
+        }
+        else{
             imageView = (ImageView) convertView;
         }
 
@@ -61,4 +70,3 @@ public class ImageAdapter extends BaseAdapter {
 
     }
 }
-
