@@ -49,11 +49,9 @@ public class gridPrac extends AppCompatActivity {
                 switch(position){
                     case 0:
                         title = "CHRONO";
-                        System.out.println(position);
                         break;
                     case 1:
                         title = "CONSTELLO";
-                        System.out.println(position);
                         break;
                     case 2:
                         title = "CORNER";
