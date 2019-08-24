@@ -4,40 +4,48 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    ﻿ <LinearLayout
-    android:id="@+id/game_hot"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp"
-    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/hot"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="HOT"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"/>
 
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="100dp"
-        android:layout_weight="1"
-        android:scaleType="fitXY"
-        android:src="@drawable/newton1"/>
+    <LinearLayout
+        android:id="@+id/game_hot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:orientation="horizontal">
 
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="100dp"
-        android:layout_weight="1"
-        android:scaleType="fitXY"
-        android:src="@drawable/rele1"/>
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/newton1"/>
 
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="100dp"
-        android:scaleType="fitXY"
-        android:layout_weight="1"
-        android:src="@drawable/jam1"/>
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/rele1"/>
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:layout_weight="1"
+            android:src="@drawable/jam1"/>
 
 
-</LinearLayout>
+    </LinearLayout>
 
     <GridView
-        android:id="@+id/gridViewImages"
+        android:id="@+id/grid_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:numColumns="3"
@@ -47,7 +55,6 @@
         android:paddingBottom="10dp">
     </GridView>
 
-    ﻿
+
 
 </LinearLayout>
-

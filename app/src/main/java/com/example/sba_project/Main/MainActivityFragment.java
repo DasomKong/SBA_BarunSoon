@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.sba_project.Adapter.gridPrac;
 import com.example.sba_project.Game_Description.Gameintroduction;
 import com.example.sba_project.R;
 
@@ -17,7 +19,8 @@ import com.example.sba_project.R;
  */
 public class MainActivityFragment extends Fragment {
 
-    ImageView imageView;
+    ImageView gameimage;
+    TextView Moregames;
 
     public MainActivityFragment() {
     }
@@ -27,8 +30,19 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.content_main,container,false);
-        imageView = rootView.findViewById(R.id.aimageview1);
-        imageView.setOnClickListener(new View.OnClickListener(){
+
+        Moregames = rootView.findViewById(R.id.Moregames);
+        Moregames.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent((MainActivity)getActivity(), gridPrac.class);
+                startActivity(intent);
+            }
+        });
+
+
+        gameimage = rootView.findViewById(R.id.aimageview1);
+        gameimage.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
@@ -38,8 +52,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.aimageview2);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.aimageview2);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -48,8 +62,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.aimageview3);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.aimageview3);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -58,8 +72,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.aimageview4);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.aimageview4);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -68,8 +82,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.bimageview1);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.bimageview1);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -78,8 +92,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.bimageview2);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.bimageview2);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -88,8 +102,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.bimageview3);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.bimageview3);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -98,8 +112,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.bimageview4);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.bimageview4);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -108,8 +122,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.cimageview1);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.cimageview1);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -118,8 +132,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.cimageview2);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.cimageview2);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -128,8 +142,8 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        imageView = rootView.findViewById(R.id.cimageview3);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.cimageview3);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);
@@ -139,8 +153,8 @@ public class MainActivityFragment extends Fragment {
         });
 
 
-        imageView = rootView.findViewById(R.id.cimageview4);
-        imageView.setOnClickListener(new View.OnClickListener(){
+        gameimage = rootView.findViewById(R.id.cimageview4);
+        gameimage.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent((MainActivity)getActivity(), Gameintroduction.class);

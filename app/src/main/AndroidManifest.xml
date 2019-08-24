@@ -52,6 +52,7 @@
         </activity>
 
         <activity android:name=".Game_Description.Gameintroduction"></activity>
+        <activity android:name=".Adapter.gridPrac"></activity>
     </application>
 
 </manifest>
