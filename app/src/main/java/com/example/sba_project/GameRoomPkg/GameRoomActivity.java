@@ -104,7 +104,7 @@ public class GameRoomActivity extends AppCompatActivity {
         add_team = (Button) findViewById(R.id.addteam);
         teamone_scoll = (ScrollView) findViewById(R.id.scrollView);
 
-        
+
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayList){
             @SuppressLint("WrongViewCast")
             public View getView(int positon, View convertView, ViewGroup parent){
