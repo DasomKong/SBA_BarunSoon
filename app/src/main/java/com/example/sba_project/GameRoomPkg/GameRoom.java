@@ -5,17 +5,14 @@ package com.example.sba_project.GameRoomPkg;
  * Desc : 네트워크 게임에서 사용되는(채팅도 포함) 방 개념 클래스
  * Blog : http://gompangs.tistory.com/
  */
-
-import android.nfc.Tag;
-import android.nfc.TagLostException;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Util.UtilValues;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,80 +23,98 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameRoom {
-    private int id; // 룸 ID
+    private int room_id; // 룸 ID
     private List<GameUser> userList;
     private GameUser roomOwner; // 방장
-    private String roomName; // 방 이름
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference mDatabase = firebaseDatabase.getReference();
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("GameRoom");
+    private ChildEventListener child_listener = null;
 
-    ValueEventListener postListener = new ValueEventListener() { //경로의 전체 내용에 대한 변경 사항을 읽고 수신 대기합니다.
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            ExtendedMyUserData post = UtilValues.GetUserDataFromDatabase(dataSnapshot);
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-            Log.w("ValueEventListener", "loadPost:onCancelled", databaseError.toException());
-        }
-    };
-
-    public GameRoom(int roomId) { // 아무도 없는 방을 생성할 때
-        this.id = roomId;
-        userList = new ArrayList();
-//        firebaseDatabase.getReference().child("sbafinalprojectsoon").
+    // 호스트 방 생성
+    public GameRoom(){
+        CreateRoomID();
     }
 
-    public GameRoom(GameUser user) { // 유저가 방을 만들때
-        userList = new ArrayList();
-        user.enterRoom(this);
-        userList.add(user); // 유저를 추가시킨 후
-        this.roomOwner = user; // 방장을 유저로 만든다.
+    private void CreateRoomID(){
+        // db 에서 반환한 값 확인 후 입력.
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int i = 0;
+                for(DataSnapshot iter : dataSnapshot.getChildren()){
+                    if(i != Integer.parseInt(iter.getKey()))
+                        break;
+                    ++i;
+                }
+                SetRoomInfo(i);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
-    public GameRoom(List <GameUser> users) { // 유저 리스트가 방을 생성할
-        this.userList = users; // 유저리스트 복사
+    public GameRoom(int _roomid){
+        CreateRoom(_roomid);
+    }
 
-        // 룸 입장
-        for(GameUser user : users){
-            user.enterRoom(this);
-        }
+    private void CreateRoom(int i){
+        child_listener = mDatabase.child(Integer.toString(i)).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("GameRoom", "ChildEventListener - onChildAdded : " + dataSnapshot.getValue());
+            }
 
-        this.roomOwner = userList.get(0); // 첫번째 유저를 방장으로 설정
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("GameRoom", "ChildEventListener - onChildChanged : " + s);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("GameRoom", "ChildEventListener - onChildRemoved : " + dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("GameRoom", "ChildEventListener - onChildMoved" + s);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("GameRoom", "ChildEventListener - onCancelled" + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void SetRoomInfo(int _roomid){
+        room_id = _roomid;
+        userList = new ArrayList();
+
+        this.roomOwner = CreateUser(); // 방장을 유저로 만든다.
+
+        CreateRoom(room_id);
+    }
+
+    private GameUser CreateUser(){
+        GameUser user = new GameUser();
+        enterUser(user);
+        return user;
     }
 
     public void enterUser(GameUser user) {
         user.enterRoom(this);
         userList.add(user);
+
+        mDatabase.child(Integer.toString(room_id)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
     }
 
-    public void enterUser(List <GameUser> users) {
-        for(GameUser gameUser : users){
-            gameUser.enterRoom(this);
-        }
-        userList.addAll(users);
+    public void DestroyGameRoom(){
+        mDatabase.child(Integer.toString(room_id)).setValue(null);
+        mDatabase.removeEventListener(child_listener);
+        child_listener = null;
     }
 
-    /**
-     * 해당 유저를 방에서 내보냄
-     * @param user 내보낼 유저
-     */
-    public void exitUser(GameUser user) {
-        user.exitRoom(this);
-        userList.remove(user); // 해당 유저를 방에서 내보냄
-
-        if (userList.size() < 1) { // 모든 인원이 다 방을 나갔다면
-            RoomManager.removeRoom(this); // 이 방을 제거한다.
-            return;
-        }
-
-        if (userList.size() < 2) { // 방에 남은 인원이 1명 이하라면
-            this.roomOwner = userList.get(0); // 리스트의 첫번째 유저가 방장이 된다.
-            return;
-        }
-    }
-
+    // DB 업데이트 함수
     /**
      * 해당 룸의 유저를 다 퇴장시키고 삭제함
      */
@@ -112,31 +127,8 @@ public class GameRoom {
     }
 
     // 게임 로직
-
-    /**
-     * 해당 byte 배열을 방의 모든 유저에게 전송
-     * @param data 보낼 data
-     */
-    public void broadcast(byte[] data) {
-        for (GameUser user : userList) { // 방에 속한 유저의 수만큼 반복
-            // 각 유저에게 데이터를 전송하는 메서드 호출~
-            // ex) user.SendData(data);
-
-//			try {
-//				user.sock.getOutputStream().write(data); // 이런식으로 바이트배열을 보낸다.
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-        }
-    }
-
     public void setOwner(GameUser gameUser) {
         this.roomOwner = gameUser; // 특정 사용자를 방장으로 변경한다.
-    }
-
-    public void setRoomName(String name) { // 방 이름을 설정
-        this.roomName = name;
     }
 
     public GameUser getUserByNickName(String nickName) { // 닉네임을 통해서 방에 속한 유저를 리턴함
@@ -163,40 +155,8 @@ public class GameRoom {
         }
     }
 
-    public String getRoomName() { // 방 이름을 가져옴
-        return roomName;
-    }
-
     public int getUserSize() { // 유저의 수를 리턴
         return userList.size();
-    }
-
-    public GameUser getOwner() { // 방장을 리턴
-        return roomOwner;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public List getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List userList) {
-        this.userList = userList;
-    }
-
-    public GameUser getRoomOwner() {
-        return roomOwner;
-    }
-
-    public void setRoomOwner(GameUser roomOwner) {
-        this.roomOwner = roomOwner;
     }
 
     @Override
@@ -206,11 +166,15 @@ public class GameRoom {
 
         GameRoom gameRoom = (GameRoom) o;
 
-        return id == gameRoom.id;
+        return room_id == gameRoom.room_id;
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return room_id;
+    }
+
+    public int getRoom_id() {
+        return room_id;
     }
 }

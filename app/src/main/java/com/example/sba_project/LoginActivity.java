@@ -171,6 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "인증 실패", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(LoginActivity.this, "구글 로그인 인증 성공", Toast.LENGTH_SHORT).show();
+                            Additional_data.ExternUploadDefaulUserData();
                             ToAdditionalRegister();
                         }
                     }
@@ -212,7 +213,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(task.isSuccessful()) {
                             login_progress.setVisibility(View.GONE);
-                            ToMainActivity();
+                            Additional_data.ExternUploadDefaulUserData();
+                            ToAdditionalRegister();
                         }
 
                         // If sign in fails, display a message to the user. If sign in succeeds
@@ -253,7 +255,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // 로그인 성공
                             Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                            ToMainActivity();
+                            Additional_data.ExternUploadDefaulUserData();
+                            ToAdditionalRegister();
                         } else {
                             // 로그인 실패
                             Toast.makeText(LoginActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();

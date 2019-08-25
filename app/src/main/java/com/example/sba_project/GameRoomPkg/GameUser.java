@@ -6,23 +6,21 @@ package com.example.sba_project.GameRoomPkg;
  * Blog : http://gompangs.tistory.com/
  */
 
+import com.example.sba_project.Userdata.ExtendedMyUserData;
+
 import java.net.Socket;
 
 // 실제로 게임을 플레이하는 유저의 클래스이다.
 
 public class GameUser {
-
     private int id; 			// Unique ID
     private GameRoom room; 		// 유저가 속한 룸이다.
-    private Socket sock; 		// 소켓 object
     private String nickName;	// 닉네임
+    //private ExtendedMyUserData User = null;
 
     // 게임에 관련된 변수 설정
     // ...
     //
-
-    private PlayerGameInfo.Location playerLocation; // 게임 정보
-    private PlayerGameInfo.Status playerStatus; // 게임 정보
 
     public GameUser() { // 아무런 정보가 없는 깡통 유저를 만들 때
     }
@@ -50,7 +48,6 @@ public class GameUser {
      * @param room  입장할 방
      */
     public void enterRoom(GameRoom room) {
-        room.enterUser(this); // 룸에 입장시킨 후
         this.room = room; // 유저가 속한 방을 룸으로 변경한다.(중요)
     }
 
@@ -62,14 +59,6 @@ public class GameUser {
         this.room = null;
         // 퇴장처리(화면에 메세지를 준다는 등)
         // ...
-    }
-
-    public void setPlayerStatus(PlayerGameInfo.Status status) { // 유저의 상태를 설정
-        this.playerStatus = status;
-    }
-
-    public void setPlayerLocation(PlayerGameInfo.Location location) { // 유저의 위치를 설정
-        this.playerLocation = location;
     }
 
     public int getId() {
@@ -88,28 +77,12 @@ public class GameUser {
         this.room = room;
     }
 
-    public Socket getSock() {
-        return sock;
-    }
-
-    public void setSock(Socket sock) {
-        this.sock = sock;
-    }
-
     public String getNickName() {
         return nickName;
     }
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
-    }
-
-    public PlayerGameInfo.Location getPlayerLocation() {
-        return playerLocation;
-    }
-
-    public PlayerGameInfo.Status getPlayerStatus() {
-        return playerStatus;
     }
 
     /*

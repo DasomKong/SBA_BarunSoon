@@ -76,6 +76,7 @@ public class PlayerItem extends BaseAdapter implements View.OnClickListener {
             case R.id.button_chu:
                 break;
             case R.id.button_exit:
+                // db 게임 방에서 강퇴,
                 break;
         }
     }
