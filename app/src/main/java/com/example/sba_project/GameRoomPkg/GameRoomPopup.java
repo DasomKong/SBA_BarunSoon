@@ -98,7 +98,6 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
 
         final SearchedUserItem newAdapter = new SearchedUserItem();
         newAdapter.SetActivity(this);
-
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         users_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
