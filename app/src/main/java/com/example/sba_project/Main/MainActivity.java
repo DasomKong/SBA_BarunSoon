@@ -143,9 +143,9 @@ public class MainActivity extends AppCompatActivity
         });
 
         // additional register
-        navigationView.getMenu().findItem(R.id.nav_privacy).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()  {
+        navigationView.getHeaderView(0).findViewById(R.id.goMyPage).setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
+            public void onClick(View view) {
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
@@ -153,8 +153,6 @@ public class MainActivity extends AppCompatActivity
                     addregi_intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_MAIN.getValue());
                     startActivity(addregi_intent);
                 }
-
-                return false;
             }
         });
 

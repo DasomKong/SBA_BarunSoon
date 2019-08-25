@@ -10,10 +10,6 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="홈" />
         <item
-            android:id="@+id/nav_privacy"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="내 정보 수정" />
-        <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_menu_camera"
             android:title="내 이용기록" />
