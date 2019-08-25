@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.sba_project.LoginActivity;
+import com.example.sba_project.Navi_fragment.Fragment1;
+import com.example.sba_project.Navi_fragment.Fragment2;
+import com.example.sba_project.Navi_fragment.Fragment3;
+import com.example.sba_project.Navi_fragment.Fragment4;
 import com.example.sba_project.Register.Additional_data;
 import com.example.sba_project.Util.AutoScrollAdapter;
 import com.example.sba_project.Util.BackPressCloseHandler;
@@ -26,6 +30,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.view.View;
@@ -40,15 +45,30 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private BackPressCloseHandler backPressCloseHandler;
     private AccessTokenTracker accessTokenTracker;
+    AutoScrollViewPager autoViewPager;
+
     private FirebaseAuth.AuthStateListener authListener;
+
+    private Fragment1 fragment1;
+    private Fragment2 fragment2;
+    private Fragment3 fragment3;
+    private Fragment4 fragment4;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        displaySelectScreen(R.id.content_layout);
         SetListenerTracker();
         SetViews();
+
+
+        fragment1 = new Fragment1();
+        fragment2 = new Fragment2();
+        fragment3 = new Fragment3();
+        fragment4 = new Fragment4();
+
     }
 
     private void SetListenerTracker() {
@@ -133,6 +153,19 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        ArrayList<String> data = new ArrayList<>(); //이미지 url를 저장하는 arraylist
+        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/twins_uho36t.png");
+        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-dojo_yzijtn.png");
+        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-pila_xtgrld.png");
+        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-scoreboard_j8wkmo.png");
+
+        autoViewPager = findViewById(R.id.autoViewPager);
+        AutoScrollAdapter scrollAdapter = new AutoScrollAdapter(this, data);
+        autoViewPager.setAdapter(scrollAdapter); //Auto Viewpager에 Adapter 장착
+        autoViewPager.setInterval(5000); // 페이지 넘어갈 시간 간격 설정
+        autoViewPager.startAutoScroll(); //Auto Scroll 시작
+
+
 
     }
 
@@ -185,25 +218,39 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        displaySelectScreen(item.getItemId());
+        return true;
+    }
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+    public void displaySelectScreen(int itemId){
 
-        } else if (id == R.id.nav_slideshow) {
+        FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
 
-        } else if (id == R.id.signOut) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (itemId) {
+            case R.id.nav_home:
+                tr.replace(R.id.content_layout, fragment1);
+                tr.addToBackStack(null);
+                tr.commit();
+                break;
+            case R.id.nav_gallery:
+                tr.replace(R.id.content_layout, fragment2);
+                tr.addToBackStack(null);
+                tr.commit();
+                break;
+            case R.id.nav_slideshow:
+                tr.replace(R.id.content_layout, fragment3);
+                tr.addToBackStack(null);
+                tr.commit();
+                break;
+            case R.id.signOut:
+                tr.replace(R.id.content_layout, fragment4);
+                tr.addToBackStack(null);
+                tr.commit();
+                break;
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+
     }
 }

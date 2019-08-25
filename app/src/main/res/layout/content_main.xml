@@ -8,7 +8,8 @@
     android:orientation="vertical"
     android:background="#ffffff"
     tools:context=".Main.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar_main"
+    android:id="@+id/content_layout">
 
     <cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager
         android:id="@+id/autoViewPager"

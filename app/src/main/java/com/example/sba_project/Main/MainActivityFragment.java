@@ -24,9 +24,8 @@ import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
  */
 public class MainActivityFragment extends Fragment {
 
-    AutoScrollViewPager autoViewPager;
-    ImageView gameimage;
-    TextView Moregames;
+    private ImageView gameimage;
+    private TextView Moregames;
 
     public MainActivityFragment() {
     }
@@ -37,17 +36,6 @@ public class MainActivityFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.content_main,container,false);
 
-        ArrayList<String> data = new ArrayList<>(); //이미지 url를 저장하는 arraylist
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/twins_uho36t.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-dojo_yzijtn.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-pila_xtgrld.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-scoreboard_j8wkmo.png");
-
-        autoViewPager = rootView.findViewById(R.id.autoViewPager);
-        AutoScrollAdapter scrollAdapter = new AutoScrollAdapter((MainActivity)getActivity(), data);
-        autoViewPager.setAdapter(scrollAdapter); //Auto Viewpager에 Adapter 장착
-        autoViewPager.setInterval(5000); // 페이지 넘어갈 시간 간격 설정
-        autoViewPager.startAutoScroll(); //Auto Scroll 시작
 
 
 
