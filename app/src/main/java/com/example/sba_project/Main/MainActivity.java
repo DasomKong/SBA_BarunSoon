@@ -234,25 +234,24 @@ public class MainActivity extends AppCompatActivity
         switch (itemId) {
             case R.id.nav_home:
                 tr.replace(R.id.content_layout, home);
-                tr.addToBackStack(null);
-                tr.commit();
+                setTitle("Home");
                 break;
             case R.id.nav_history:
                 tr.replace(R.id.content_layout, fragment1);
-                tr.addToBackStack(null);
-                tr.commit();
+                setTitle("내 이용기록");
                 break;
             case R.id.nav_gallery:
                 tr.replace(R.id.content_layout, gameplus);
-                tr.addToBackStack(null);
-                tr.commit();
+                setTitle("전체게임");
                 break;
             case R.id.nav_slideshow:
                 tr.replace(R.id.content_layout, fragment3);
-                tr.addToBackStack(null);
-                tr.commit();
+                setTitle("방만들기");
                 break;
         }
+
+        tr.addToBackStack(null);
+        tr.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
