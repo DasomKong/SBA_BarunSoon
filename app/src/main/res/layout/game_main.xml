@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="#ffffff"
     tools:context=".Game_Description.Gameplus">
 
     <TextView
@@ -20,6 +21,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
+        android:layout_marginTop="50dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -50,13 +52,14 @@
         android:id="@+id/grid_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="3"
+        android:layout_marginStart="10dp"
         android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
+        android:numColumns="3"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp">
-    </GridView>
+        android:paddingBottom="10dp"
+        android:verticalSpacing="10dp"
+        android:layout_marginTop="170dp"></GridView>
 
 
 
-</LinearLayout>
+</FrameLayout>

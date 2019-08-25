@@ -3,32 +3,47 @@ package com.example.sba_project.Game_Description;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.sba_project.R;
 
-public class Gameplus extends AppCompatActivity {
+public class Gameplus extends Fragment {
 
     String title;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_main);
+    public Gameplus() {
+        // Required empty public constructor
+    }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.game_main, container,false);
 
         final GridView gridView;
 
-        gridView = (GridView)findViewById(R.id.grid_game);
-        ImageAdapter imageAdapter = new ImageAdapter(this);
+        gridView = rootView.findViewById(R.id.grid_game);
+        ImageAdapter imageAdapter = new ImageAdapter(getActivity());
         gridView.setAdapter(imageAdapter);
 
-        // 이벤트 처리를 위한 부분
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,12 +129,15 @@ public class Gameplus extends AppCompatActivity {
                         System.out.println("ERROR");
                 }
 
-                Intent intent = new Intent(Gameplus.this, Gameintroduction.class);
+                Intent intent = new Intent(getActivity(), Gameintroduction.class);
                 intent.putExtra("title",title);
                 startActivity(intent);
             }
         });
 
-
+        return rootView;
     }
+
+
+
 }

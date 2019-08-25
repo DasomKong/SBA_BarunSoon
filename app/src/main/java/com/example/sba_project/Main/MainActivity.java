@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment2 fragment2;
     private Fragment3 fragment3;
     private Fragment4 fragment4;
+    private Gameplus gameplus;
 
     private ImageView gameimage;
     private TextView Moregames;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
         fragment4 = new Fragment4();
+        gameplus = new Gameplus();
 
     }
 
@@ -176,8 +178,11 @@ public class MainActivity extends AppCompatActivity
         Moregames.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameplus.class);
-                startActivity(intent);
+
+                FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
+                tr.replace(R.id.content_layout, gameplus);
+                tr.commit();
+
             }
         });
 
@@ -371,7 +376,7 @@ public class MainActivity extends AppCompatActivity
                 tr.commit();
                 break;
             case R.id.nav_gallery:
-                tr.replace(R.id.content_layout, fragment2);
+                tr.replace(R.id.content_layout, gameplus);
                 tr.addToBackStack(null);
                 tr.commit();
                 break;
