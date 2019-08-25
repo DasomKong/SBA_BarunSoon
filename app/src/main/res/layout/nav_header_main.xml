@@ -68,12 +68,6 @@
         <!--android:src="@drawable/logout" />-->
     </LinearLayout>
 
-    <Button
-        android:id="@+id/AddRegi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="AddRegi" />
 
 </LinearLayout>
     <!--나중에 지울거-->

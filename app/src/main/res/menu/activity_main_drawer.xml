@@ -6,6 +6,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_privacy"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="내 정보 수정" />
+        <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_camera"
             android:title="내 이용기록" />
@@ -18,7 +22,7 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="방만들기"/>
         <item
-            android:id="@+id/signOut"
+            android:id="@+id/nav_signOut"
             android:icon="@drawable/ic_menu_manage"
             android:title="로그아웃" />
     </group>

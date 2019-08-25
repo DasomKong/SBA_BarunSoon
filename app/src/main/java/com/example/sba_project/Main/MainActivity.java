@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // signout 버튼
-        navigationView.getMenu().findItem(R.id.signOut).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        navigationView.getMenu().findItem(R.id.nav_signOut).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
@@ -152,9 +152,9 @@ public class MainActivity extends AppCompatActivity
         });
 
         // additional register
-        navigationView.getHeaderView(0).findViewById(R.id.AddRegi).setOnClickListener(new View.OnClickListener() {
+        navigationView.getMenu().findItem(R.id.nav_privacy).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()  {
             @Override
-            public void onClick(View view) {
+            public boolean onMenuItemClick(MenuItem menuItem) {
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
@@ -162,6 +162,8 @@ public class MainActivity extends AppCompatActivity
                     addregi_intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_MAIN.getValue());
                     startActivity(addregi_intent);
                 }
+
+                return false;
             }
         });
 
