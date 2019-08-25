@@ -1,4 +1,4 @@
-package com.example.sba_project.Adapter;
+package com.example.sba_project.Game_Description;
 
 
 import android.content.Context;

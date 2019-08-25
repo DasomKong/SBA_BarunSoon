@@ -72,7 +72,7 @@ public class Gameintroduction extends YouTubeBaseActivity {
 
                 }
                 else {
-                    setContentView(R.layout.activity_sub);
+                    setContentView(R.layout.activity_gameintroduction_video);
 
                     YouTubePlayerView youTubeView;
                     YouTubePlayer.OnInitializedListener listener;

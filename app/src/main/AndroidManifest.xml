@@ -54,7 +54,7 @@
         </activity>
 
         <activity android:name=".Game_Description.Gameintroduction"></activity>
-        <activity android:name=".Adapter.gridPrac"></activity>
+        <activity android:name=".Game_Description.Gameplus"></activity>
     </application>
 
 </manifest>

@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.sba_project.Adapter.gridPrac;
 import com.example.sba_project.Game_Description.Gameintroduction;
+import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.R;
 import com.example.sba_project.Util.AutoScrollAdapter;
 
@@ -43,7 +43,7 @@ public class MainActivityFragment extends Fragment {
         Moregames.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent((MainActivity)getActivity(), gridPrac.class);
+                Intent intent = new Intent((MainActivity)getActivity(), Gameplus.class);
                 startActivity(intent);
             }
         });
