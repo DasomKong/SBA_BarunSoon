@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private BackPressCloseHandler backPressCloseHandler;
     private AccessTokenTracker accessTokenTracker;
-    AutoScrollViewPager autoViewPager;
 
     private FirebaseAuth.AuthStateListener authListener;
 
@@ -58,9 +57,8 @@ public class MainActivity extends AppCompatActivity
     private Fragment3 fragment3;
     private Fragment4 fragment4;
     private Gameplus gameplus;
+    private Home home;
 
-    private ImageView gameimage;
-    private TextView Moregames;
 
 
     @Override
@@ -70,13 +68,6 @@ public class MainActivity extends AppCompatActivity
         displaySelectScreen(R.id.content_layout);
         SetListenerTracker();
         SetViews();
-
-
-        fragment1 = new Fragment1();
-        fragment2 = new Fragment2();
-        fragment3 = new Fragment3();
-        fragment4 = new Fragment4();
-        gameplus = new Gameplus();
 
     }
 
@@ -167,152 +158,18 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        ArrayList<String> data = new ArrayList<>(); //이미지 url를 저장하는 arraylist
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/twins_uho36t.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-dojo_yzijtn.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-pila_xtgrld.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-scoreboard_j8wkmo.png");
+        fragment1 = new Fragment1();
+        fragment2 = new Fragment2();
+        fragment3 = new Fragment3();
+        fragment4 = new Fragment4();
+        gameplus = new Gameplus();
+        home = new Home();
 
-        autoViewPager = findViewById(R.id.autoViewPager);
-        AutoScrollAdapter scrollAdapter = new AutoScrollAdapter(this, data);
-        autoViewPager.setAdapter(scrollAdapter); //Auto Viewpager에 Adapter 장착
-        autoViewPager.setInterval(5000); // 페이지 넘어갈 시간 간격 설정
-        autoViewPager.startAutoScroll(); //Auto Scroll 시작
+        FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
 
-        Moregames = findViewById(R.id.Moregames);
-        Moregames.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
-                tr.replace(R.id.content_layout, gameplus);
-                tr.commit();
-
-            }
-        });
-
-        gameimage = findViewById(R.id.aimageview1);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","TOUCHDOWN");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.aimageview2);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","CORNER");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.aimageview3);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","TOUCHDOWN");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.aimageview4);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","RELE");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.bimageview1);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","SWET");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.bimageview2);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","GERM");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.bimageview3);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","TARGET");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.bimageview4);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","SCALA");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.cimageview1);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","VIKA");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.cimageview2);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","MINEWORD");
-                startActivity(intent);
-            }
-        });
-
-        gameimage = findViewById(R.id.cimageview3);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","NEWTON");
-                startActivity(intent);
-            }
-        });
-
-
-        gameimage = findViewById(R.id.cimageview4);
-        gameimage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
-                intent.putExtra("title","CONSTELLO");
-                startActivity(intent);
-            }
-        });
-
+        tr.replace(R.id.content_layout, home);
+        tr.addToBackStack(null);
+        tr.commit();
 
 
     }
@@ -351,7 +208,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
@@ -376,6 +233,11 @@ public class MainActivity extends AppCompatActivity
 
         switch (itemId) {
             case R.id.nav_home:
+                tr.replace(R.id.content_layout, home);
+                tr.addToBackStack(null);
+                tr.commit();
+                break;
+            case R.id.nav_history:
                 tr.replace(R.id.content_layout, fragment1);
                 tr.addToBackStack(null);
                 tr.commit();
