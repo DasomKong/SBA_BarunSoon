@@ -20,15 +20,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:name="com.example.sba_project.Main.MainActivityFragment"
-        android:id="@+id/mainfragment"/>
-
-    <!--<include layout="@layout/content_main" />-->
+    <include layout="@layout/content_main" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

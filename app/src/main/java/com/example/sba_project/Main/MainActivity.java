@@ -3,6 +3,8 @@ package com.example.sba_project.Main;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.sba_project.Game_Description.Gameintroduction;
+import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.Navi_fragment.Fragment1;
 import com.example.sba_project.Navi_fragment.Fragment2;
@@ -34,6 +36,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -53,6 +57,9 @@ public class MainActivity extends AppCompatActivity
     private Fragment2 fragment2;
     private Fragment3 fragment3;
     private Fragment4 fragment4;
+
+    private ImageView gameimage;
+    private TextView Moregames;
 
 
     @Override
@@ -164,6 +171,137 @@ public class MainActivity extends AppCompatActivity
         autoViewPager.setAdapter(scrollAdapter); //Auto Viewpager에 Adapter 장착
         autoViewPager.setInterval(5000); // 페이지 넘어갈 시간 간격 설정
         autoViewPager.startAutoScroll(); //Auto Scroll 시작
+
+        Moregames = findViewById(R.id.Moregames);
+        Moregames.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameplus.class);
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.aimageview1);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","TOUCHDOWN");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.aimageview2);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","CORNER");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.aimageview3);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","TOUCHDOWN");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.aimageview4);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","RELE");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.bimageview1);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","SWET");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.bimageview2);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","GERM");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.bimageview3);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","TARGET");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.bimageview4);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","SCALA");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.cimageview1);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","VIKA");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.cimageview2);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","MINEWORD");
+                startActivity(intent);
+            }
+        });
+
+        gameimage = findViewById(R.id.cimageview3);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","NEWTON");
+                startActivity(intent);
+            }
+        });
+
+
+        gameimage = findViewById(R.id.cimageview4);
+        gameimage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Gameintroduction.class);
+                intent.putExtra("title","CONSTELLO");
+                startActivity(intent);
+            }
+        });
 
 
 
