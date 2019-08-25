@@ -129,9 +129,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // signout 버튼
-        navigationView.getHeaderView(0).findViewById(R.id.signout).setOnClickListener(new View.OnClickListener() {
+        navigationView.getMenu().findItem(R.id.signOut).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
@@ -145,6 +146,8 @@ public class MainActivity extends AppCompatActivity
                 else{
                     Toast.makeText(MainActivity.this,"로그아웃 실패!",Toast.LENGTH_SHORT).show();
                 }
+
+                return false;
             }
         });
 
@@ -382,11 +385,6 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_slideshow:
                 tr.replace(R.id.content_layout, fragment3);
-                tr.addToBackStack(null);
-                tr.commit();
-                break;
-            case R.id.signOut:
-                tr.replace(R.id.content_layout, fragment4);
                 tr.addToBackStack(null);
                 tr.commit();
                 break;
