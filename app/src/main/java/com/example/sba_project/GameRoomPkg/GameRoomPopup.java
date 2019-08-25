@@ -88,7 +88,6 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
 
     private void SearchFromDataBase()
     {
-        // 10명의 유저까지 find
         final String _nickname = nameToFind.getText().toString().trim();
 
         if(_nickname.isEmpty()){
@@ -98,8 +97,8 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
 
         final SearchedUserItem newAdapter = new SearchedUserItem();
         newAdapter.SetActivity(this);
-        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
-        users_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        UtilValues.getUsers().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot iter : dataSnapshot.getChildren()){

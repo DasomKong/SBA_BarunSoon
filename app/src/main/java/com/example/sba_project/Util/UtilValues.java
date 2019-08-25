@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.InviteData;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,6 +20,7 @@ public class UtilValues {
 * */
     public static String INVITE = "invite";
     public static String ACCEPT = "accept";
+    public static String USERS = "users";
 
 /*
 * Function Class
@@ -46,30 +48,24 @@ public class UtilValues {
         }
     }
 
-
-
     // GameRoomActivity 진입용
     public class moveWithIntFunc implements FuncInstance{
         public Context _context;
         public Class _class;
         public String _tag;
         public int _value;
-        public InviteData _acceptData;
 
-        public moveWithIntFunc (Context _context, Class _class, String _tag, int _value, InviteData _acceptData) {
+        public moveWithIntFunc (Context _context, Class _class, String _tag, int _value) {
             this._context = _context;
             this._class = _class;
             this._tag = _tag;
             this._value = _value;
-            this._acceptData = _acceptData;
         }
         public void Execute(){
             if(_context == null && _class == null){
                 Log.d("UtilValues", "Not expected function excute : " + this.getClass());
                 return;
             }
-            // 확인하면 확인한 데이터 다시 돌려줌
-            UtilValues.getAcceptRef().push().setValue(_acceptData);
 
             Intent _intent = new Intent(_context, _class);
             _intent.putExtra(_tag, _value);
@@ -92,12 +88,17 @@ public class UtilValues {
         return newUser;
     }
 
+    // DB 디렉토리 레퍼런스
     public static DatabaseReference getInviteRef(){
         return FirebaseDatabase.getInstance().getReference().child(UtilValues.INVITE);
     }
 
     public static DatabaseReference getAcceptRef(){
         return FirebaseDatabase.getInstance().getReference().child(UtilValues.ACCEPT);
+    }
+
+    public static DatabaseReference getUsers(){
+        return FirebaseDatabase.getInstance().getReference().child(UtilValues.USERS);
     }
 /*
 * 유틸 함수

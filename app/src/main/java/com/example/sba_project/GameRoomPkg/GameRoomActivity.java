@@ -1,19 +1,18 @@
 package com.example.sba_project.GameRoomPkg;
 
 import com.example.sba_project.Adapter.PlayerItem;
+import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
+import com.example.sba_project.Userdata.UserDataManager;
+import com.example.sba_project.Util.BackPressCloseHandler;
 import com.example.sba_project.Util.UtilValues;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.example.sba_project.Userdata.InviteData;
-import com.example.sba_project.Util.UtilValues;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -37,8 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-
-import static com.facebook.internal.Utility.arrayList;
 
 public class GameRoomActivity extends AppCompatActivity {
     public enum User_Permission{
@@ -67,8 +64,6 @@ public class GameRoomActivity extends AppCompatActivity {
     final ArrayList arrayList = new ArrayList<>(); // 파이널 달린거 주의
     ArrayAdapter<String> arrayAdapter;
 
-    private GameRoom gameRoom = null;
-
     // Request Code
     static final int INVITE = 100;
 
@@ -83,8 +78,7 @@ public class GameRoomActivity extends AppCompatActivity {
     // 디폴트는 Client
     User_Permission userPermission = User_Permission.CLIENT;
 
-    // Invite Listen
-    ChildEventListener _childeListener = null;
+    private BackPressCloseHandler backPressCloseHandler;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -95,7 +89,7 @@ public class GameRoomActivity extends AppCompatActivity {
                 switch (resultCode) {
                     case INVITE_RESULT_OK:
                         ExtendedMyUserData InvitedUser = (ExtendedMyUserData) data.getSerializableExtra(USER_DATA);
-                        WaitUserToAccept(InvitedUser);
+                        InviteMessageToUser(InvitedUser);
                         Toast.makeText(GameRoomActivity.this, "초대 성공!", Toast.LENGTH_SHORT).show();
                         break;
                     case INVITE_RESULT_FAIL:
@@ -106,48 +100,9 @@ public class GameRoomActivity extends AppCompatActivity {
         }
     }
 
-    private void WaitUserToAccept(final ExtendedMyUserData InvitedUser){
-        // 만약 같은 유저가 방 안에 있으면 예외 처리 추가해야 함.
-        // db 로 초대장. uid 와 room_number
-        // db 에서 수락 확인.
-        // db 방에 방에 입장.
-        final InviteData inviteData = new InviteData(gameRoom.getRoom_id(), FirebaseAuth.getInstance().getCurrentUser().getUid(), InvitedUser.uID, InviteData.EInviteFlag.INVITE);
-
+    private void InviteMessageToUser(final ExtendedMyUserData InvitedUser){
+        final InviteData inviteData = new InviteData(UserDataManager.getInstance().getGameRoom().getRoom_id(), FirebaseAuth.getInstance().getCurrentUser().getUid(), InvitedUser.uID, InviteData.EInviteFlag.INVITE);
         UtilValues.getInviteRef().push().setValue(inviteData);
-
-        _childeListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                // 대기 끝나면 add
-                // boolean 확인하고 타깃 불린 바뀌면 ok
-                InviteData tmp_data = dataSnapshot.getValue(InviteData.class);
-
-                if(tmp_data.Flag != InviteData.EInviteFlag.RESULT
-                && tmp_data.ClientuID != inviteData.ClientuID
-                && tmp_data.HostuID != inviteData.HostuID
-                && tmp_data.RoomNumber != inviteData.RoomNumber)
-                    return;
-
-                PlayersList.addItem(InvitedUser);
-                PlayersList.notifyDataSetChanged();
-
-//                UtilValues.getAcceptRef().removeEventListener(_childeListener);
-//                _childeListener = null;
-            }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        };
-        UtilValues.getAcceptRef().addChildEventListener(_childeListener);
     }
 
     @Override
@@ -162,7 +117,28 @@ public class GameRoomActivity extends AppCompatActivity {
     }
 
     private void SetGameRoom(){
-        // 직접 생성했을 경우와 초대받아서 들어온 경우.
+        // 이미 게임 룸에 참여했었고, gameroom이 아직 존재하다면..
+        final int _roomNum = UserDataManager.getInstance().getRoomNumber();
+        if(_roomNum != -1){
+            // 초기화 후 방 살아있는지 확인.
+            UserDataManager.getInstance().setRoomNumber(-1);
+            FirebaseDatabase.getInstance().getReference().child("GameRoom").equalTo(_roomNum).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, _roomNum, PlayersList));
+                        UserDataManager.getInstance().setInGameRoom(true);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    int a = 0;
+                }
+            });
+        }else{
+            SetGameRoomResult();
+        }
+    }
+
+    private void SetGameRoomResult(){
         // 권한 확인
         Intent permit = getIntent();
 
@@ -170,22 +146,39 @@ public class GameRoomActivity extends AppCompatActivity {
             userPermission = (User_Permission)permit.getSerializableExtra(GameRoomActivity.ROOM_PERMITION);
 
         int RoomNumber = permit.getIntExtra(ROOM_NUMBER, -1);
+        PlayersList.setPermission(userPermission);
 
+        // 직접 생성했을 경우와 초대받아서 들어온 경우.
         switch (userPermission)
         {
             case HOST:
-                gameRoom = new GameRoom();
+                UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
                 break;
             case CLIENT:
                 if(RoomNumber == -1)
                     Toast.makeText(GameRoomActivity.this, "잘못된 방 번호 " + RoomNumber + "입니다.", Toast.LENGTH_SHORT).show();
                 else
-                    gameRoom = new GameRoom(RoomNumber);
+                    UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, RoomNumber, PlayersList));
                 break;
         }
+        UserDataManager.getInstance().setInGameRoom(true);
     }
-    DatabaseReference game_ref = FirebaseDatabase.getInstance().getReference("users");
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        backPressCloseHandler.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UserDataManager.getInstance().setInGameRoom(false);
+    }
+
     private void SetViews() {
+        backPressCloseHandler = new BackPressCloseHandler(this);
+
         gameselc = (Spinner) findViewById(R.id.gameselect);
         jicwi = (TextView) findViewById(R.id.textView2);
         teamone = (TextView) findViewById(R.id.textView4);
@@ -193,6 +186,13 @@ public class GameRoomActivity extends AppCompatActivity {
         add_team = (Button) findViewById(R.id.addteam);
         teamone_scoll = (ScrollView) findViewById(R.id.scrollView);
 
+        // start button
+        findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserDataManager.getInstance().getCurGameRoomRef().child("CategoryName").setValue(true);
+            }
+        });
 
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayList){
             @SuppressLint("WrongViewCast")
@@ -234,7 +234,11 @@ public class GameRoomActivity extends AppCompatActivity {
         gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                final DatabaseReference tmpRef = UserDataManager.getInstance().getCurGameRoomRef();
 
+                if(tmpRef != null){
+                    tmpRef.child("CategoryName").setValue(arrayList.get(i).toString());
+                }
             }
 
             @Override
