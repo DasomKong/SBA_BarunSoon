@@ -3,6 +3,7 @@ package com.example.sba_project.Main;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.sba_project.GameRoomPkg.GameRoomActivity;
 import com.example.sba_project.Game_Description.Gameintroduction;
 import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.LoginActivity;
@@ -11,6 +12,7 @@ import com.example.sba_project.Navi_fragment.Fragment2;
 import com.example.sba_project.Navi_fragment.Fragment3;
 import com.example.sba_project.Navi_fragment.Fragment4;
 import com.example.sba_project.Register.Additional_data;
+import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.AutoScrollAdapter;
 import com.example.sba_project.Util.BackPressCloseHandler;
 import com.example.sba_project.R;
@@ -65,10 +67,12 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        UserDataManager.getInstance().Init(this);
+
         displaySelectScreen(R.id.content_layout);
         SetListenerTracker();
         SetViews();
-
     }
 
     private void SetListenerTracker() {
@@ -85,11 +89,12 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         };
+
+        // 사용자 정보 변경 시.
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-
                 if (user != null) {
 //                    emailText.setText(user.getEmail());
 //                    statusText.setText("Signed In");
@@ -186,6 +191,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UserDataManager.getInstance().Destroy();
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -252,6 +263,29 @@ public class MainActivity extends AppCompatActivity
         tr.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // Handle navigation view item clicks here.
+        switch (item.getItemId())
+        {
+            case R.id.nav_home:
+                break;
+            case R.id.nav_gallery:
+                break;
+            case R.id.nav_slideshow:
+                break;
+            case R.id.nav_tools:
+                break;
+            case R.id.nav_share:
+                break;
+            case R.id.nav_send:
+                break;
+            case R.id.nav_createroom:
+                Intent intent = new Intent(MainActivity.this, GameRoomActivity.class);
+                intent.putExtra(GameRoomActivity.ROOM_PERMITION, GameRoomActivity.User_Permission.HOST);
+                startActivity(intent);
+                break;
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
     }

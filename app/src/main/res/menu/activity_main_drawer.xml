@@ -37,6 +37,11 @@
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/menu_send" />
+
+            <item
+                android:id="@+id/nav_createroom"
+                android:icon="@drawable/ic_menu_send"
+                android:title="CreateRoom" />
         </menu>
     </item>
 
