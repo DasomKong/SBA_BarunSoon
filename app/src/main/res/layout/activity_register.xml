@@ -19,8 +19,7 @@
         android:id="@+id/editPhoto"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@color/fontWhite"
-        android:src="@drawable/camera_192"
+        android:src="@drawable/camera_purple"
         app:layout_constraintBottom_toBottomOf="@id/profile_image"
         app:layout_constraintEnd_toEndOf="@id/profile_image" />
 
