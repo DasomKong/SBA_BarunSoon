@@ -172,7 +172,6 @@ public class LoginActivity extends AppCompatActivity {
                     if(uID.equals(iter.getKey())){
                         // 존재함.
                         isExist = true;
-                        return;
                     }
                 }
 
