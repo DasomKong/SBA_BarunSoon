@@ -1,13 +1,17 @@
 package com.example.sba_project.Main;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
 import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.Register.Additional_data;
+import com.example.sba_project.Register.Mypage;
 import com.example.sba_project.Register.RegisterActivity;
+import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.BackPressCloseHandler;
 import com.example.sba_project.R;
@@ -33,6 +37,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +53,8 @@ public class MainActivity extends AppCompatActivity
 
     private Gameplus gameplus;
     private Home home;
+
+    private ExtendedMyUserData userData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,13 +148,12 @@ public class MainActivity extends AppCompatActivity
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
-                    Intent addregi_intent = new Intent(MainActivity.this, RegisterActivity.class);
+                    Intent addregi_intent = new Intent(MainActivity.this, Mypage.class);
                     addregi_intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_MAIN.getValue());
                     startActivity(addregi_intent);
                 }
             }
         });
-
 
         gameplus = new Gameplus();
         home = new Home();
@@ -158,6 +164,22 @@ public class MainActivity extends AppCompatActivity
         tr.addToBackStack(null);
         tr.commit();
         setTitle("Home");
+
+    }
+
+    public void setUserData(){
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        TextView nav_header_text = (TextView) navigationView.getHeaderView(0).findViewById(R.id.header_nickname);
+        nav_header_text.setText(UserDataManager.getInstance().getCurUserData().NickName);
+
+        nav_header_text = (TextView) navigationView.getHeaderView(0).findViewById(R.id.header_email);
+        nav_header_text.setText(UserDataManager.getInstance().getCurUserData().eMail);
+
+
+        if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
+            System.out.println("abcd"+UserDataManager.getInstance().getCurUserData().PhotoUrl);
+            Glide.with(MainActivity.this).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into((de.hdodenhof.circleimageview.CircleImageView)navigationView.getHeaderView(0).findViewById(R.id.header_profile_image));
+        }
 
     }
 

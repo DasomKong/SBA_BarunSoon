@@ -58,7 +58,7 @@
         </activity>
 
         <activity android:name=".Game_Description.Gameintroduction"></activity>
-        <activity android:name=".Game_Description.Gameplus"></activity>
+        <activity android:name=".Register.Mypage"></activity>
     </application>
 
 </manifest>

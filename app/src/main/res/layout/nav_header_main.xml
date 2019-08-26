@@ -24,6 +24,7 @@
         android:src="@drawable/settings_round2" />
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/header_profile_image"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_gravity="center"
@@ -46,7 +47,7 @@
         android:layout_marginBottom="10dp">
 
         <TextView
-            android:id="@+id/email"
+            android:id="@+id/header_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
