@@ -28,7 +28,7 @@
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:layout_gravity="center"
-        android:src="@drawable/jg" />
+        android:src="@drawable/lu" />
     <TextView
         android:id="@+id/header_nickname"
         android:layout_width="wrap_content"
