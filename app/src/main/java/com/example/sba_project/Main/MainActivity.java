@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
         gameplus = new Gameplus();
         home = new Home();
 
