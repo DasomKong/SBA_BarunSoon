@@ -258,6 +258,11 @@ public class MainActivity extends AppCompatActivity
                 tr.replace(R.id.content_layout, fragment3);
                 setTitle("방만들기");
                 break;
+            case R.id.nav_createroom:
+                Intent intent = new Intent(MainActivity.this, GameRoomActivity.class);
+                intent.putExtra(GameRoomActivity.ROOM_PERMITION, GameRoomActivity.User_Permission.HOST);
+                startActivity(intent);
+                break;
         }
 
         tr.addToBackStack(null);

@@ -6,6 +6,12 @@ package com.example.sba_project.GameRoomPkg;
  * Blog : http://gompangs.tistory.com/
  */
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.media.Image;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -98,7 +104,6 @@ public class GameRoom {
 
             }
         });
-        //  mDatabase.child(roomnumberStr).child("GameState").addChildEventListener(room_listener);
 
         player_listener = player_ref.addChildEventListener(new ChildEventListener() {
             @Override
@@ -163,7 +168,6 @@ public class GameRoom {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-        //mDatabase.child(roomnumberStr).child("Players").addChildEventListener(player_listener);
     }
 
     private GameUser CreateUser(String _nickname) {
