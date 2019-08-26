@@ -1,34 +1,11 @@
 package com.example.sba_project.GameRoomPkg;
 
-import com.example.sba_project.Adapter.PlayerItem;
-import com.example.sba_project.Main.MainActivity;
-import com.example.sba_project.R;
-import com.example.sba_project.Userdata.ExtendedMyUserData;
-import com.example.sba_project.Userdata.UserDataManager;
-import com.example.sba_project.Util.BackPressCloseHandler;
-import com.example.sba_project.Util.UtilValues;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.example.sba_project.Userdata.InviteData;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -39,10 +16,29 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.example.sba_project.Adapter.PlayerItem;
+import com.example.sba_project.R;
+import com.example.sba_project.Userdata.ExtendedMyUserData;
+import com.example.sba_project.Userdata.InviteData;
+import com.example.sba_project.Userdata.UserDataManager;
+import com.example.sba_project.Util.BackPressCloseHandler;
+import com.example.sba_project.Util.UtilValues;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -64,14 +60,17 @@ public class GameRoomActivity extends AppCompatActivity {
     }
 
     private Spinner gameselc;
-    private TextView jicwi;
-    private TextView teamone;
+    private TextView captain;
+    private TextView crew;
     private ImageView master_pro_Image;
     private Button add_team;
-    private ScrollView teamone_scoll;
+//    private ScrollView teamone_scroll;
+    private ListView crewList;
+    private Button exit_home;
 
     private ListView PlayerListView;
     PlayerItem PlayersList = null;
+
     final ArrayList arrayList = new ArrayList<>(); // 파이널 달린거 주의
     ArrayAdapter<String> arrayAdapter;
 
@@ -183,7 +182,7 @@ public class GameRoomActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_room);
+        setContentView(R.layout.game_room);
 
         //camera permission
         cameraPermission = new String[]{Manifest.permission.CAMERA,
@@ -257,12 +256,13 @@ public class GameRoomActivity extends AppCompatActivity {
     private void SetViews() {
         backPressCloseHandler = new BackPressCloseHandler(this);
 
-        gameselc = (Spinner) findViewById(R.id.gameselect);
-        jicwi = (TextView) findViewById(R.id.textView2);
-        teamone = (TextView) findViewById(R.id.textView4);
-        master_pro_Image = (ImageView) findViewById(R.id.imageView2);
-        add_team = (Button) findViewById(R.id.addteam);
-        teamone_scoll = (ScrollView) findViewById(R.id.scrollView);
+        gameselc = (Spinner) findViewById(R.id.gameSelect);
+        captain = (TextView) findViewById(R.id.captain);
+        crew = (TextView) findViewById(R.id.crew);
+        master_pro_Image = (ImageView) findViewById(R.id.profile_image2);
+        add_team = (Button) findViewById(R.id.addTeam);
+//        teamone_scroll = (ScrollView) findViewById(R.id.scrollView);
+        exit_home = (Button) findViewById(R.id.btn_exit);
 
         // start button
         findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
@@ -293,8 +293,8 @@ public class GameRoomActivity extends AppCompatActivity {
                 if (positon == getCount()) {
 //                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
 //                    ((TextView)v.findViewById(android.R.id.text2)).setHint(getItem(getCount()));
-                    ((TextView) v.findViewById(R.id.gameselect)).setText("");
-                    ((TextView) v.findViewById(R.id.gameselect)).setHint(getItem(getCount()));
+                    ((TextView) v.findViewById(R.id.gameSelect)).setText("");
+                    ((TextView) v.findViewById(R.id.gameSelect)).setHint(getItem(getCount()));
 
                 }
                 return v;
@@ -356,12 +356,13 @@ public class GameRoomActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        PlayerListView = findViewById(R.id.listview);
+        PlayerListView = findViewById(R.id.crewList);
 
         PlayersList = new PlayerItem();
         PlayersList.SetActivity(this);
         PlayerListView.setAdapter(PlayersList);
-        findViewById(R.id.addteam).setOnClickListener(new Button.OnClickListener() {
+        findViewById(R.id.addTeam).setOnClickListener(new Button.OnClickListener()
+                                                      {
                                                           @Override
                                                           public void onClick(View view) {
                                                               Intent intent = new Intent(GameRoomActivity.this, GameRoomPopup.class);
@@ -369,5 +370,8 @@ public class GameRoomActivity extends AppCompatActivity {
                                                           }
                                                       }
         );
+
+        //exit 버튼
+
     }
 }
