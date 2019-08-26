@@ -42,5 +42,8 @@
     <string name="nickname">NickName</string>
     <string name="강퇴">강퇴</string>
     <string name="추천">추천</string>
+    <string name="camera_result">점수 값 출력</string>
+    <string name="todo">TODO</string>
+    <string name="camera_score_pic">스코어 사진찍기</string>
 
 </resources>
