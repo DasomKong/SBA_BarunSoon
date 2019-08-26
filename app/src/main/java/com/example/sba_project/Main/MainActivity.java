@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void SetListenerTracker() {
-        backPressCloseHandler = new BackPressCloseHandler(this);
+        backPressCloseHandler = new BackPressCloseHandler(this, "\'뒤로\'버튼을 한번 더 누르시면 종료됩니다.");
 
         accessTokenTracker = new AccessTokenTracker() {
             @Override

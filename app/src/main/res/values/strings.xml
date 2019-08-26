@@ -45,6 +45,7 @@
     <string name="todo">TODO</string>
     <string name="camera_score_pic">스코어 사진찍기</string>
 
+    <string name="ask">점수가 맞으면 확인 버튼을 눌러주세요.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

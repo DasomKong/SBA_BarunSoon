@@ -1,79 +1,56 @@
-package com.example.sba_project;
+package com.example.sba_project.Util;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
-import android.media.Image;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.SparseIntArray;
-import android.view.Surface;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.sba_project.GameRoomPkg.GameRoomActivity;
+import com.example.sba_project.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
-import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import com.google.firebase.ml.vision.text.RecognizedLanguage;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.List;
 
-public class Text_detec extends AppCompatActivity {
-    private Button button_score;
+public class Text_detec extends AppCompatActivity implements View.OnClickListener{
     private TextView img_score;
-    private ImageView image_view;
+    private FirebaseVisionImage image;
 
-    Bitmap bitmap = null;
-    BitmapFactory.Options bfo = new BitmapFactory.Options();
-
-    public void runTextRecognition(){
-        button_score.setEnabled(false);
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);//선택 이미지
+    private void runTextRecognition(){
         FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
         detector.processImage(image)
                 .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                     @Override
                     public void onSuccess(FirebaseVisionText firebaseVisionText) {
-                        button_score.setEnabled(true);
                         processTextRecognitionResult(firebaseVisionText);
                     }
                 }).addOnFailureListener(
                 new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        button_score.setEnabled(true);
                         e.printStackTrace();
                     }
                 }
         );
     }
+
     private void processTextRecognitionResult(FirebaseVisionText texts){
         String resultText = texts.getText();
-        button_score.setText(resultText);
+        img_score.setText(resultText);
         for (FirebaseVisionText.TextBlock block: texts.getTextBlocks()) {
             String blockText = block.getText();
             Float blockConfidence = block.getConfidence();
@@ -96,30 +73,37 @@ public class Text_detec extends AppCompatActivity {
             }
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_detec);
 
         Intent intent = getIntent();
-        bitmap = (Bitmap)intent.getParcelableExtra("image");
+        Uri uri = intent.getParcelableExtra("uri");
 
-        button_score = (Button)findViewById(R.id.button_score);
-        img_score = (TextView)findViewById(R.id.textView3);
-        image_view = (ImageView)findViewById(R.id.imageView3);
+        img_score = (TextView)findViewById(R.id.score);
+        findViewById(R.id.btn_ok).setOnClickListener(this);
+        findViewById(R.id.btn_cancle).setOnClickListener(this);
 
-        image_view.setImageBitmap(bitmap);
-
-        button_score.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                runTextRecognition();
-            }
-        });
-//        bfo.inSampleSize =2;
-//        Bitmap bm = BitmapFactory.decodeFile(imgPath,bfo);
-//        Bitmap resized = Bitmap.createScaledBitmap(bm,16,16,true);
+        try{
+            image = FirebaseVisionImage.fromFilePath(this, uri);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        runTextRecognition();
     }
 
-
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_ok:
+                Intent intent = new Intent();
+                intent.putExtra("Result", img_score.getText());
+                setResult(GameRoomActivity.TEXT_DETEC_RESULT_OK, intent);
+            case R.id.btn_cancle:
+                finish();
+                break;
+        }
+    }
 }
