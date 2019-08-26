@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity
 
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else{
                     Toast.makeText(MainActivity.this,"로그아웃 실패!",Toast.LENGTH_SHORT).show();
@@ -263,29 +264,6 @@ public class MainActivity extends AppCompatActivity
         tr.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        // Handle navigation view item clicks here.
-        switch (item.getItemId())
-        {
-            case R.id.nav_home:
-                break;
-            case R.id.nav_gallery:
-                break;
-            case R.id.nav_slideshow:
-                break;
-            case R.id.nav_tools:
-                break;
-            case R.id.nav_share:
-                break;
-            case R.id.nav_send:
-                break;
-            case R.id.nav_createroom:
-                Intent intent = new Intent(MainActivity.this, GameRoomActivity.class);
-                intent.putExtra(GameRoomActivity.ROOM_PERMITION, GameRoomActivity.User_Permission.HOST);
-                startActivity(intent);
-                break;
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
     }

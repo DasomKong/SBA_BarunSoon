@@ -13,7 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +27,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
-import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.google.android.gms.tasks.Continuation;
+import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -115,11 +118,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                         break;
                     case 1: finish(); break;
                 }
-                break;
-          //  case R.id.btn_searchaddress:
-                // 웹서버를 올려야 하므로 현재 사용 안하고 일단 텍스트로 대체.
-//                Intent i = new Intent(Additional_data.this, WebviewSearchaddress.class);
-//                startActivityForResult(i, SEARCH_ADDRESS_ACTIVITY);
                 break;
             case R.id.profile_image:
                 if (!checkStoragePermission()) {
@@ -297,13 +295,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
-            case SEARCH_ADDRESS_ACTIVITY:
-                if (resultCode == RESULT_OK) {
-                    String data = intent.getExtras().getString("data");
-                    if (data != null)
-                        Address.setText(data);
-                }
-                break;
             case GET_FROM_GALLERY: {
                 sendPicture(intent.getData()); //갤러리에서 가져오기
             }
