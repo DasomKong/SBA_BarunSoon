@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Surface;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,18 +42,15 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.util.List;
 
-public class Face_detec extends AppCompatActivity {
+public class Text_detec extends AppCompatActivity {
     private Button button_score;
     private TextView img_score;
     private ImageView image_view;
 
-    Intent i = getIntent(); //i:null
-    Bundle extras = i.getExtras();
-    String imgPath = extras.getString("imagefilename");
-
+    Bitmap bitmap = null;
     BitmapFactory.Options bfo = new BitmapFactory.Options();
 
-    public void runTextRecognition(Bitmap bitmap){
+    public void runTextRecognition(){
         button_score.setEnabled(false);
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);//선택 이미지
         FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
@@ -75,6 +73,7 @@ public class Face_detec extends AppCompatActivity {
     }
     private void processTextRecognitionResult(FirebaseVisionText texts){
         String resultText = texts.getText();
+        button_score.setText(resultText);
         for (FirebaseVisionText.TextBlock block: texts.getTextBlocks()) {
             String blockText = block.getText();
             Float blockConfidence = block.getConfidence();
@@ -102,13 +101,24 @@ public class Face_detec extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_detec);
 
+        Intent intent = getIntent();
+        bitmap = (Bitmap)intent.getParcelableExtra("image");
+
         button_score = (Button)findViewById(R.id.button_score);
         img_score = (TextView)findViewById(R.id.textView3);
         image_view = (ImageView)findViewById(R.id.imageView3);
 
-        bfo.inSampleSize =2;
-        Bitmap bm = BitmapFactory.decodeFile(imgPath,bfo);
-        Bitmap resized = Bitmap.createScaledBitmap(bm,16,16,true);
+        image_view.setImageBitmap(bitmap);
+
+        button_score.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                runTextRecognition();
+            }
+        });
+//        bfo.inSampleSize =2;
+//        Bitmap bm = BitmapFactory.decodeFile(imgPath,bfo);
+//        Bitmap resized = Bitmap.createScaledBitmap(bm,16,16,true);
     }
 
 

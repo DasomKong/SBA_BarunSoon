@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.sba_project.Adapter.PlayerItem;
+import com.example.sba_project.Text_detec;
 import com.example.sba_project.R;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.InviteData;
@@ -117,6 +118,10 @@ public class GameRoomActivity extends AppCompatActivity {
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), image_uri);
+
+                        //글자인식 detec
+//                        Text_detec td = new Text_detec();
+//                        td.runTextRecognition(bitmap);
                     } catch (FileNotFoundException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -124,6 +129,9 @@ public class GameRoomActivity extends AppCompatActivity {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
+                    Intent intent = new Intent(GameRoomActivity.this, Text_detec.class);
+                    intent.putExtra("image", bitmap);
+                    startActivity(intent);
                 }
             }
             break;
@@ -159,6 +167,7 @@ public class GameRoomActivity extends AppCompatActivity {
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
     }
 
