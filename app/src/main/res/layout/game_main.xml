@@ -58,7 +58,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:verticalSpacing="10dp"
-        android:layout_marginTop="170dp"></GridView>
+        android:layout_marginTop="170dp" />
 
 
 
