@@ -7,23 +7,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/home_48"
             android:title="홈" />
         <item
             android:id="@+id/nav_history"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/graph_48"
             android:title="내 이용기록" />
         <item
             android:id="@+id/nav_game"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/list_48"
             android:title="전체게임" />
         <item
             android:id="@+id/nav_Room"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/makeroom_48"
             android:title="방만들기"/>
         <item
             android:id="@+id/nav_signOut"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/signout_48"
             android:title="로그아웃" />
     </group>
 

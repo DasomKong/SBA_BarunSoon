@@ -44,13 +44,15 @@ public class UserDataManager {
         UtilValues.getUsers().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final String curUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                for(DataSnapshot iter : dataSnapshot.getChildren()){
-                    final String find_uID = iter.getKey();
+                        final String curUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        for(DataSnapshot iter : dataSnapshot.getChildren()){
+                            final String find_uID = iter.getKey();
 
-                    if(curUID.equals(find_uID))
+                            if(curUID.equals(find_uID))
                         curUserData = UtilValues.GetUserDataFromDatabase(iter);
                 }
+
+                ((MainActivity)_context).setUserData();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

@@ -36,8 +36,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail;
@@ -157,6 +160,34 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void CheckExistUser(){
+        // 이미 디비에 등록된 적 있으면 로그인. 외엔 추가 작성 폼으로.
+        FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                boolean isExist = false;
+                for(DataSnapshot iter : dataSnapshot.getChildren()){
+                    if(uID.equals(iter.getKey())){
+                        // 존재함.
+                        isExist = true;
+                    }
+                }
+
+                if(isExist){
+                    ToMainActivity();
+                }else{
+                    Additional_data.ExternUploadDefaulUserData();
+                    ToAdditionalRegister();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
         // 어센티케이션에서 메일 있는지 확인할 것.
 //        if(CheckSameID(acct.getEmail()))
@@ -171,13 +202,13 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "인증 실패", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(LoginActivity.this, "구글 로그인 인증 성공", Toast.LENGTH_SHORT).show();
-                            Additional_data.ExternUploadDefaulUserData();
-                            ToAdditionalRegister();
+                            CheckExistUser();
                         }
                     }
                 });
     }
 
+    // 구글 이메일 덮어쓰기 방지
     private boolean CheckSameID(String ID){
         // db 에 e-mail 도 등록시킬 것.
         String name = FirebaseAuth.getInstance().getCurrentUser().toString();
@@ -213,8 +244,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(task.isSuccessful()) {
                             login_progress.setVisibility(View.GONE);
-                            Additional_data.ExternUploadDefaulUserData();
-                            ToAdditionalRegister();
+                            CheckExistUser();
                         }
 
                         // If sign in fails, display a message to the user. If sign in succeeds
@@ -255,8 +285,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // 로그인 성공
                             Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                            Additional_data.ExternUploadDefaulUserData();
-                            ToAdditionalRegister();
+                            CheckExistUser();
                         } else {
                             // 로그인 실패
                             Toast.makeText(LoginActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();

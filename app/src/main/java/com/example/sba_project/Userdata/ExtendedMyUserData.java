@@ -18,6 +18,9 @@ public class ExtendedMyUserData implements Serializable {
     public String PhotoUrl = "";
     public String uID;
 
+    public ExtendedMyUserData(){
+    }
+
     public ExtendedMyUserData(final ExtendedMyUserData rhs) {
         this.NickName = rhs.NickName;
         this.Address = rhs.Address;
