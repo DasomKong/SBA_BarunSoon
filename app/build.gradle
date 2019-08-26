@@ -50,5 +50,6 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation "gun0912.ted:tedpermission:2.1.0"
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'com.google.firebase:firebase-ml-vision:23.0.0'
 
 }
