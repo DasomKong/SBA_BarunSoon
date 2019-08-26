@@ -31,8 +31,6 @@ public class Home extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -56,10 +54,7 @@ public class Home extends Fragment {
         Moregames.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//
-//                FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
-//                tr.replace(R.id.content_layout, gameplus);
-//                tr.commit();
+                ((MainActivity)getActivity()).displaySelectScreen(R.id.nav_game);
 
             }
         });
@@ -185,8 +180,6 @@ public class Home extends Fragment {
                 startActivity(intent);
             }
         });
-
-
 
         return rootView;
 

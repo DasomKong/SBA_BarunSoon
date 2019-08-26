@@ -3,15 +3,13 @@ package com.example.sba_project.Main;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
 import com.example.sba_project.Game_Description.Gameintroduction;
 import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.LoginActivity;
-import com.example.sba_project.Navi_fragment.Fragment1;
-import com.example.sba_project.Navi_fragment.Fragment2;
-import com.example.sba_project.Navi_fragment.Fragment3;
-import com.example.sba_project.Navi_fragment.Fragment4;
 import com.example.sba_project.Register.Additional_data;
+import com.example.sba_project.Register.RegisterActivity;
 import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.AutoScrollAdapter;
 import com.example.sba_project.Util.BackPressCloseHandler;
@@ -54,14 +52,11 @@ public class MainActivity extends AppCompatActivity
 
     private FirebaseAuth.AuthStateListener authListener;
 
-    private Fragment1 fragment1;
-    private Fragment2 fragment2;
-    private Fragment3 fragment3;
-    private Fragment4 fragment4;
+    private TextView textView;
+    private String a;
+
     private Gameplus gameplus;
     private Home home;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,17 +150,14 @@ public class MainActivity extends AppCompatActivity
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
-                    Intent addregi_intent = new Intent(MainActivity.this, Additional_data.class);
+                    Intent addregi_intent = new Intent(MainActivity.this, RegisterActivity.class);
                     addregi_intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_MAIN.getValue());
                     startActivity(addregi_intent);
                 }
             }
         });
 
-        fragment1 = new Fragment1();
-        fragment2 = new Fragment2();
-        fragment3 = new Fragment3();
-        fragment4 = new Fragment4();
+
         gameplus = new Gameplus();
         home = new Home();
 
@@ -174,7 +166,7 @@ public class MainActivity extends AppCompatActivity
         tr.replace(R.id.content_layout, home);
         tr.addToBackStack(null);
         tr.commit();
-
+        setTitle("Home");
 
     }
 
@@ -246,17 +238,13 @@ public class MainActivity extends AppCompatActivity
                 tr.replace(R.id.content_layout, home);
                 setTitle("Home");
                 break;
-            case R.id.nav_history:
-                tr.replace(R.id.content_layout, fragment1);
-                setTitle("내 이용기록");
-                break;
-            case R.id.nav_gallery:
+//            case R.id.nav_history:
+//                tr.replace(R.id.content_layout, );
+//                setTitle("내 이용기록");
+//                break;
+            case R.id.nav_game:
                 tr.replace(R.id.content_layout, gameplus);
                 setTitle("전체게임");
-                break;
-            case R.id.nav_slideshow:
-                tr.replace(R.id.content_layout, fragment3);
-                setTitle("방만들기");
                 break;
         }
 

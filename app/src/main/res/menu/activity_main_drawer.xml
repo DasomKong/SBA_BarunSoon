@@ -14,11 +14,11 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="내 이용기록" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_game"
             android:icon="@drawable/ic_menu_gallery"
             android:title="전체게임" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_Room"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="방만들기"/>
         <item
@@ -27,22 +27,22 @@
             android:title="로그아웃" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="@string/menu_share" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="@string/menu_send" />-->
 
-            <item
-                android:id="@+id/nav_createroom"
-                android:icon="@drawable/ic_menu_send"
-                android:title="CreateRoom" />
-        </menu>
-    </item>
+            <!--<item-->
+                <!--android:id="@+id/nav_createroom"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="CreateRoom" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>
