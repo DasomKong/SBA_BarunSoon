@@ -1,11 +1,7 @@
 package com.example.sba_project.Register;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,12 +13,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
-import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,14 +42,15 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Additional_data extends AppCompatActivity implements View.OnClickListener {
     private TextView NickName;
-    private TextView Age;
-    private TextView Address;
-    private CircleImageView ProifleImg;
+    private Spinner Age;
+    private Spinner Address;
+    private CircleImageView profileImage;
     private ValueEventListener listener;
     private DatabaseReference users_ref;
 
@@ -55,9 +59,11 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     private String cameraPermission[];
     private String storagePermission[];
 
-    private static final int SEARCH_ADDRESS_ACTIVITY = 10000;
     private static final int GET_FROM_GALLERY = 100;
     private static final int STORAGE_REQUEST_CODE = 400;
+
+    final ArrayList ageList = new ArrayList();
+    ArrayAdapter<String> ageListAdapter;
 
     public enum KEY_WHERE{
         FROM_LOGIN(0), FROM_MAIN(1);
@@ -97,10 +103,10 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_additionalRegister:
+            case R.id.addInfo:
                 AdditionalRegister();
                 break;
-            case R.id.btn_nexttime:
+            case R.id.nextTime:
                 switch (activity_flag)
                 {
                     case 0:
@@ -111,12 +117,7 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                     case 1: finish(); break;
                 }
                 break;
-            case R.id.btn_searchaddress:
-                // 웹서버를 올려야 하므로 현재 사용 안하고 일단 텍스트로 대체.
-//                Intent i = new Intent(Additional_data.this, WebviewSearchaddress.class);
-//                startActivityForResult(i, SEARCH_ADDRESS_ACTIVITY);
-                break;
-            case R.id.registerphoto:
+            case R.id.profile_image:
                 if (!checkStoragePermission()) {
                     //Storage permission not allowed, request it
                     requestStoragePermission();
@@ -129,15 +130,42 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     }
 
     void SetViews() {
-        findViewById(R.id.btn_additionalRegister).setOnClickListener(this);
-        findViewById(R.id.btn_nexttime).setOnClickListener(this);
-        findViewById(R.id.btn_searchaddress).setOnClickListener(this);
-        findViewById(R.id.registerphoto).setOnClickListener(this);
+        findViewById(R.id.addInfo).setOnClickListener(this);
+        findViewById(R.id.nextTime).setOnClickListener(this);
+//        findViewById(R.id.btn_searchaddress).setOnClickListener(this);
+        findViewById(R.id.profile_image).setOnClickListener(this);
 
-        ProifleImg = (CircleImageView) findViewById(R.id.profilephoto);
-        NickName = findViewById(R.id.NickName);
-        Age = findViewById(R.id.Age);
-        Address = findViewById(R.id.Address);
+        profileImage = (CircleImageView) findViewById(R.id.profile_image);
+        NickName = findViewById(R.id.nickname);
+        Age = (Spinner)findViewById(R.id.age);
+        Address = (Spinner)findViewById(R.id.address);
+
+        //나이 스피너 정의하는 곳
+
+        for(int i = 1; i < 100; ++i){
+            ageList.add(i);
+
+        }
+
+        ageListAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, ageList){
+            @SuppressLint("WrongViewCast")
+            public View getView(int positon, View convertView, ViewGroup parent){
+                View v = super.getView(positon,convertView,parent);
+                if(positon==getCount()){
+                    ((TextView)v.findViewById(R.id.age)).setText("");
+                    ((TextView)v.findViewById(R.id.age)).setHint(getItem(getCount()));
+
+                }
+                return  v;
+            }
+            public int getCount(int getcount){
+                return super.getCount() -1;
+            }
+
+        };
+
+        Age.setAdapter(ageListAdapter);
+
 
         //camera permission
         cameraPermission = new String[]{Manifest.permission.CAMERA,
@@ -148,8 +176,9 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
     private void AdditionalRegister() {
         final String _nickname = NickName.getText().toString().trim();
-        final String _age = Age.getText().toString().trim();
-        final String _address = Address.getText().toString().trim();
+        final String _address = Address.getSelectedItem().toString().trim();
+        final String _age = Age.getSelectedItem().toString().trim();
+
 
         if (!_nickname.isEmpty() && !_age.isEmpty() && !_address.isEmpty() && _age.matches("^[0-9]+$")) {
             if (users_ref == null) {
@@ -264,13 +293,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
-            case SEARCH_ADDRESS_ACTIVITY:
-                if (resultCode == RESULT_OK) {
-                    String data = intent.getExtras().getString("data");
-                    if (data != null)
-                        Address.setText(data);
-                }
-                break;
             case GET_FROM_GALLERY: {
                 sendPicture(intent.getData()); //갤러리에서 가져오기
             }
@@ -297,7 +319,7 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         int exifDegree = exifOrientationToDegrees(exifOrientation);
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath); //경로를 통해 비트맵으로 전환
-        ProifleImg.setImageBitmap(rotate(bitmap, exifDegree));
+        profileImage.setImageBitmap(rotate(bitmap, exifDegree));
         ImgPath = imagePath;
     }
 

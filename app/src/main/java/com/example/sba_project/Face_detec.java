@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import com.google.firebase.ml.vision.text.RecognizedLanguage;
@@ -45,21 +46,22 @@ public class Face_detec extends AppCompatActivity {
     private TextView img_score;
     private ImageView image_view;
 
-    Intent i = getIntent();
+    Intent i = getIntent(); //i:null
     Bundle extras = i.getExtras();
     String imgPath = extras.getString("imagefilename");
 
     BitmapFactory.Options bfo = new BitmapFactory.Options();
-    private void runTextRecognition(){
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap();//선택 이미지
-        FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
+
+    public void runTextRecognition(Bitmap bitmap){
         button_score.setEnabled(false);
+        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);//선택 이미지
+        FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
         detector.processImage(image)
                 .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                     @Override
                     public void onSuccess(FirebaseVisionText firebaseVisionText) {
                         button_score.setEnabled(true);
-                        processTextRecognitionResult(texts);
+                        processTextRecognitionResult(firebaseVisionText);
                     }
                 }).addOnFailureListener(
                 new OnFailureListener() {
@@ -72,18 +74,25 @@ public class Face_detec extends AppCompatActivity {
         );
     }
     private void processTextRecognitionResult(FirebaseVisionText texts){
-        List<FirebaseVisionText.TextBlock> blocks = texts.getTextBlocks();
-        if(blocks.size() ==0){
-            Toast.makeText(this, "No text found", Toast.LENGTH_SHORT).show();
-        }
-        image_view.clear();
-        for(int i = 0 ;i<blocks.size(); i++){
-            List<FirebaseVisionText.Line> lines = blocks.get(i).getLines();
-            for(int j = 0; j<lines.size();j++){
-                List<FirebaseVisionText.Element> elements = lines.get(j).getElements();
-                for(int k = 0; k<elements.size(); k++){
-                    Graphic textGraphic = new TextGraphic(image_view, elements.get(k));
-                    image_view.add(textGraphic);
+        String resultText = texts.getText();
+        for (FirebaseVisionText.TextBlock block: texts.getTextBlocks()) {
+            String blockText = block.getText();
+            Float blockConfidence = block.getConfidence();
+            List<RecognizedLanguage> blockLanguages = block.getRecognizedLanguages();
+            Point[] blockCornerPoints = block.getCornerPoints();
+            Rect blockFrame = block.getBoundingBox();
+            for (FirebaseVisionText.Line line: block.getLines()) {
+                String lineText = line.getText();
+                Float lineConfidence = line.getConfidence();
+                List<RecognizedLanguage> lineLanguages = line.getRecognizedLanguages();
+                Point[] lineCornerPoints = line.getCornerPoints();
+                Rect lineFrame = line.getBoundingBox();
+                for (FirebaseVisionText.Element element: line.getElements()) {
+                    String elementText = element.getText();
+                    Float elementConfidence = element.getConfidence();
+                    List<RecognizedLanguage> elementLanguages = element.getRecognizedLanguages();
+                    Point[] elementCornerPoints = element.getCornerPoints();
+                    Rect elementFrame = element.getBoundingBox();
                 }
             }
         }
@@ -97,13 +106,10 @@ public class Face_detec extends AppCompatActivity {
         img_score = (TextView)findViewById(R.id.textView3);
         image_view = (ImageView)findViewById(R.id.imageView3);
 
-
-
         bfo.inSampleSize =2;
-        ImageView iv = (ImageView)findViewById(R.id.imageView);
         Bitmap bm = BitmapFactory.decodeFile(imgPath,bfo);
-        Bitmap resized = Bitmap.createScaledBitmap(bm,imgWidth,imgHeight,true);
-        iv.setImageBitmap(resized);
+        Bitmap resized = Bitmap.createScaledBitmap(bm,16,16,true);
     }
+
 
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    tools:context=".Game_Description.Gameplus">
+
+    <TextView
+        android:id="@+id/hot"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="HOT"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:id="@+id/game_hot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/newton1"/>
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/rele1"/>
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:layout_weight="1"
+            android:src="@drawable/jam1"/>
+
+
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/grid_game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:horizontalSpacing="10dp"
+        android:numColumns="3"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:verticalSpacing="10dp"
+        android:layout_marginTop="170dp"></GridView>
+
+
+
+</FrameLayout>

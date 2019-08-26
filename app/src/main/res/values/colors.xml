@@ -5,4 +5,11 @@
     <color name="colorAccent">#D81B60</color>
     <color name="cursorColor">#2e1a49</color>
     <color name="nomalColor">#2e1a49</color>
+    <color name="colorPurple">#7A3DBC</color>
+    <color name="colorPurpleLight">#C0A4E0</color>
+    <color name="colorPurpleLight2">#D9C7ED</color>
+    <color name="colorYellow">#FDBF01</color>
+    <color name="fontGray">#4D4D4D</color>
+    <color name="fontWhite">#FFFF</color>
+
 </resources>

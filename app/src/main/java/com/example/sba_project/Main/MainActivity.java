@@ -4,18 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
+import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.Register.Additional_data;
-import com.example.sba_project.Userdata.InviteData;
-import com.example.sba_project.Util.AutoScrollAdapter;
+import com.example.sba_project.Register.RegisterActivity;
+import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.BackPressCloseHandler;
 import com.example.sba_project.R;
-import com.example.sba_project.Util.UtilValues;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -25,42 +24,40 @@ import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-
-import cn.trinea.android.view.autoscrollviewpager.AutoScrollViewPager;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private BackPressCloseHandler backPressCloseHandler;
-    AutoScrollViewPager autoViewPager;
     private AccessTokenTracker accessTokenTracker;
+
     private FirebaseAuth.AuthStateListener authListener;
 
-    private ChildEventListener childEventListener = null;
-    private DatabaseReference invite_ref = UtilValues.getInviteRef();
+    private TextView textView;
+    private String a;
+
+    private Gameplus gameplus;
+    private Home home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        UserDataManager.getInstance().Init(this);
+
+        displaySelectScreen(R.id.content_layout);
         SetListenerTracker();
-        SetGameRoomEventListener();
         SetViews();
     }
 
@@ -78,11 +75,12 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         };
+
+        // 사용자 정보 변경 시.
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-
                 if (user != null) {
 //                    emailText.setText(user.getEmail());
 //                    statusText.setText("Signed In");
@@ -100,51 +98,6 @@ public class MainActivity extends AppCompatActivity
         };
     }
 
-    private void SetGameRoomEventListener(){
-        if(childEventListener == null){
-            childEventListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    // 초대 확인
-                    // 다이얼로그 팝업 띄워서 확인.
-                    final String uid = dataSnapshot.child("ClientuID").getValue().toString();
-                    final String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                    if(!uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
-                        return;
-
-                    InviteData inviteData = dataSnapshot.getValue(InviteData.class);
-                    inviteData.Flag = InviteData.EInviteFlag.RESULT;
-
-                    final int RoomNumber = dataSnapshot.child("RoomNumber").getValue(Integer.class);
-                    UtilValues.CreateSimpleDialogue(MainActivity.this,
-                            "초대를 수락하시겠습니까?", "네", "아니오", "게임 초대",
-                            new UtilValues().new moveWithIntFunc(MainActivity.this, GameRoomActivity.class, GameRoomActivity.ROOM_NUMBER, RoomNumber, inviteData));
-
-                    // 확인했으니 지움.
-                    dataSnapshot.getRef().setValue(null);
-                }
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            };
-            invite_ref.addChildEventListener(childEventListener);
-        }
-    }
-
     private void SetViews()
     {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -158,50 +111,54 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // signout 버튼
-        navigationView.getHeaderView(0).findViewById(R.id.signout).setOnClickListener(new View.OnClickListener() {
+        navigationView.getMenu().findItem(R.id.nav_signOut).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
                     FirebaseAuth.getInstance().signOut();
                     LoginManager.getInstance().logOut();
-                    Toast.makeText(MainActivity.this,"signout!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"로그아웃!",Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else{
-                    Toast.makeText(MainActivity.this,"signout failed!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"로그아웃 실패!",Toast.LENGTH_SHORT).show();
                 }
+
+                return false;
             }
         });
 
         // additional register
-        navigationView.getHeaderView(0).findViewById(R.id.AddRegi).setOnClickListener(new View.OnClickListener() {
+        navigationView.getHeaderView(0).findViewById(R.id.goMyPage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
-                    Intent addregi_intent = new Intent(MainActivity.this, Additional_data.class);
+                    Intent addregi_intent = new Intent(MainActivity.this, RegisterActivity.class);
                     addregi_intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_MAIN.getValue());
                     startActivity(addregi_intent);
                 }
             }
         });
 
-        ArrayList<String> data = new ArrayList<>(); //이미지 url를 저장하는 arraylist
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/twins_uho36t.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-dojo_yzijtn.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-pila_xtgrld.png");
-        data.add("https://user-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/457571/printscreen-scoreboard_j8wkmo.png");
 
-        autoViewPager = (AutoScrollViewPager)findViewById(R.id.autoViewPager);
-        AutoScrollAdapter scrollAdapter = new AutoScrollAdapter(this, data);
-        autoViewPager.setAdapter(scrollAdapter); //Auto Viewpager에 Adapter 장착
-        autoViewPager.setInterval(5000); // 페이지 넘어갈 시간 간격 설정
-        autoViewPager.startAutoScroll(); //Auto Scroll 시작
+        gameplus = new Gameplus();
+        home = new Home();
+
+        FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
+
+        tr.replace(R.id.content_layout, home);
+        tr.addToBackStack(null);
+        tr.commit();
+        setTitle("Home");
+
     }
 
     @Override
@@ -215,9 +172,12 @@ public class MainActivity extends AppCompatActivity
         if (authListener != null) {
             FirebaseAuth.getInstance().removeAuthStateListener(authListener);
         }
-//        if(childEventListener != null){
-//           invite_ref.removeEventListener(childEventListener);
-//        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UserDataManager.getInstance().Destroy();
     }
 
     @Override
@@ -241,7 +201,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
@@ -256,30 +216,39 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        switch (item.getItemId())
-        {
+        displaySelectScreen(item.getItemId());
+        return true;
+    }
+
+    public void displaySelectScreen(int itemId){
+
+        FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
+
+        switch (itemId) {
             case R.id.nav_home:
+                tr.replace(R.id.content_layout, home);
+                setTitle("Home");
                 break;
-            case R.id.nav_gallery:
+//            case R.id.nav_history:
+//                tr.replace(R.id.content_layout, );
+//                setTitle("내 이용기록");
+//                break;
+            case R.id.nav_game:
+                tr.replace(R.id.content_layout, gameplus);
+                setTitle("전체게임");
                 break;
-            case R.id.nav_slideshow:
-                break;
-            case R.id.nav_tools:
-                break;
-            case R.id.nav_share:
-                break;
-            case R.id.nav_send:
-                break;
-            case R.id.nav_createroom:
+            case R.id.nav_Room:
                 Intent intent = new Intent(MainActivity.this, GameRoomActivity.class);
                 intent.putExtra(GameRoomActivity.ROOM_PERMITION, GameRoomActivity.User_Permission.HOST);
                 startActivity(intent);
                 break;
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        tr.addToBackStack(null);
+        tr.commit();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+
     }
 }
