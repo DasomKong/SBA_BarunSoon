@@ -26,7 +26,6 @@ import androidx.core.content.ContextCompat;
 
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
-import com.example.sba_project.Userdata.MyUserData;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -118,11 +117,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                     case 1: finish(); break;
                 }
                 break;
-//            case R.id.btn_searchaddress:
-                // 웹서버를 올려야 하므로 현재 사용 안하고 일단 텍스트로 대체.
-//                Intent i = new Intent(Additional_data.this, WebviewSearchaddress.class);
-//                startActivityForResult(i, SEARCH_ADDRESS_ACTIVITY);
-//                break;
             case R.id.profile_image:
                 if (!checkStoragePermission()) {
                     //Storage permission not allowed, request it
@@ -180,105 +174,113 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
     }
 
-    void AdditionalRegister() {
+    private void AdditionalRegister() {
         final String _nickname = NickName.getText().toString().trim();
         final String _address = Address.getSelectedItem().toString().trim();
         final String _age = Age.getSelectedItem().toString().trim();
 
 
-        if (!_nickname.isEmpty() && !_age.isEmpty() && !_address.isEmpty()
-                && CheckNickName(_nickname)) {
-
-            class tmpStr{
-                public String tmpString = "";
+        if (!_nickname.isEmpty() && !_age.isEmpty() && !_address.isEmpty() && _age.matches("^[0-9]+$")) {
+            if (users_ref == null) {
+                users_ref = FirebaseDatabase.getInstance().getReference().child("users");
             }
-            // 파이어베이스 유저 아이디 루트로 등록.
-            // Storage 에 프로필 사진 등록
-            FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
-            final StorageReference UserStorage_ref = FirebaseStorage.getInstance().getReference(curUser.getUid()).child("profile.jpg");
 
-            UploadTask uploadTask = UserStorage_ref.putFile(Uri.fromFile(new File(ImgPath)));
-
-            final tmpStr urlRs = new tmpStr();
-
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            // 비동기일 경우 다르게 처리해야함.
+            listener = users_ref.addValueEventListener(new ValueEventListener() {
                 @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon), "name_" + i, "contents_" + i);
+                        String tmpStr = snapshot.child("NickName").getValue().toString();
+
+                        // 동일한 닉네임이 이미 존재한다면..
+                        if (!tmpStr.isEmpty() && tmpStr.equals(_nickname)) {
+                            Toast.makeText(getApplicationContext(), tmpStr + " already exists.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                     }
-                    // Continue with the task to get the download URL
-                    return UserStorage_ref.getDownloadUrl();
+                    DoAddUserData(_nickname, _address, _age);
                 }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        urlRs.tmpString = task.getResult().toString();
-                        UploadUserData(_nickname,_address, Integer.parseInt(_age), urlRs.tmpString);
-                    } else {
-                        // Handle failures
-                        // ...
-                        Toast.makeText(Additional_data.this, "Upload Failed", Toast.LENGTH_SHORT).show();
-                    }
+                public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
             });
-
         } else {
             Toast.makeText(this, "Fill all texts", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void UploadUserData(String _nickname, String _address, int _age, String photourl){ FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+    private void DoAddUserData(final String _nickname, final String _address, final String _age){
+        class tmpStr{
+            public String tmpString = "";
+        }
+        // 파이어베이스 유저 아이디 루트로 등록.
+        // Storage 에 프로필 사진 등록
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+        final StorageReference UserStorage_ref = FirebaseStorage.getInstance().getReference(curUser.getUid()).child("profile.jpg");
 
-        String email = curUser.getEmail();
+        UploadTask uploadTask = UserStorage_ref.putFile(Uri.fromFile(new File(ImgPath)));
 
-        MyUserData newUserData = new MyUserData(_nickname, _address, _age, email, photourl);
+        final tmpStr urlRs = new tmpStr();
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                // Continue with the task to get the download URL
+                return UserStorage_ref.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    urlRs.tmpString = task.getResult().toString();
+                    UploadUserData(_nickname,_address, Integer.parseInt(_age), urlRs.tmpString);
+                } else {
+                    // Handle failures
+                    // ...
+                    Toast.makeText(Additional_data.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    public static void ExternUploadDefaulUserData(){
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference().child("users");
-        user_ref.child(curUser.getUid()).setValue(newUserData);
+
+        // 데이터 문제로 하나씩 적용
+        user_ref.child(curUser.getUid()).child("Address").setValue("");
+        user_ref.child(curUser.getUid()).child("Age").setValue(0);
+        user_ref.child(curUser.getUid()).child("NickName").setValue("닉네임");
+        user_ref.child(curUser.getUid()).child("PhotoUrl").setValue("");
+        user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
+    }
+
+    private void UploadUserData(String _nickname, String _address, int _age, String photourl){
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference().child("users");
+
+        // 데이터 문제로 하나씩 적용
+        user_ref.child(curUser.getUid()).child("Address").setValue(_address);
+        user_ref.child(curUser.getUid()).child("Age").setValue(_age);
+        user_ref.child(curUser.getUid()).child("NickName").setValue(_nickname);
+        user_ref.child(curUser.getUid()).child("PhotoUrl").setValue(photourl);
+        user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
 
         // 로긴 창으로 돌아가자.
         Toast.makeText(this, "등록 성공", Toast.LENGTH_SHORT).show();
-
         finish();
     }
 
     // nickname 검사
-    private boolean CheckNickName(final String newNickName) {
-        if (users_ref == null) {
-            users_ref = FirebaseDatabase.getInstance().getReference().child("users");
-        }
+    private void CheckNickName(final String newNickName) {
 
-        class RS {
-            boolean result = true;
-        }
-
-        final RS rs = new RS();
-
-        // 비동기일 경우 다르게 처리해야함.
-        listener = users_ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon), "name_" + i, "contents_" + i);
-                    MyUserData tmp = snapshot.getValue(MyUserData.class);
-
-                    // 동일한 닉네임이 이미 존재한다면..
-                    if (!tmp.NickName.isEmpty() && tmp.NickName.equals(newNickName)) {
-                        Toast.makeText(getApplicationContext(), tmp.NickName + " already exists.", Toast.LENGTH_SHORT).show();
-                        rs.result = false;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        return rs.result;
     }
 
     protected void onDestroy() {

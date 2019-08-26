@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity
 
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else{
                     Toast.makeText(MainActivity.this,"로그아웃 실패!",Toast.LENGTH_SHORT).show();
