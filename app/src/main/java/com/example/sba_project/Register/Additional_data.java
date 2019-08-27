@@ -51,7 +51,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     private Spinner Age;
     private Spinner Address;
     private CircleImageView profileImage;
-    private ValueEventListener listener;
     private DatabaseReference users_ref;
 
     private String ImgPath;
@@ -119,13 +118,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.profile_image:
                 GetImageFromGallery();
-//                if (!checkStoragePermission()) {
-//                    //Storage permission not allowed, request it
-//                    requestStoragePermission();
-//                }
-//                else{
-//                    GetImageFromGallery();
-//                }
                 break;
         }
     }
@@ -180,14 +172,12 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         final String _address = Address.getSelectedItem().toString().trim();
         final String _age = Age.getSelectedItem().toString().trim();
 
-
         if (!_nickname.isEmpty() && !_age.isEmpty() && !_address.isEmpty() && _age.matches("^[0-9]+$")) {
             if (users_ref == null) {
                 users_ref = FirebaseDatabase.getInstance().getReference().child("users");
             }
 
-            // 비동기일 경우 다르게 처리해야함.
-            listener = users_ref.addValueEventListener(new ValueEventListener() {
+            users_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -204,9 +194,11 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
             });
-        } else {
+        }
+        else {
             Toast.makeText(this, "Fill all texts", Toast.LENGTH_SHORT).show();
         }
     }
@@ -215,38 +207,42 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         class tmpStr{
             public String tmpString = "";
         }
-        // 파이어베이스 유저 아이디 루트로 등록.
-        // Storage 에 프로필 사진 등록
-        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
-        final StorageReference UserStorage_ref = FirebaseStorage.getInstance().getReference(curUser.getUid()).child("profile.jpg");
+                    // 파이어베이스 유저 아이디 루트로 등록.
+                    // Storage 에 프로필 사진 등록
+                    FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+            final StorageReference UserStorage_ref = FirebaseStorage.getInstance().getReference(curUser.getUid()).child("profile.jpg");
 
-        UploadTask uploadTask = UserStorage_ref.putFile(Uri.fromFile(new File(ImgPath)));
+            if(ImgPath == null){
+                UploadUserData(_nickname,_address, Integer.parseInt(_age), "");
+        }
+        else{
+            UploadTask uploadTask = UserStorage_ref.putFile(Uri.fromFile(new File(ImgPath)));
 
-        final tmpStr urlRs = new tmpStr();
+            final tmpStr urlRs = new tmpStr();
 
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    // Continue with the task to get the download URL
+                    return UserStorage_ref.getDownloadUrl();
                 }
-                // Continue with the task to get the download URL
-                return UserStorage_ref.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    urlRs.tmpString = task.getResult().toString();
-                    UploadUserData(_nickname,_address, Integer.parseInt(_age), urlRs.tmpString);
-                } else {
-                    // Handle failures
-                    // ...
-                    Toast.makeText(Additional_data.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        urlRs.tmpString = task.getResult().toString();
+                        UploadUserData(_nickname,_address, Integer.parseInt(_age), urlRs.tmpString);
+                    } else {
+                        // Handle failures
+                        // ...
+                        Toast.makeText(Additional_data.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     public static void ExternUploadDefaulUserData(){
@@ -276,6 +272,13 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
         // 로긴 창으로 돌아가자.
         Toast.makeText(this, "등록 성공", Toast.LENGTH_SHORT).show();
+
+        // 로그인에서 넘어왔는데, 데이터가 없어서 채워주는 경우
+        if(activity_flag == KEY_WHERE.FROM_LOGIN.getValue())
+        {
+            Intent intent = new Intent(Additional_data.this, MainActivity.class);
+            startActivity(intent);
+        }
         finish();
     }
 
@@ -286,8 +289,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
     protected void onDestroy() {
         super.onDestroy();
-        if(null != listener)
-            users_ref.removeEventListener(listener);
     }
 
     // 주소 검색 후 반환.

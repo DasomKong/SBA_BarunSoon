@@ -302,12 +302,12 @@ public class GameRoomActivity extends AppCompatActivity {
             }
         });
 
-        exit_home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserDataManager.getInstance().getGameRoom().ExitRoom();
-            }
-        });
+//        exit_home.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                UserDataManager.getInstance().getGameRoom().ExitRoom();
+//            }
+//        });
 
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayList) {
             @SuppressLint("WrongViewCast")

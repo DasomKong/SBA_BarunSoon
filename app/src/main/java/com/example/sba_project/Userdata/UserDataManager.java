@@ -31,6 +31,7 @@ public class UserDataManager {
     private static UserDataManager instance;
     private GameRoom gameRoom = null;
     private ChildEventListener inviteListener = null;
+    private ChildEventListener myUserDataListener = null;
     private ExtendedMyUserData curUserData = null;
     private boolean isInGameRoom = false;
 
@@ -125,6 +126,40 @@ public class UserDataManager {
             }
         };
         UtilValues.getInviteRef().addChildEventListener(inviteListener);
+
+        myUserDataListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                switch (dataSnapshot.getKey()){
+                    case "NickName":
+                        curUserData.NickName = dataSnapshot.getValue(String.class);
+                        break;
+                    case "Address":
+                        curUserData.Address = dataSnapshot.getValue(String.class);
+                        break;
+                    case "Age":
+                        curUserData.Age = dataSnapshot.getValue(Integer.class);
+                        break;
+                    case "PhotoUrl":
+                        curUserData.PhotoUrl = dataSnapshot.getValue(String.class);
+                        break;
+                }
+                ((MainActivity)_context).setUserData();
+            }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+        UtilValues.getUsers().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addChildEventListener(myUserDataListener);
     }
 
     public DatabaseReference getCurGameRoomRef() {
