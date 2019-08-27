@@ -6,6 +6,8 @@ package com.example.sba_project.GameRoomPkg;
  * Blog : http://gompangs.tistory.com/
  */
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameRoom {
+    public Context context;
     private int room_id; // 룸 ID
     private List<GameUser> userList;
     private PlayerItem PlayerAdapter_Ref = null; // adapter 제어용 ref
@@ -39,7 +42,7 @@ public class GameRoom {
     private ChildEventListener room_listener = null;
 
     // 호스트 방 생성
-    public GameRoom(final String _nickname, final PlayerItem _playerItem) {
+    public GameRoom(Context context, final String _nickname, final PlayerItem _playerItem) {
         // db 에서 반환한 값 확인 후 입력.
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -63,7 +66,7 @@ public class GameRoom {
     }
 
     // 초대 받은 유저 용
-    public GameRoom(final String _nickname, int _roomid, PlayerItem _playerItem) {
+    public GameRoom(Context context, final String _nickname, int _roomid, PlayerItem _playerItem) {
         PlayerAdapter_Ref = _playerItem;
         CreateRoom(_roomid);
         CreateUser(_nickname);
@@ -102,6 +105,11 @@ public class GameRoom {
             }
         });
 
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("데이터 로딩 중");
+        dialog.show();
+
         player_listener = getcurPlayersRef().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -119,6 +127,7 @@ public class GameRoom {
                                 userList.add(newUser);
                             }
                         }
+                        dialog.dismiss();
                     }
 
                     @Override
