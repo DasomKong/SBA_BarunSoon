@@ -42,7 +42,7 @@ public class GameRoom {
     private ChildEventListener room_listener = null;
 
     // 호스트 방 생성
-    public GameRoom(Context context, final String _nickname, final PlayerItem _playerItem) {
+    public GameRoom(final Context _context, final String _nickname, final PlayerItem _playerItem) {
         // db 에서 반환한 값 확인 후 입력.
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -53,7 +53,7 @@ public class GameRoom {
                         break;
                     ++i;
                 }
-
+                setContext(_context);
                 PlayerAdapter_Ref = _playerItem;
                 CreateRoom(i);
                 CreateUser(_nickname);
@@ -66,10 +66,15 @@ public class GameRoom {
     }
 
     // 초대 받은 유저 용
-    public GameRoom(Context context, final String _nickname, int _roomid, PlayerItem _playerItem) {
+    public GameRoom(final Context _context, final String _nickname, int _roomid, PlayerItem _playerItem) {
+        setContext(_context);
         PlayerAdapter_Ref = _playerItem;
         CreateRoom(_roomid);
         CreateUser(_nickname);
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     // 최종 세팅
