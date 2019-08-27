@@ -255,7 +255,11 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         user_ref.child(curUser.getUid()).child("Age").setValue(0);
         user_ref.child(curUser.getUid()).child("NickName").setValue("닉네임#" + curUser.getUid());
         user_ref.child(curUser.getUid()).child("PhotoUrl").setValue("");
-        user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
+
+        if (null != curUser.getEmail())
+            user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
+        else
+            user_ref.child(curUser.getUid()).child("eMail").setValue("");
     }
 
     private void UploadUserData(String _nickname, String _address, int _age, String photourl){
@@ -268,7 +272,9 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         user_ref.child(curUser.getUid()).child("Age").setValue(_age);
         user_ref.child(curUser.getUid()).child("NickName").setValue(_nickname);
         user_ref.child(curUser.getUid()).child("PhotoUrl").setValue(photourl);
-        user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
+
+        if(curUser.getEmail() != null)
+            user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
 
         // 로긴 창으로 돌아가자.
         Toast.makeText(this, "등록 성공", Toast.LENGTH_SHORT).show();
