@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.sba_project">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -29,7 +30,9 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Register.RegisterActivity" /> <!-- android:noHistory="true" 이용하면 스택트레이스에 남기지 않을 수 있음 -->
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".Main.SplashActivity"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

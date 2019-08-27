@@ -118,13 +118,14 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.profile_image:
-                if (!checkStoragePermission()) {
-                    //Storage permission not allowed, request it
-                    requestStoragePermission();
-                }
-                else{
-                    GetImageFromGallery();
-                }
+                GetImageFromGallery();
+//                if (!checkStoragePermission()) {
+//                    //Storage permission not allowed, request it
+//                    requestStoragePermission();
+//                }
+//                else{
+//                    GetImageFromGallery();
+//                }
                 break;
         }
     }
