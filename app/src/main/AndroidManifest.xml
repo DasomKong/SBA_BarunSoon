@@ -58,7 +58,14 @@
         </activity>
 
         <activity android:name=".Game_Description.Gameintroduction"></activity>
-        <activity android:name=".Game_Description.Gameplus"></activity>
+        <activity android:name=".Register.Mypage"></activity>
+
+        <activity android:name=".Util.Text_detec"
+            android:theme="@style/Theme.MyDialog"></activity>
+
+        <!-- add in application tag -->
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/AppCrop"/> <!-- optional (needed if default theme has no action bar) -->
     </application>
 
 </manifest>

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 
 import com.example.sba_project.Adapter.PlayerItem;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
+import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.UtilValues;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -73,21 +74,17 @@ public class GameRoom {
         room_id = i;
         userList = new ArrayList();
 
-        final String roomnumberStr = Integer.toString(i);
-
         GameRoomState newRoomState = new GameRoomState();
-        DatabaseReference state_ref = mDatabase.child(roomnumberStr).child("GameState");
-        DatabaseReference player_ref = mDatabase.child(roomnumberStr).child("Players");
 
-        state_ref.setValue(newRoomState);
-
-        room_listener = state_ref.addChildEventListener(new ChildEventListener() {
+        getcurGameStateRef().setValue(newRoomState);
+        room_listener = getcurGameStateRef().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                // start button
                 int a = 0;
                 boolean isActive = dataSnapshot.getValue(boolean.class);
             }
@@ -105,7 +102,7 @@ public class GameRoom {
             }
         });
 
-        player_listener = player_ref.addChildEventListener(new ChildEventListener() {
+        player_listener = getcurPlayersRef().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 //  자신을 제외한 유저 리스트 여기서 세팅?
@@ -126,7 +123,6 @@ public class GameRoom {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
             }
@@ -149,7 +145,12 @@ public class GameRoom {
                                 PlayerAdapter_Ref.removeItem(extendedMyUserData);
                                 PlayerAdapter_Ref.notifyDataSetChanged();
                                 userList.remove(newUser);
+                                break;
                             }
+                        }
+                        if(userList.size() <= 0){
+                            // 방을 제거
+                            DestroyGameRoom();
                         }
                     }
 
@@ -172,21 +173,78 @@ public class GameRoom {
 
     private GameUser CreateUser(String _nickname) {
         GameUser user = new GameUser(_nickname);
-        mDatabase.child(Integer.toString(room_id)).child("Players").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
+        getcurPlayersRef().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
         return user;
     }
 
-    public void DestroyGameRoom() {
-        mDatabase.child(Integer.toString(room_id)).setValue(null);
-        mDatabase.child(Integer.toString(getRoom_id())).child("GameState").removeEventListener(room_listener);
-        mDatabase.child(Integer.toString(getRoom_id())).child("Players").removeEventListener(player_listener);
-        room_listener = null;
-        player_listener = null;
+    private DatabaseReference getcurRoomRef(){
+        return mDatabase.child(Integer.toString(getRoom_id()));
+    }
+
+    private DatabaseReference getcurPlayersRef(){
+        return getcurRoomRef().child(("Players"));
+    }
+
+    private DatabaseReference getcurGameStateRef(){
+        return getcurRoomRef().child(("GameState"));
     }
 
     public int getRoom_id() {
         return room_id;
     }
 
+
     // DB 업데이트 함수
+    public void UpdateUserScore(final int score){
+        getcurPlayersRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot iter : dataSnapshot.getChildren()){
+                    if(iter.child("nickName").getValue().toString().equals(UserDataManager.getInstance().getCurUserData().NickName))
+                    {
+                        iter.child("score").getRef().setValue(score);
+                        break;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+
+    public void ExitRoom(){
+        UserDataManager.getInstance().setInGameRoom(false);
+        getcurPlayersRef().orderByChild(UserDataManager.getInstance().getCurUserData().uID).equalTo(UserDataManager.getInstance().getCurUserData().uID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        getcurPlayersRef().orderByKey().equalTo(UserDataManager.getInstance().getCurUserData().uID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void DestroyGameRoom() {
+        getcurRoomRef().setValue(null);
+//        getcurGameStateRef().removeEventListener(room_listener);
+//        getcurPlayersRef().removeEventListener(player_listener);
+//        room_listener = null;
+//        player_listener = null;
+    }
 }

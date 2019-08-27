@@ -1,18 +1,23 @@
 package com.example.sba_project.Userdata;
 
 /*
-*  전역에서 다뤄야 할 데이터를 들고 있을 것.
-*  init 은 main.
-* */
+ *  전역에서 다뤄야 할 데이터를 들고 있을 것.
+ *  init 은 main.
+ * */
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.sba_project.GameRoomPkg.GameRoom;
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
+import com.example.sba_project.LoginActivity;
 import com.example.sba_project.Main.MainActivity;
+import com.example.sba_project.Register.Additional_data;
 import com.example.sba_project.Util.UtilValues;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -31,27 +36,48 @@ public class UserDataManager {
 
     private int RoomNumber = -1;
 
-    public static UserDataManager getInstance(){
-        if(instance == null){
+    public static UserDataManager getInstance() {
+        if (instance == null) {
             instance = new UserDataManager();
         }
         return instance;
     }
 
-    public void Init(final Context _context){
+    public void Init(final Context _context) {
         // 디비에서 자신의 정보 읽어오기
         // 더 좋은 방법이 있으면 수정
+        final ProgressDialog dialog = new ProgressDialog(_context);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setMessage("데이터 로딩 중");
+        dialog.show();
+
         UtilValues.getUsers().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 final String curUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                for(DataSnapshot iter : dataSnapshot.getChildren()){
+                boolean isExist = false;
+                for (DataSnapshot iter : dataSnapshot.getChildren()) {
                     final String find_uID = iter.getKey();
 
-                    if(curUID.equals(find_uID))
+                    if (curUID.equals(find_uID)){
                         curUserData = UtilValues.GetUserDataFromDatabase(iter);
+                        isExist = true;
+                    }
                 }
+
+                if(!isExist){
+                    Additional_data.ExternUploadDefaulUserData();
+                    Intent intent = new Intent(_context, Additional_data.class);
+                    intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_LOGIN.getValue());
+                    ((MainActivity)_context).startActivity(intent);
+                    ((MainActivity)_context).finish();
+                }else{
+                    ((MainActivity)_context).setUserData();
+                }
+
+                dialog.dismiss();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -61,8 +87,7 @@ public class UserDataManager {
         inviteListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(isInGameRoom)
-                {
+                if (isInGameRoom) {
                     dataSnapshot.getRef().setValue(null);
                     return;
                 }
@@ -71,7 +96,7 @@ public class UserDataManager {
                 final String uid = dataSnapshot.child("ClientuID").getValue().toString();
                 final String myid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                if(!uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                if (!uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
                     return;
 
                 InviteData inviteData = dataSnapshot.getValue(InviteData.class);
@@ -85,15 +110,19 @@ public class UserDataManager {
                 // 확인했으니 지움.
                 dataSnapshot.getRef().setValue(null);
             }
+
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             }
+
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
             }
+
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
@@ -101,11 +130,11 @@ public class UserDataManager {
         UtilValues.getInviteRef().addChildEventListener(inviteListener);
     }
 
-    public DatabaseReference getCurGameRoomRef(){
+    public DatabaseReference getCurGameRoomRef() {
         return FirebaseDatabase.getInstance().getReference().child("GameRoom").child(Integer.toString(RoomNumber));
     }
 
-    public void Destroy(){
+    public void Destroy() {
         UtilValues.getInviteRef().removeEventListener(inviteListener);
         inviteListener = null;
         instance = null;
@@ -115,7 +144,7 @@ public class UserDataManager {
         return curUserData;
     }
 
-    public GameRoom getGameRoom(){
+    public GameRoom getGameRoom() {
         return gameRoom;
     }
 
@@ -123,7 +152,7 @@ public class UserDataManager {
         isInGameRoom = inGameRoom;
     }
 
-    public void setGameRoom(GameRoom _gameRoom){
+    public void setGameRoom(GameRoom _gameRoom) {
         gameRoom = _gameRoom;
         setRoomNumber(gameRoom.getRoom_id());
     }
@@ -131,7 +160,8 @@ public class UserDataManager {
     public int getRoomNumber() {
         return RoomNumber;
     }
-    public void setRoomNumber(int _num){
+
+    public void setRoomNumber(int _num) {
         RoomNumber = _num;
     }
 }

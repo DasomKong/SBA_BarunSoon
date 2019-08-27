@@ -256,7 +256,7 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         // 데이터 문제로 하나씩 적용
         user_ref.child(curUser.getUid()).child("Address").setValue("");
         user_ref.child(curUser.getUid()).child("Age").setValue(0);
-        user_ref.child(curUser.getUid()).child("NickName").setValue("닉네임");
+        user_ref.child(curUser.getUid()).child("NickName").setValue("닉네임#" + curUser.getUid());
         user_ref.child(curUser.getUid()).child("PhotoUrl").setValue("");
         user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
     }

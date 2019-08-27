@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.sba_project.Adapter.PlayerItem;
+import com.example.sba_project.Util.Text_detec;
 import com.example.sba_project.R;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.InviteData;
@@ -39,9 +39,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameRoomActivity extends AppCompatActivity {
@@ -64,7 +64,7 @@ public class GameRoomActivity extends AppCompatActivity {
     private TextView crew;
     private ImageView master_pro_Image;
     private Button add_team;
-//    private ScrollView teamone_scroll;
+    //    private ScrollView teamone_scroll;
     private ListView crewList;
     private Button exit_home;
 
@@ -76,10 +76,13 @@ public class GameRoomActivity extends AppCompatActivity {
 
     // Request Code
     static final int INVITE = 1000;
+    static final int TEXT_DETEC = 1001;
 
     // Result Code
     static final int INVITE_RESULT_OK = 2000;
     static final int INVITE_RESULT_FAIL = 2001;
+
+    public static final int TEXT_DETEC_RESULT_OK = 3000;
     // Tag
     public static final String USER_DATA = "UserData";
     public static final String ROOM_PERMITION = "Room_Permition";
@@ -87,6 +90,7 @@ public class GameRoomActivity extends AppCompatActivity {
 
     private static final int IMAGE_PICK_CAMERA_CODE = 100;
     private static final int CAMERA_REQUEST_CODE = 200;
+
     String cameraPermission[];
 
     // 디폴트는 Client
@@ -111,19 +115,29 @@ public class GameRoomActivity extends AppCompatActivity {
                         break;
                 }
                 break;
+            case TEXT_DETEC:
+                if(resultCode == TEXT_DETEC_RESULT_OK){
+                    String resultStr = data.getStringExtra("Result");
+                    UserDataManager.getInstance().getGameRoom().UpdateUserScore(Integer.parseInt(resultStr));
+                }
+                break;
             case IMAGE_PICK_CAMERA_CODE: {
                 if (resultCode == RESULT_OK) {
                     //get drawable bitmap for text recognition
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), image_uri);
-                    } catch (FileNotFoundException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                    CropImage.activity(image_uri)
+                            .setGuidelines(CropImageView.Guidelines.ON) //enable image guidlines
+                            .start(this);
+                }
+            }
+            break;
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE: {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK) {
+                    Uri resultUri = result.getUri(); //get image uri
+
+                    Intent intent = new Intent(GameRoomActivity.this, Text_detec.class);
+                    intent.putExtra("uri", resultUri);
+                    startActivityForResult(intent, TEXT_DETEC);
                 }
             }
             break;
@@ -159,6 +173,7 @@ public class GameRoomActivity extends AppCompatActivity {
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
     }
 
@@ -250,11 +265,11 @@ public class GameRoomActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UserDataManager.getInstance().setInGameRoom(false);
+        UserDataManager.getInstance().getGameRoom().ExitRoom();
     }
 
     private void SetViews() {
-        backPressCloseHandler = new BackPressCloseHandler(this);
+        backPressCloseHandler = new BackPressCloseHandler(this, "\\'뒤로\\'버튼을 한번 더 누르시면 메인 화면으로 돌아갑니다.\"");
 
         gameselc = (Spinner) findViewById(R.id.gameSelect);
         captain = (TextView) findViewById(R.id.captain);
@@ -283,6 +298,13 @@ public class GameRoomActivity extends AppCompatActivity {
                     //Permission allowed, take picture
                     pickCamera();
                 }
+            }
+        });
+
+        exit_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserDataManager.getInstance().getGameRoom().ExitRoom();
             }
         });
 
@@ -361,8 +383,7 @@ public class GameRoomActivity extends AppCompatActivity {
         PlayersList = new PlayerItem();
         PlayersList.SetActivity(this);
         PlayerListView.setAdapter(PlayersList);
-        findViewById(R.id.addTeam).setOnClickListener(new Button.OnClickListener()
-                                                      {
+        findViewById(R.id.addTeam).setOnClickListener(new Button.OnClickListener() {
                                                           @Override
                                                           public void onClick(View view) {
                                                               Intent intent = new Intent(GameRoomActivity.this, GameRoomPopup.class);
