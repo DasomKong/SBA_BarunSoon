@@ -98,6 +98,8 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
         final SearchedUserItem newAdapter = new SearchedUserItem();
         newAdapter.SetActivity(this);
 
+        UtilValues.setProgressDialogue(this);
+
         UtilValues.getUsers().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -113,6 +115,7 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
                     newAdapter.addItem(tmpUser);
                 }
                 SearchedList.setAdapter(newAdapter);
+                UtilValues.dismissProgressDialogue();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

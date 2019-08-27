@@ -105,10 +105,7 @@ public class GameRoom {
             }
         });
 
-        final ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("데이터 로딩 중");
-        dialog.show();
+        UtilValues.setProgressDialogue(context);
 
         player_listener = getcurPlayersRef().addChildEventListener(new ChildEventListener() {
             @Override
@@ -127,7 +124,7 @@ public class GameRoom {
                                 userList.add(newUser);
                             }
                         }
-                        dialog.dismiss();
+                        UtilValues.dismissProgressDialogue();
                     }
 
                     @Override
@@ -228,22 +225,25 @@ public class GameRoom {
         getcurPlayersRef().orderByChild(UserDataManager.getInstance().getCurUserData().uID).equalTo(UserDataManager.getInstance().getCurUserData().uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                int a = 0;
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                int a = 0;
 
             }
         });
         getcurPlayersRef().orderByKey().equalTo(UserDataManager.getInstance().getCurUserData().uID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int a = 0;
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                int a = 0;
 
             }
         });

@@ -46,10 +46,7 @@ public class UserDataManager {
     public void Init(final Context _context) {
         // 디비에서 자신의 정보 읽어오기
         // 더 좋은 방법이 있으면 수정
-        final ProgressDialog dialog = new ProgressDialog(_context);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("데이터 로딩 중");
-        dialog.show();
+        UtilValues.setProgressDialogue(_context);
 
         UtilValues.getUsers().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -75,7 +72,7 @@ public class UserDataManager {
                     ((MainActivity)_context).setUserData();
                 }
 
-                dialog.dismiss();
+                UtilValues.dismissProgressDialogue();
             }
 
             @Override
