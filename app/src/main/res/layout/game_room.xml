@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".GameRoomPkg.GameRoomActivity">
 
-
-    <Button
-        android:id="@+id/captain"
+    <Spinner
+        android:id="@+id/gameSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_yellow"
-        android:text="팀장"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:entries="@array/address"
+        android:spinnerMode="dialog"/>
+
 
     <Button
         android:id="@+id/btn_cam"
@@ -24,48 +24,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image2"
+
+
+    <Button
+        android:id="@+id/addTeam"
         android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:src="@drawable/jg"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_purple"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/captain" />
+        app:layout_constraintTop_toBottomOf="@id/gameSelect"
+        android:text="팀원추가"
+        android:textColor="@color/fontWhite" />
 
-    <TextView
-        android:id="@+id/nickName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="여진구라네"
-        app:layout_constraintEnd_toEndOf="@id/profile_image2"
-        app:layout_constraintStart_toStartOf="@id/profile_image2"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image2" />
-
-    <LinearLayout
-        android:id="@+id/midLinear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@id/profile_image2"
-        app:layout_constraintStart_toEndOf="@id/profile_image2"
-        app:layout_constraintTop_toTopOf="@id/profile_image2">
-
-        <Spinner
-            android:id="@+id/gameSelect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/address"
-            android:spinnerMode="dialog"></Spinner>
-
-        <Button
-            android:id="@+id/addTeam"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_purple"
-            android:text="팀원추가"
-            android:textColor="@color/fontWhite" />
-    </LinearLayout>
 
     <Button
         android:id="@+id/btn_start"
@@ -73,21 +43,10 @@
         android:layout_height="90dp"
         android:background="@drawable/btn_yellow"
         android:text="시작하기"
-        app:layout_constraintBottom_toBottomOf="@id/profile_image2"
-        app:layout_constraintStart_toEndOf="@id/midLinear"
-        app:layout_constraintTop_toTopOf="@id/profile_image2" />
-
-    <!--팀원-->
-
-    <Button
-        android:id="@+id/crew"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/btn_yellow"
-        android:text="팀원"
+        app:layout_constraintTop_toBottomOf="@id/crewList"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nickName" />
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <!--팀원-->
 
 
 
@@ -104,25 +63,25 @@
     <ListView
         android:id="@+id/crewList"
         android:layout_width="0dp"
-        android:layout_height="320dp"
+        android:layout_height="400dp"
         android:layout_marginTop="10dp"
         android:background="@color/colorPurpleLight2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/crew">
+        app:layout_constraintTop_toBottomOf="@id/addTeam">
 
     </ListView>
 
-    <Button
-        android:id="@+id/btn_exit"
-        android:layout_width="90dp"
-        android:layout_height="60dp"
-        android:background="@drawable/btn_purple"
-        android:text="나가기"
-        android:textColor="@color/fontWhite"
-        android:textSize="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/crewList" />
+<!--    <Button-->
+<!--        android:id="@+id/btn_exit"-->
+<!--        android:layout_width="90dp"-->
+<!--        android:layout_height="60dp"-->
+<!--        android:background="@drawable/btn_purple"-->
+<!--        android:text="나가기"-->
+<!--        android:textColor="@color/fontWhite"-->
+<!--        android:textSize="20dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/crewList" />-->
 
 
 
