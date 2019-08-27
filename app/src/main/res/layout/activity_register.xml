@@ -16,7 +16,7 @@
         android:src="@drawable/iu"
         />
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/editPhoto"
+        android:id="@+id/addPhoto"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/camera_purple"

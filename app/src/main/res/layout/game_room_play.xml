@@ -7,26 +7,106 @@
 
     <ImageView
         android:id="@+id/gameImage"
-        android:layout_width="240dp"
-        android:layout_height="140dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="300dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/iu"
+        android:src="@drawable/pila1"
         />
 
-    <ListView
-        android:id="@+id/crewList"
-        android:layout_width="match_parent"
-        android:layout_height="612dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorPurpleLight2"
+    <TextView
+        android:id="@+id/gameName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="게임이름"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameImage">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gameImage"/>
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="플레이중"
+        android:textSize="20dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@id/guidelineVerticalCenter"
+        app:layout_constraintTop_toBottomOf="@id/gameName"/>
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="02:00"
+        android:textSize="20dp"
 
-    </ListView>
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        app:layout_constraintStart_toStartOf="@id/guidelineVerticalCenter"
+        app:layout_constraintTop_toBottomOf="@id/gameName"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image2"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text1"
+        android:src="@drawable/jg" />
+    <TextView
+        android:id="@+id/nickname2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image2"
+        app:layout_constraintStart_toStartOf="@id/profile_image2"
+        app:layout_constraintEnd_toEndOf="@id/profile_image2"
+        android:text="여진구라네"/>
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="30점"
+        android:textSize="40dp"
+        app:layout_constraintStart_toStartOf="@id/guidelineVerticalCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/profile_image2"/>
+    <TextView
+        android:id="@+id/calorie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="530kcal"
+        android:textSize="40dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="@id/guidelineVerticalCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/score"/>
+
+    <Button
+        android:id="@+id/signUp"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:background="@drawable/btn_purple"
+        android:text="방나가기"
+        android:textColor="@color/fontWhite"
+        android:textSize="20dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVerticalCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

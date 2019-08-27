@@ -277,7 +277,7 @@ public class GameRoomActivity extends AppCompatActivity {
         master_pro_Image = (ImageView) findViewById(R.id.profile_image2);
         add_team = (Button) findViewById(R.id.addTeam);
 //        teamone_scroll = (ScrollView) findViewById(R.id.scrollView);
-        exit_home = (Button) findViewById(R.id.btn_exit);
+//        exit_home = (Button) findViewById(R.id.btn_exit);
 
         // start button
         findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
