@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.gms:play-services-vision:18.0.0@aar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/fc93155052d1e8145987bf878f38a285/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-2/files-2.1/fc93155052d1e8145987bf878f38a285/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/83646da6791416a39df884fa4e09793f/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/83646da6791416a39df884fa4e09793f/res" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-vision/18.0.0/71a4d5016a818cb26e643138c5e7d113a696fca0/play-services-vision-18.0.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-vision/18.0.0/71a4d5016a818cb26e643138c5e7d113a696fca0/play-services-vision-18.0.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES />
   </library>

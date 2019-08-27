@@ -291,13 +291,14 @@ public class GameRoomActivity extends AppCompatActivity {
         findViewById(R.id.btn_cam).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!checkCameraPermission()) {
-                    //camera permission not allowed, request it
-                    requestCameraPermission();
-                } else {
-                    //Permission allowed, take picture
-                    pickCamera();
-                }
+                pickCamera();
+//                if (!checkCameraPermission()) {
+//                    //camera permission not allowed, request it
+//                    requestCameraPermission();
+//                } else {
+//                    //Permission allowed, take picture
+//                    pickCamera();
+//                }
             }
         });
 
