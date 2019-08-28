@@ -25,8 +25,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
+import com.example.sba_project.Userdata.UserDataManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -89,6 +91,14 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_additional_data);
+
+
+        de.hdodenhof.circleimageview.CircleImageView profile;
+        profile = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.additional_profile_image);
+
+        if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
+            Glide.with(Additional_data.this).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into(profile);
+        }
 
         SetActivityFlag();
 
