@@ -1,7 +1,6 @@
 package com.example.sba_project.Main;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +18,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
+import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.R;
 import com.example.sba_project.Register.Additional_data;
-import com.example.sba_project.Register.Mypage;
-import com.example.sba_project.Register.RegisterActivity;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.BackPressCloseHandler;
@@ -34,18 +32,6 @@ import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.view.Menu;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

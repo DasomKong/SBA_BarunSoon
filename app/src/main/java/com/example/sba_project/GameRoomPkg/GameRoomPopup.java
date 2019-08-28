@@ -1,8 +1,5 @@
 package com.example.sba_project.GameRoomPkg;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,14 +10,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sba_project.Adapter.SearchedUserItem;
 import com.example.sba_project.R;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Util.UtilValues;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class GameRoomPopup extends AppCompatActivity implements View.OnClickListener {
@@ -71,9 +69,9 @@ public class GameRoomPopup extends AppCompatActivity implements View.OnClickList
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
 
-                bundle.putSerializable(GameRoomActivity.USER_DATA, SelectedUser);
+                bundle.putSerializable(Game_Room_Frag.USER_DATA, SelectedUser);
                 intent.putExtras(bundle);
-                setResult(GameRoomActivity.INVITE_RESULT_OK, intent);
+                setResult(Game_Room_Frag.INVITE_RESULT_OK, intent);
                 this.finish();
                 break;
             case R.id.btnCancel:

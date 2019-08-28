@@ -1,11 +1,6 @@
 package com.example.sba_project.Util;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -13,7 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.sba_project.GameRoomPkg.GameRoomActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -100,7 +98,7 @@ public class Text_detec extends AppCompatActivity implements View.OnClickListene
             case R.id.btn_ok:
                 Intent intent = new Intent();
                 intent.putExtra("Result", img_score.getText());
-                setResult(GameRoomActivity.TEXT_DETEC_RESULT_OK, intent);
+                setResult(Game_Room_Frag.TEXT_DETEC_RESULT_OK, intent);
             case R.id.btn_cancle:
                 finish();
                 break;

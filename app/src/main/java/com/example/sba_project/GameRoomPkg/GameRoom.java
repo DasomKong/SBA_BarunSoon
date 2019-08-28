@@ -6,13 +6,7 @@ package com.example.sba_project.GameRoomPkg;
  * Blog : http://gompangs.tistory.com/
  */
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.media.Image;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -71,6 +65,14 @@ public class GameRoom {
         PlayerAdapter_Ref = _playerItem;
         CreateRoom(_roomid);
         CreateUser(_nickname);
+    }
+
+    public GameRoom(String nickName, int roomNum, PlayerItem playersList) {
+
+    }
+
+    public GameRoom(String nickName, PlayerItem playersList) {
+
     }
 
     public void setContext(Context context) {

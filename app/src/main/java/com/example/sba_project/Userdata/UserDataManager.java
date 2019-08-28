@@ -5,17 +5,14 @@ package com.example.sba_project.Userdata;
  *  init 은 main.
  * */
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.sba_project.GameRoomPkg.GameRoom;
-import com.example.sba_project.GameRoomPkg.GameRoomActivity;
-import com.example.sba_project.LoginActivity;
+import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.Register.Additional_data;
 import com.example.sba_project.Util.UtilValues;
@@ -137,7 +134,7 @@ public class UserDataManager {
                 final int RoomNumber = dataSnapshot.child("RoomNumber").getValue(Integer.class);
                 UtilValues.CreateSimpleDialogue(_context,
                         "초대를 수락하시겠습니까?", "네", "아니오", "게임 초대",
-                        new UtilValues().new moveWithIntFunc(_context, GameRoomActivity.class, GameRoomActivity.ROOM_NUMBER, RoomNumber));
+                        new UtilValues().new moveWithIntFunc(_context, Game_Room_Frag.class, Game_Room_Frag.ROOM_NUMBER, RoomNumber));
 
                 // 확인했으니 지움.
                 dataSnapshot.getRef().setValue(null);

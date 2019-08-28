@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.example.sba_project.GameRoomPkg.GameRoomActivity;
 import com.example.sba_project.GameRoomPkg.GameUser;
+import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.R;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.UserDataManager;
@@ -22,14 +22,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class PlayerItem extends BaseAdapter {
     private ArrayList<ExtendedMyUserData> UserList = new ArrayList<>();
     private Activity activity;
-    private GameRoomActivity.User_Permission permission;
+    private Game_Room_Frag.User_Permission permission;
 
-    public void setPermission(GameRoomActivity.User_Permission permission) {
+    public void setPermission(Game_Room_Frag.User_Permission permission) {
         this.permission = permission;
     }
 
@@ -68,7 +69,7 @@ public class PlayerItem extends BaseAdapter {
         if(!newUser.PhotoUrl.isEmpty())
             Glide.with(activity).load(newUser.PhotoUrl).into((ImageView)view.findViewById(R.id.profile));
 
-        if(permission == GameRoomActivity.User_Permission.CLIENT){
+        if(permission == Game_Room_Frag.User_Permission.CLIENT){
             view.findViewById(R.id.button_chu).setVisibility(View.GONE);
             view.findViewById(R.id.button_exit).setVisibility(View.GONE);
         }else{
@@ -113,5 +114,8 @@ public class PlayerItem extends BaseAdapter {
 
     public void removeItem(final int i) {
         UserList.remove(i);
+    }
+
+    public void setPermission(Serializable userPermission) {
     }
 }
