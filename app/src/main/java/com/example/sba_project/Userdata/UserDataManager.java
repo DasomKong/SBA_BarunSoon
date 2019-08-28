@@ -31,6 +31,7 @@ public class UserDataManager {
     private static UserDataManager instance;
     private GameRoom gameRoom = null;
     private ChildEventListener inviteListener = null;
+    private ChildEventListener myUserDataListener = null;
     private ExtendedMyUserData curUserData = null;
     private boolean isInGameRoom = false;
 
@@ -46,10 +47,7 @@ public class UserDataManager {
     public void Init(final Context _context) {
         // 디비에서 자신의 정보 읽어오기
         // 더 좋은 방법이 있으면 수정
-        final ProgressDialog dialog = new ProgressDialog(_context);
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage("데이터 로딩 중");
-        dialog.show();
+        UtilValues.setProgressDialogue(_context);
 
         UtilValues.getUsers().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -73,9 +71,43 @@ public class UserDataManager {
                     ((MainActivity)_context).finish();
                 }else{
                     ((MainActivity)_context).setUserData();
+
+                    myUserDataListener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        }
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            switch (dataSnapshot.getKey()){
+                                case "NickName":
+                                    curUserData.NickName = dataSnapshot.getValue(String.class);
+                                    break;
+                                case "Address":
+                                    curUserData.Address = dataSnapshot.getValue(String.class);
+                                    break;
+                                case "Age":
+                                    curUserData.Age = dataSnapshot.getValue(Integer.class);
+                                    break;
+                                case "PhotoUrl":
+                                    curUserData.PhotoUrl = dataSnapshot.getValue(String.class);
+                                    break;
+                            }
+                            ((MainActivity)_context).setUserData();
+                        }
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                        }
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    };
+                    UtilValues.getUsers().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addChildEventListener(myUserDataListener);
                 }
 
-                dialog.dismiss();
+                UtilValues.dismissProgressDialogue();
             }
 
             @Override

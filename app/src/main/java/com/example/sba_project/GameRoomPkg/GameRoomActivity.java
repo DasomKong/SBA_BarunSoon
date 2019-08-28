@@ -217,7 +217,7 @@ public class GameRoomActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference().child("GameRoom").equalTo(_roomNum).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, _roomNum, PlayersList));
+                    UserDataManager.getInstance().setGameRoom(new GameRoom(GameRoomActivity.this, UserDataManager.getInstance().getCurUserData().NickName, _roomNum, PlayersList));
                     UserDataManager.getInstance().setInGameRoom(true);
                 }
 
@@ -244,13 +244,13 @@ public class GameRoomActivity extends AppCompatActivity {
         // 직접 생성했을 경우와 초대받아서 들어온 경우.
         switch (userPermission) {
             case HOST:
-                UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
+                UserDataManager.getInstance().setGameRoom(new GameRoom(this, UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
                 break;
             case CLIENT:
                 if (RoomNumber == -1)
                     Toast.makeText(GameRoomActivity.this, "잘못된 방 번호 " + RoomNumber + "입니다.", Toast.LENGTH_SHORT).show();
                 else
-                    UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, RoomNumber, PlayersList));
+                    UserDataManager.getInstance().setGameRoom(new GameRoom(this, UserDataManager.getInstance().getCurUserData().NickName, RoomNumber, PlayersList));
                 break;
         }
         UserDataManager.getInstance().setInGameRoom(true);
@@ -302,12 +302,12 @@ public class GameRoomActivity extends AppCompatActivity {
             }
         });
 
-        exit_home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserDataManager.getInstance().getGameRoom().ExitRoom();
-            }
-        });
+//        exit_home.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                UserDataManager.getInstance().getGameRoom().ExitRoom();
+//            }
+//        });
 
         arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayList) {
             @SuppressLint("WrongViewCast")
