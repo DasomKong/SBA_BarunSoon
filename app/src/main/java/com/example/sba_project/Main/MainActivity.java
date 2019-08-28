@@ -18,8 +18,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
-import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.Game_Description.Gameplus;
+import com.example.sba_project.History.History_main;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.R;
 import com.example.sba_project.Register.Additional_data;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
 
     private Gameplus gameplus;
     private Home home;
+    private History_main history_main;
 
     private ExtendedMyUserData userData;
 
@@ -150,6 +151,7 @@ public class MainActivity extends AppCompatActivity
 
         gameplus = new Gameplus();
         home = new Home();
+        history_main = new History_main();
 
         FragmentTransaction tr = getSupportFragmentManager().beginTransaction();
 
@@ -244,10 +246,10 @@ public class MainActivity extends AppCompatActivity
                 tr.replace(R.id.content_layout, home);
                 setTitle("Home");
                 break;
-//            case R.id.nav_history:
-//                tr.replace(R.id.content_layout, );
-//                setTitle("내 이용기록");
-//                break;
+            case R.id.nav_history:
+                tr.replace(R.id.content_layout, history_main);
+                setTitle("내 이용기록");
+                break;
             case R.id.nav_game:
                 tr.replace(R.id.content_layout, gameplus);
                 setTitle("전체게임");

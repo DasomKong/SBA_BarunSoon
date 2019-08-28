@@ -184,7 +184,6 @@
                 android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:entries="@array/age"
                 app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
                 />
 

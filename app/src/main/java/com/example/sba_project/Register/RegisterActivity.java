@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +48,9 @@ public class RegisterActivity extends AppCompatActivity{
     CircleImageView profileCircleImageView;
     CircleImageView addPhoto;
     FirebaseAuth mAuth;
+
+    final ArrayList ageList = new ArrayList();
+    ArrayAdapter<String> ageListAdapter;
 
 
 
@@ -117,6 +122,33 @@ public class RegisterActivity extends AppCompatActivity{
         addPhoto = findViewById(R.id.addPhoto);
 
         inputNickname = findViewById(R.id.nickname);
+
+        //나이 1~100까지 입력
+
+        ageList.add("선택");
+        for(int i = 1; i < 100; ++i){
+            ageList.add(i);
+
+        }
+
+        ageListAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, ageList){
+            @SuppressLint("WrongViewCast")
+            public View getView(int positon, View convertView, ViewGroup parent){
+                View v = super.getView(positon,convertView,parent);
+                if(positon==getCount()){
+                    ((TextView)v.findViewById(R.id.age)).setText("");
+                    ((TextView)v.findViewById(R.id.age)).setHint(getItem(getCount()));
+
+                }
+                return  v;
+            }
+            public int getCount(int getcount){
+                return super.getCount() -1;
+            }
+
+        };
+
+        inputAge.setAdapter(ageListAdapter);
 
         findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
             @Override

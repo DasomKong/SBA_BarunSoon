@@ -148,6 +148,7 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
         //나이 스피너 정의하는 곳
 
+        ageList.add("선택");
         for(int i = 1; i < 100; ++i){
             ageList.add(i);
 
