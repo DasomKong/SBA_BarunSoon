@@ -24,8 +24,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
+import com.example.sba_project.Userdata.UserDataManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -87,6 +89,13 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_additional_data);
 
+        de.hdodenhof.circleimageview.CircleImageView profile;
+        profile = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.additional_profile_image);
+
+        if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
+            Glide.with(Additional_data.this).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into(profile);
+        }
+
         SetActivityFlag();
 
         SetViews();
@@ -116,7 +125,7 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                     case 1: finish(); break;
                 }
                 break;
-            case R.id.profile_image:
+            case R.id.additional_profile_image:
                 GetImageFromGallery();
                 break;
         }
@@ -126,9 +135,9 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.addInfo).setOnClickListener(this);
         findViewById(R.id.nextTime).setOnClickListener(this);
 //        findViewById(R.id.btn_searchaddress).setOnClickListener(this);
-        findViewById(R.id.profile_image).setOnClickListener(this);
+        findViewById(R.id.additional_profile_image).setOnClickListener(this);
 
-        profileImage = (CircleImageView) findViewById(R.id.profile_image);
+        profileImage = (CircleImageView) findViewById(R.id.additional_profile_image);
         NickName = findViewById(R.id.nickname);
         Age = (Spinner)findViewById(R.id.age);
         Address = (Spinner)findViewById(R.id.address);
@@ -147,7 +156,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                 if(positon==getCount()){
                     ((TextView)v.findViewById(R.id.age)).setText("");
                     ((TextView)v.findViewById(R.id.age)).setHint(getItem(getCount()));
-
                 }
                 return  v;
             }
