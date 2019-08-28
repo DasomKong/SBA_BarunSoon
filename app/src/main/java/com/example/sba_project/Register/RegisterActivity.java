@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +27,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity{
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
@@ -36,9 +40,67 @@ public class RegisterActivity extends AppCompatActivity {
 
     TextView inputEmail;
     TextView inputPassword;
+    TextView inputNickname;
+    Spinner inputAddress;
+    Spinner inputAge;
     CircleImageView profileCircleImageView;
     CircleImageView addPhoto;
     FirebaseAuth mAuth;
+
+
+
+    // 이메일 정규식
+    public static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+"
+    );
+
+    // 이메일 검사
+    private boolean checkEmail(String email) {
+        Matcher matcher = EMAIL_ADDRESS_PATTERN.matcher(email);
+        return matcher.find();
+    }
+
+    // 비밀번호 정규식
+    public static final Pattern VALID_PASSWOLD_REGEX_ALPHA_NUM =
+            Pattern.compile("^[A-Za-z0-9]{8,12}$"
+            ); // 8자리 ~ 12자리까지 가능
+
+    // 비밀번호 검사
+    public static boolean checkPassword(String password) {
+        Matcher matcher = VALID_PASSWOLD_REGEX_ALPHA_NUM.matcher(password);
+        return matcher.matches();
+    }
+
+    // 닉네임 정규식
+    public static final Pattern VALID_NICKNAME_REGEX_ALPHA_NUM =
+            Pattern.compile("^[A-Za-z0-9가-힣]{4,6}$"
+            ); // 특수문자제외 4-6문자
+
+    // 닉네임 검사
+    public static boolean checkNickname(String nickname) {
+        Matcher matcher = VALID_NICKNAME_REGEX_ALPHA_NUM.matcher(nickname);
+        return matcher.matches();
+    }
+
+//    // 거주지 검사
+//    public static boolean checkAddress(Spinner address) {
+//        if(address.getSelectedItem().toString().equals("선택")){
+//            RequiredSpinnerAdapter adapter = (RequiredSpinnerAdapter)marketstatus_spinner.getAdapter();
+//            View view = address.getSelectedView();
+//            adapter.setError(view, "Please select a value");
+//
+//            return false;
+//        }
+//    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,25 +110,62 @@ public class RegisterActivity extends AppCompatActivity {
 
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
+        inputAddress = findViewById(R.id.address);
+        inputAge = findViewById(R.id.age);
+
         profileCircleImageView = findViewById(R.id.profile_image);
         addPhoto = findViewById(R.id.addPhoto);
+
+        inputNickname = findViewById(R.id.nickname);
 
         findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
+                String nickname = inputNickname.getText().toString().trim();
+                String address = inputAddress.getSelectedItem().toString().trim();
+                String age = inputAge.getSelectedItem().toString().trim();
 
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    Task<AuthResult> Task = createUser(email, password);
+                System.out.println("abcd"+address);
+                System.out.println("abcd"+age);
+
+                boolean A = true;
+
+
+                if (!checkEmail(email)) {
+                    inputEmail.setError("이메일 형식이 아닙니다");
+                    inputEmail.requestFocus();
+                    A = false;
+                }
+                if (!checkPassword(password)) {
+                    inputPassword.setError("비밀번호 형식을 지켜주세요");
+                    inputPassword.requestFocus();
+                    A = false;
+                }
+                if (!checkNickname(nickname)) {
+                    inputNickname.setError("닉네임 형식을 지켜주세요");
+                    inputNickname.requestFocus();
+                    A = false;
+                }
+                if (address.equals("선택")){
+                    ((TextView)inputAddress.getSelectedView()).setError("거주지 선택해주세요");
+                    ((TextView)inputAddress.getSelectedView()).requestFocus();
+                    A = false;
+                }
+                if (age.equals("선택")){
+                    ((TextView)inputAge.getSelectedView()).setError("나이 선택해주세요");
+                    ((TextView)inputAge.getSelectedView()).requestFocus();
+                    A = false;
+                }
+                if(A == true){
                     // 등록 성공일 경우.
+                    Task<AuthResult> Task = createUser(email, password);
                     if(Task.isSuccessful()) {
                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                         finish();
                         startActivity(intent);
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(), "No blanks!", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -164,4 +263,5 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return cursor.getString(column_index);
     }
+
 }

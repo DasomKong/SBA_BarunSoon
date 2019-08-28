@@ -1,209 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/iu"
-        />
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/addPhoto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/camera_purple"
-        app:layout_constraintBottom_toBottomOf="@id/profile_image"
-        app:layout_constraintEnd_toEndOf="@id/profile_image" />
-
-    <LinearLayout
-        android:id="@+id/mailLinear"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toBottomOf="@id/profile_image"
-        android:layout_marginTop="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="70dp">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="이메일"
-            android:textSize="18dp"
-            android:layout_weight="0.5"
-            app:layout_constraintEnd_toStartOf="@id/email"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
 
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.5"
-            android:hint="이메일형식"
-            android:inputType="textEmailAddress"
-            />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/pwLinear"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toBottomOf="@id/mailLinear"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="70dp">
-
-        <TextView
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="20dp"
-            android:text="패스워드"
-            android:textSize="18dp"
-            android:layout_weight="0.5"
-            app:layout_constraintEnd_toStartOf="@id/password"/>
-
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:maxLength="12"
-            android:hint="8~12자(영어,숫자)"
-            android:inputType="textPassword"
-            android:layout_weight="0.5"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/nickLinear"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        app:layout_constraintTop_toBottomOf="@id/pwLinear"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="70dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="20dp"
-            android:text="닉네임"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toStartOf="@id/nickname"/>
-
-
-        <EditText
-            android:id="@+id/nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:maxLength="6"
-            android:hint="4~6자 (특수문자 제외)"
-            android:inputType="textPersonName"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/addressLinear"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/nickLinear"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="70dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="20dp"
-            android:text="거주지"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toStartOf="@id/nickname"/>
-
-        <Spinner
-            android:id="@+id/address"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
             android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:entries="@array/address"
-            app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter" />
+            android:layout_height="140dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/lu"
+            />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/addPhoto"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/camera_purple"
+            app:layout_constraintBottom_toBottomOf="@id/profile_image"
+            app:layout_constraintEnd_toEndOf="@id/profile_image" />
+
+        <LinearLayout
+            android:id="@+id/mailLinear"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toBottomOf="@id/profile_image"
+            android:layout_marginTop="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="70dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="이메일"
+                android:textSize="18dp"
+                android:layout_weight="0.5"
+                app:layout_constraintEnd_toStartOf="@id/email"/>
 
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.5"
+                android:hint="이메일형식"
+                android:inputType="textEmailAddress">
+                <requestFocus/>
+            </EditText>
 
-    <LinearLayout
-        android:id="@+id/ageLinear"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/addressLinear"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="70dp">
+        </LinearLayout>
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/pwLinear"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toBottomOf="@id/mailLinear"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="70dp">
+
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:text="패스워드"
+                android:textSize="18dp"
+                android:layout_weight="0.5"
+                app:layout_constraintEnd_toStartOf="@id/password"/>
+
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:maxLength="12"
+                android:hint="8~12자(영어,숫자)"
+                android:inputType="textPassword"
+                android:layout_weight="0.5">
+                <requestFocus/>
+            </EditText>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nickLinear"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toBottomOf="@id/pwLinear"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="70dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:text="닉네임"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@id/nickname"/>
+
+
+            <EditText
+                android:id="@+id/nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:maxLength="6"
+                android:hint="4~6자 (특수문자 제외)"
+                android:inputType="textPersonName"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/addressLinear"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/nickLinear"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="70dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:text="거주지"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@id/nickname"/>
+
+            <Spinner
+                android:id="@+id/address"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:entries="@array/address"
+                app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ageLinear"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/addressLinear"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="70dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:text="나이"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@id/nickname"/>
+
+            <Spinner
+                android:id="@+id/age"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:entries="@array/age"
+                app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
+                />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/signUp"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/btn_purple"
+            android:text="입력완료"
+            android:textSize="20dp"
+            android:textColor="@color/fontWhite"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ageLinear" />
+
+        <!--guide percent로 중간지정-->
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineVerticalCenter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="20dp"
-            android:text="나이"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toStartOf="@id/nickname"/>
-
-        <Spinner
-            android:id="@+id/age"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:entries="@array/age"
-            app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"
             />
 
-    </LinearLayout>
 
 
-    <Button
-        android:id="@+id/signUp"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/btn_purple"
-        android:text="입력완료"
-        android:textSize="20dp"
-        android:textColor="@color/fontWhite"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ageLinear" />
-
-    <!--guide percent로 중간지정-->
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineVerticalCenter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"
-        />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
