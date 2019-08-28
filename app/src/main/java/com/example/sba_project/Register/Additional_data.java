@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -24,8 +25,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
+import com.example.sba_project.Userdata.UserDataManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,6 +46,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -87,6 +92,14 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_additional_data);
 
+
+        de.hdodenhof.circleimageview.CircleImageView profile;
+        profile = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.additional_profile_image);
+
+        if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
+            Glide.with(Additional_data.this).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into(profile);
+        }
+
         SetActivityFlag();
 
         SetViews();
@@ -116,7 +129,7 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
                     case 1: finish(); break;
                 }
                 break;
-            case R.id.profile_image:
+            case R.id.additional_profile_image:
                 GetImageFromGallery();
                 break;
         }
@@ -126,9 +139,9 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.addInfo).setOnClickListener(this);
         findViewById(R.id.nextTime).setOnClickListener(this);
 //        findViewById(R.id.btn_searchaddress).setOnClickListener(this);
-        findViewById(R.id.profile_image).setOnClickListener(this);
+        findViewById(R.id.additional_profile_image).setOnClickListener(this);
 
-        profileImage = (CircleImageView) findViewById(R.id.profile_image);
+        profileImage = (CircleImageView) findViewById(R.id.additional_profile_image);
         NickName = findViewById(R.id.nickname);
         Age = (Spinner)findViewById(R.id.age);
         Address = (Spinner)findViewById(R.id.address);
@@ -172,7 +185,14 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         final String _address = Address.getSelectedItem().toString().trim();
         final String _age = Age.getSelectedItem().toString().trim();
 
+
         if (!_nickname.isEmpty() && !_age.isEmpty() && !_address.isEmpty() && _age.matches("^[0-9]+$")) {
+
+            if(CheckNickName(_nickname) == false){
+                NickName.setError("닉네임 형식을 지켜주세요");
+                NickName.requestFocus();
+            }
+
             if (users_ref == null) {
                 users_ref = FirebaseDatabase.getInstance().getReference().child("users");
             }
@@ -199,7 +219,20 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
             });
         }
         else {
-            Toast.makeText(this, "Fill all texts", Toast.LENGTH_SHORT).show();
+
+            if(_nickname.isEmpty()){
+                NickName.setError("닉네임 형식을 지켜주세요");
+                NickName.requestFocus();
+            }
+            if (_address.equals("선택")){
+                ((TextView)Address.getSelectedView()).setError("거주지 선택해주세요");
+                ((TextView)Address.getSelectedView()).requestFocus();
+            }
+            if (_age.equals("선택")){
+                ((TextView)Age.getSelectedView()).setError("나이 선택해주세요");
+                ((TextView)Age.getSelectedView()).requestFocus();
+            }
+//            Toast.makeText(this, "Fill all texts", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -207,13 +240,13 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         class tmpStr{
             public String tmpString = "";
         }
-                    // 파이어베이스 유저 아이디 루트로 등록.
-                    // Storage 에 프로필 사진 등록
-                    FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
-            final StorageReference UserStorage_ref = FirebaseStorage.getInstance().getReference(curUser.getUid()).child("profile.jpg");
+        // 파이어베이스 유저 아이디 루트로 등록.
+        // Storage 에 프로필 사진 등록
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+        final StorageReference UserStorage_ref = FirebaseStorage.getInstance().getReference(curUser.getUid()).child("profile.jpg");
 
-            if(ImgPath == null){
-                UploadUserData(_nickname,_address, Integer.parseInt(_age), "");
+        if(ImgPath == null){
+            UploadUserData(_nickname,_address, Integer.parseInt(_age), "");
         }
         else{
             UploadTask uploadTask = UserStorage_ref.putFile(Uri.fromFile(new File(ImgPath)));
@@ -273,6 +306,9 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         user_ref.child(curUser.getUid()).child("NickName").setValue(_nickname);
         user_ref.child(curUser.getUid()).child("PhotoUrl").setValue(photourl);
 
+
+
+
         if(curUser.getEmail() != null)
             user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
 
@@ -289,8 +325,13 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
     }
 
     // nickname 검사
-    private void CheckNickName(final String newNickName) {
-
+    private boolean CheckNickName(final String newNickName) {
+        // 닉네임 정규식
+        final Pattern VALID_NICKNAME_REGEX_ALPHA_NUM =
+                Pattern.compile("^[A-Za-z0-9가-힣]{4,6}$"
+                ); // 특수문자제외 4-6문자
+        Matcher matcher = VALID_NICKNAME_REGEX_ALPHA_NUM.matcher(newNickName);
+        return matcher.matches();
     }
 
     protected void onDestroy() {

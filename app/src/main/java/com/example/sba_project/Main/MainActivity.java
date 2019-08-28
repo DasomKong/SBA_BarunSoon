@@ -170,7 +170,6 @@ public class MainActivity extends AppCompatActivity
 
 
         if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
-            System.out.println("abcd"+UserDataManager.getInstance().getCurUserData().PhotoUrl);
             Glide.with(MainActivity.this).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into((de.hdodenhof.circleimageview.CircleImageView)navigationView.getHeaderView(0).findViewById(R.id.header_profile_image));
         }
 
