@@ -41,12 +41,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.sba_project.GameRoomPkg.Game_Room_Frag.User_Permission.CLIENT;
-import static com.example.sba_project.GameRoomPkg.Game_Room_Frag.User_Permission.HOST;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
@@ -74,7 +71,7 @@ public class Game_Room_Frag extends Fragment {
     }
 
     private Spinner gameselc;
-    private TextView captain;
+    private TextView host;
     private TextView crew;
     private ImageView master_pro_Image;
 
@@ -84,7 +81,6 @@ public class Game_Room_Frag extends Fragment {
 
     private ListView PlayerListView;
     PlayerItem PlayersList = null;
-
 
 
     final ArrayList arrayList = new ArrayList<>(); // 파이널 달린거 주의
@@ -110,7 +106,7 @@ public class Game_Room_Frag extends Fragment {
     String cameraPermission[];
 
     // 디폴트는 Client
-    Serializable userPermission = CLIENT;
+    User_Permission userPermission = User_Permission.CLIENT;
 
     private BackPressCloseHandler backPressCloseHandler;
     Uri image_uri = null;
@@ -120,6 +116,10 @@ public class Game_Room_Frag extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_game__room_, container, false);
 //        return inflater.inflate(R.layout.fragment_game__room_, container, false);
+
+        host = rootView.findViewById(R.id.nickname2);
+        master_pro_Image = rootView.findViewById(R.id.profile_image2);
+
 
         //start button
         Button button = rootView.findViewById(R.id.btn_start);
@@ -142,21 +142,19 @@ public class Game_Room_Frag extends Fragment {
         //crew list
 
         ListView PlayerListView = rootView.findViewById(R.id.crewList);
-        PlayerItem PlayersList;
 
         PlayersList = new PlayerItem();
         PlayersList.SetActivity(getActivity());
         PlayerListView.setAdapter(PlayersList);
 
         Button add_team = rootView.findViewById(R.id.addTeam);
-        add_team.setOnClickListener(new Button.OnClickListener()
-                                                      {
-                                                          @Override
-                                                          public void onClick(View view) {
-                                                              Intent intent = new Intent(getActivity(), GameRoomPopup.class);
-                                                              startActivityForResult(intent, INVITE);
-                                                          }
-                                                      }
+        add_team.setOnClickListener(new Button.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(getActivity(), GameRoomPopup.class);
+                                            startActivityForResult(intent, INVITE);
+                                        }
+                                    }
         );
 
         ///////////////////////////////////////////////////// 수정해야할거
@@ -199,7 +197,7 @@ public class Game_Room_Frag extends Fragment {
             }
         });
 
-        Spinner gameselc = rootView.findViewById(R.id.gameSelect);
+        gameselc = rootView.findViewById(R.id.gameSelect);
         gameselc.setPrompt("게임선택");
         gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -278,7 +276,7 @@ public class Game_Room_Frag extends Fragment {
         }
     }
 
-//    //handle permission result
+    //    //handle permission result
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -328,8 +326,7 @@ public class Game_Room_Frag extends Fragment {
     }
 
 
-
-//        backPressCloseHandler = new BackPressCloseHandler(getActivity());
+    //        backPressCloseHandler = new BackPressCloseHandler(getActivity());
 //
 //
 //        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayList) {
@@ -438,22 +435,35 @@ public class Game_Room_Frag extends Fragment {
     private void SetGameRoomResult() {
         // 권한 확인
         Intent permit = getActivity().getIntent();
+        String Image_check = null;
 
         if (permit.getSerializableExtra(GameRoomActivity.ROOM_PERMITION) != null)
-            userPermission =  permit.getSerializableExtra(GameRoomActivity.ROOM_PERMITION);
+            userPermission = (User_Permission) permit.getSerializableExtra(GameRoomActivity.ROOM_PERMITION);
 
         int RoomNumber = permit.getIntExtra(ROOM_NUMBER, -1);
-        PlayersList.setPermission( userPermission);
+        PlayersList.setPermission(userPermission);
 
         // 직접 생성했을 경우와 초대받아서 들어온 경우.
 
-        if (HOST.equals(userPermission)) {
-            UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
-        } else if (CLIENT.equals(userPermission)) {
-            if (RoomNumber == -1)
-                Toast.makeText(getActivity(), "잘못된 방 번호 " + RoomNumber + "입니다.", Toast.LENGTH_SHORT).show();
-            else
-                UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, RoomNumber, PlayersList));
+        switch (userPermission) {
+            case HOST:
+                UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
+                // 호스트 이미지와 닉네임 받아오기
+
+                host.setText(UserDataManager.getInstance().getCurUserData().NickName);
+                Image_check = UserDataManager.getInstance().getCurUserData().PhotoUrl;
+                if (Image_check.equals(null) == true || Image_check.isEmpty()) {
+
+                } else {
+                    master_pro_Image.setImageURI(Uri.parse(UserDataManager.getInstance().getCurUserData().PhotoUrl));
+                }
+                break;
+            case CLIENT:
+                if (RoomNumber == -1)
+                    Toast.makeText(getActivity(), "잘못된 방 번호 " + RoomNumber + "입니다.", Toast.LENGTH_SHORT).show();
+                else
+                    UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, RoomNumber, PlayersList));
+                break;
         }
         UserDataManager.getInstance().setInGameRoom(true);
     }
@@ -567,7 +577,7 @@ public class Game_Room_Frag extends Fragment {
 //                                                      }
 //        );
 
-        //exit 버튼
+    //exit 버튼
 
 }
 
