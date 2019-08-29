@@ -42,7 +42,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * A simple {@link Fragment} subclass.
  */
 public class Game_Room_Frag extends Fragment {
-
+    Button startbutton;
 
     public Game_Room_Frag() {
         // Required empty public constructor
@@ -108,8 +108,8 @@ public class Game_Room_Frag extends Fragment {
 
 
         //start button
-        Button button = rootView.findViewById(R.id.btn_start);
-        button.setOnClickListener(new View.OnClickListener() {
+        startbutton = rootView.findViewById(R.id.btn_start);
+        startbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(isClicked)
@@ -304,6 +304,7 @@ public class Game_Room_Frag extends Fragment {
                 if (RoomNumber == -1)
                     Toast.makeText(getActivity(), "잘못된 방 번호 " + RoomNumber + "입니다.", Toast.LENGTH_SHORT).show();
                 else{
+                    startbutton.setVisibility(View.GONE);
                     UserDataManager.getInstance().setGameRoom(new GameRoom(host, master_pro_Image, getContext(),UserDataManager.getInstance().getCurUserData().NickName, RoomNumber, PlayersList));
                 }
                 break;

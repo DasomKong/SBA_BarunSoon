@@ -114,7 +114,9 @@ public class Game_Play_Frag extends Fragment
 
         GamePlayData newData = new GamePlayData(Math.round(kcal) ,Integer.parseInt(scoreView.getText().toString().trim()));
 
-        FirebaseDatabase.getInstance().getReference().child("Game").child("uid").child(UserDataManager.getInstance().getCurUserData().uID).child(_CategoryName ).child(_GameUser.Date).setValue(newData);
+        String date[] = _GameUser.Date.split(" ");
+
+        FirebaseDatabase.getInstance().getReference().child("Game").child("uid").child(UserDataManager.getInstance().getCurUserData().uID).child(_CategoryName ).child(date[0]).child(date[1]).setValue(newData);
     }
 
     public void StartPlay(final GameUser _user, final String CategoryName){
