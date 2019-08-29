@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.sba_project.GameRoomPkg.GameRoom;
+import com.example.sba_project.GameRoomPkg.GameUser;
+import com.example.sba_project.GameRoomPkg.Game_Play_Frag;
 import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.Register.Additional_data;
@@ -32,6 +34,8 @@ public class UserDataManager {
     private ExtendedMyUserData curUserData = null;
     private boolean isInGameRoom = false;
 
+    private Game_Play_Frag GamePlayFrag;
+
     private int RoomNumber = -1;
 
     public static UserDataManager getInstance() {
@@ -39,6 +43,13 @@ public class UserDataManager {
             instance = new UserDataManager();
         }
         return instance;
+    }
+
+    public Game_Play_Frag getGamePlayFrag(){
+        return GamePlayFrag;
+    }
+    public void setGamePlayFrag(Game_Play_Frag gamePlayFrag) {
+        GamePlayFrag = gamePlayFrag;
     }
 
     public void Init(final Context _context) {
@@ -183,7 +194,6 @@ public class UserDataManager {
 
     public void setGameRoom(GameRoom _gameRoom) {
         gameRoom = _gameRoom;
-        setRoomNumber(gameRoom.getRoom_id());
     }
 
     public int getRoomNumber() {

@@ -9,6 +9,7 @@ package com.example.sba_project.GameRoomPkg;
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +39,7 @@ class HostData {
 
     public HostData() {
     }
+
     public HostData(String imgUrl, String nickName, String uid) {
         this.imgUrl = imgUrl;
         NickName = nickName;
@@ -55,6 +57,9 @@ public class GameRoom {
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("GameRoom");
     private ChildEventListener player_listener = null;
     private ChildEventListener room_listener = null;
+
+    private GameUser OwnUser = null;
+    public GameRoomState newRoomState = null;
 
     // 호스트 방 생성
     public GameRoom(final TextView _txtView, final ImageView _imgView, final Context _context, final String _nickname, final PlayerItem _playerItem) {
@@ -88,7 +93,7 @@ public class GameRoom {
         final String tmpNick = UserDataManager.getInstance().getCurUserData().NickName;
         final String tmpuID = UserDataManager.getInstance().getCurUserData().uID;
 
-        if(tmpPhoto.isEmpty() || tmpPhoto == null)
+        if (tmpPhoto.isEmpty() || tmpPhoto == null)
             tmpPhoto = "";
         getcurRoomRef().child(HostData.OWNER).setValue(new HostData(tmpPhoto, tmpNick, tmpuID));
     }
@@ -112,7 +117,9 @@ public class GameRoom {
         room_id = i;
         userList = new ArrayList();
 
-        GameRoomState newRoomState = new GameRoomState();
+        UserDataManager.getInstance().setRoomNumber(room_id);
+
+        newRoomState = new GameRoomState();
 
         getcurGameStateRef().setValue(newRoomState);
 
@@ -124,13 +131,34 @@ public class GameRoom {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 // start button
-                final boolean isActive = dataSnapshot.getValue(boolean.class);
+                switch (dataSnapshot.getKey()){
+                    case "CategoryName":
+                        String tmpStr = dataSnapshot.getValue(String.class);
+                        if(tmpStr != null && !tmpStr.isEmpty()){
+                            newRoomState.CategoryName = tmpStr;
+                        }
+                        break;
+                    case "isRunning":
+                        if(newRoomState.CategoryName.equals("")){
+                            Toast.makeText(context,"Category 이름을 정해주세요", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                // start
-                if(isActive){
-
-                }else{
-                    // stop
+                        boolean tmpBool = dataSnapshot.getValue(boolean.class);
+                        if(tmpBool)
+                        {
+                            UserDataManager.getInstance().getGamePlayFrag().StartPlay(OwnUser, newRoomState.CategoryName);
+                        }
+                        break;
+                    case "GameState":
+                        GameRoomState tmpData = dataSnapshot.getValue(GameRoomState.class);
+                        // start
+                        if (tmpData.isRunning) {
+                            UserDataManager.getInstance().getGamePlayFrag().StartPlay(OwnUser, tmpData.CategoryName);
+                        } else {
+                            // stop
+                        }
+                        break;
                 }
             }
 
@@ -228,16 +256,18 @@ public class GameRoom {
         UserDataManager.getInstance().setInGameRoom(true);
     }
 
-    private void ResetHostData(){
+    private void ResetHostData() {
         getcurRoomRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 HostData tmpData = dataSnapshot.child(HostData.OWNER).getValue(HostData.class);
 
-                txtView.setText(tmpData.NickName);
-                Glide.with(context)
-                        .load(tmpData.imgUrl)
-                        .into(imgView);
+                if(tmpData != null){
+                    txtView.setText(tmpData.NickName);
+                    Glide.with(context)
+                            .load(tmpData.imgUrl)
+                            .into(imgView);
+                }
             }
 
             @Override
@@ -248,9 +278,9 @@ public class GameRoom {
     }
 
     private GameUser CreateUser(String _nickname) {
-        GameUser user = new GameUser(_nickname);
-        getcurPlayersRef().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
-        return user;
+        OwnUser = new GameUser(_nickname);
+        getcurPlayersRef().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(OwnUser);
+        return OwnUser;
     }
 
     private DatabaseReference getcurRoomRef() {

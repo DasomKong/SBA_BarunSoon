@@ -2,13 +2,9 @@ package com.example.sba_project.GameRoomPkg;
 
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.service.autofill.UserData;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +26,6 @@ import com.example.sba_project.R;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.InviteData;
 import com.example.sba_project.Userdata.UserDataManager;
-import com.example.sba_project.Util.BackPressCloseHandler;
 import com.example.sba_project.Util.UtilValues;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,11 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
@@ -88,31 +80,22 @@ public class Game_Room_Frag extends Fragment {
 
     // Request Code
     static final int INVITE = 1000;
-    static final int TEXT_DETEC = 1001;
 
     // Result Code
     static final int INVITE_RESULT_OK = 2000;
     static final int INVITE_RESULT_FAIL = 2001;
 
-    public static final int TEXT_DETEC_RESULT_OK = 3000;
     // Tag
     public static final String USER_DATA = "UserData";
     public static final String ROOM_PERMITION = "Room_Permition";
     public static final String ROOM_NUMBER = "Room_Number";
 
-    private static final int IMAGE_PICK_CAMERA_CODE = 100;
-    private static final int CAMERA_REQUEST_CODE = 200;
 
     // Host 용 버튼
     private boolean isClicked = false;
 
-    String cameraPermission[];
-
     // 디폴트는 Client
     User_Permission userPermission = User_Permission.CLIENT;
-
-    private BackPressCloseHandler backPressCloseHandler;
-    Uri image_uri = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -139,17 +122,7 @@ public class Game_Room_Frag extends Fragment {
             }
         });
 
-        // test cam button
-        Button button1 = rootView.findViewById(R.id.btn_cam);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickCamera();
-            }
-        });
-
         //crew list
-
         ListView PlayerListView = rootView.findViewById(R.id.crewList);
 
         PlayersList = new PlayerItem();
@@ -208,21 +181,7 @@ public class Game_Room_Frag extends Fragment {
 
         gameselc = rootView.findViewById(R.id.gameSelect);
         gameselc.setPrompt("게임선택");
-        gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                final DatabaseReference tmpRef = UserDataManager.getInstance().getCurGameRoomRef();
 
-                if (tmpRef != null) {
-                    tmpRef.child("CategoryName").setValue(arrayList.get(i).toString());
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         gameselc.setAdapter(arrayAdapter);
         gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -230,9 +189,20 @@ public class Game_Room_Frag extends Fragment {
                 if (arrayList.get(i).equals("게임선택") == true) {
                     //Toast.makeText(getApplicationContext(),"게임선택해주세요!",Toast.LENGTH_SHORT).show();
                     arrayList.remove(0);
-                } else
+                } else{
                     Toast.makeText(getApplicationContext(), arrayList.get(i) + "가 선택되었습니다.",
                             Toast.LENGTH_SHORT).show();
+
+                    if(UserDataManager.getInstance().getGameRoom() != null){
+                        UserDataManager.getInstance().getGameRoom().newRoomState.CategoryName = arrayList.get(i).toString();
+                    }
+
+                    final DatabaseReference tmpRef = UserDataManager.getInstance().getCurGameRoomRef().child("GameState").child("CategoryName");
+
+                    if (tmpRef != null) {
+                        tmpRef.setValue(arrayList.get(i).toString());
+                    }
+                }
             }
 
             @Override
@@ -266,56 +236,10 @@ public class Game_Room_Frag extends Fragment {
                         break;
                 }
                 break;
-            case IMAGE_PICK_CAMERA_CODE: {
-                if (resultCode == RESULT_OK) {
-                    //get drawable bitmap for text recognition
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image_uri);
-                    } catch (FileNotFoundException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-            break;
         }
     }
 
-    //    //handle permission result
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case CAMERA_REQUEST_CODE:
-                if (grantResults.length > 0) {
-                    boolean cameraAccepted = grantResults[0] ==
-                            PackageManager.PERMISSION_GRANTED;
-                    boolean writeStorageAccepted = grantResults[0] ==
-                            PackageManager.PERMISSION_GRANTED;
-                    if (cameraAccepted && writeStorageAccepted) {
-                        pickCamera();
-                    } else {
-                        Toast.makeText(getActivity(), "permission denied", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                break;
-        }
-    }
 
-    private void pickCamera() {
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "NewPic"); //title of the picture
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Image To text"); //description
-        image_uri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
-        startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
-    }
 
     private void InviteMessageToUser(final ExtendedMyUserData InvitedUser) {
         final InviteData inviteData = new InviteData(UserDataManager.getInstance().getGameRoom().getRoom_id(), FirebaseAuth.getInstance().getCurrentUser().getUid(), InvitedUser.uID, InviteData.EInviteFlag.INVITE);
@@ -368,11 +292,13 @@ public class Game_Room_Frag extends Fragment {
             case HOST:
                 // 호스트 이미지와 닉네임 받아오기
                 Image_check = UserDataManager.getInstance().getCurUserData().PhotoUrl;
-                if (Image_check.equals(null) == true || Image_check.isEmpty()) {
 
-                } else {
-                    UserDataManager.getInstance().setGameRoom(new GameRoom(host, master_pro_Image, getContext(), UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
-                }
+                UserDataManager.getInstance().setGameRoom(new GameRoom(host, master_pro_Image, getContext(), UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
+
+//                if (Image_check.equals(null) == true || Image_check.isEmpty()) {
+//
+//                } else {
+//                }
                 break;
             case CLIENT:
                 if (RoomNumber == -1)

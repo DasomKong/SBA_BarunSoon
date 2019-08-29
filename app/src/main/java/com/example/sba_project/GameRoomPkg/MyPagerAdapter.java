@@ -4,6 +4,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.sba_project.Userdata.UserDataManager;
+import com.example.sba_project.Util.UtilValues;
+
 import java.util.ArrayList;
 
 public class MyPagerAdapter extends FragmentPagerAdapter {
@@ -13,7 +16,10 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         mData = new ArrayList<>();
         mData.add(new Game_Room_Frag());
-        mData.add(new Game_Play_Frag());
+
+        Game_Play_Frag tmpFrag = new Game_Play_Frag();
+        UserDataManager.getInstance().setGamePlayFrag(tmpFrag);
+        mData.add(tmpFrag);
     }
 
     @Override

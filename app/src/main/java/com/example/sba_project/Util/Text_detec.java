@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sba_project.GameRoomPkg.Game_Play_Frag;
 import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -98,7 +99,7 @@ public class Text_detec extends AppCompatActivity implements View.OnClickListene
             case R.id.btn_ok:
                 Intent intent = new Intent();
                 intent.putExtra("Result", img_score.getText());
-                setResult(Game_Room_Frag.TEXT_DETEC_RESULT_OK, intent);
+                setResult(Game_Play_Frag.TEXT_DETEC_RESULT_OK, intent);
             case R.id.btn_cancle:
                 finish();
                 break;
