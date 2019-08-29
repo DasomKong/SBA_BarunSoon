@@ -96,8 +96,11 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
         de.hdodenhof.circleimageview.CircleImageView profile;
         profile = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.additional_profile_image);
 
-        if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
-            Glide.with(Additional_data.this).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into(profile);
+        if(UserDataManager.getInstance().getCurUserData() != null)
+        {
+            if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
+                Glide.with(Additional_data.this).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into(profile);
+            }
         }
 
         SetActivityFlag();
