@@ -24,6 +24,7 @@ import com.example.sba_project.History.History_main;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.R;
 import com.example.sba_project.Register.Additional_data;
+import com.example.sba_project.Register.Mypage;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.BackPressCloseHandler;
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
-                    Intent addregi_intent = new Intent(MainActivity.this, Additional_data.class);
+                    Intent addregi_intent = new Intent(MainActivity.this, Mypage.class);
                     addregi_intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_MAIN.getValue());
                     startActivity(addregi_intent);
                 }
