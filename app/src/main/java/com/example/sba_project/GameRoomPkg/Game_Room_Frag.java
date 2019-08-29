@@ -142,7 +142,6 @@ public class Game_Room_Frag extends Fragment {
         //crew list
 
         ListView PlayerListView = rootView.findViewById(R.id.crewList);
-        PlayerItem PlayersList;
 
         PlayersList = new PlayerItem();
         PlayersList.SetActivity(getActivity());
