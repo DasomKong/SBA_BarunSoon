@@ -67,13 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser CurUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // 파이어베이스에 로그인된 유저가 있을 경우 바로 메인으로..
-        if(CurUser != null)
-        {
+        if (CurUser != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-        }
-        else{
+        } else {
             // 최초 로그인일 경우 계정 연동 세팅.
             SetViews();
             SetGoogleLogin();
@@ -92,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
     private void SetFaceBookLogin() {
         callbackManager = CallbackManager.Factory.create();
 
-        LoginButton loginButton = (LoginButton)findViewById(R.id.buttonFacebookLogin);
+        LoginButton loginButton = (LoginButton) findViewById(R.id.buttonFacebookLogin);
         loginButton.setReadPermissions("email", "public_profile", "user_friends");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -112,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void SetGoogleLogin(){
+    private void SetGoogleLogin() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -124,11 +122,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent,RC_SIGN_IN);
+                startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
     }
-    private void SetSignInAndUp(){
+
+    private void SetSignInAndUp() {
         findViewById(R.id.signIn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,58 +148,58 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode,resultCode,data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-            }
-            else{
+            } else {
             }
         }
     }
 
-    private void CheckExistUser(){
+    private void CheckExistUser() {
         // 이미 디비에 등록된 적 있으면 로그인. 외엔 추가 작성 폼으로.
         FirebaseDatabase.getInstance().getReference().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 boolean isExist = false;
-                for(DataSnapshot iter : dataSnapshot.getChildren()){
-                    if(uID.equals(iter.getKey())){
+                for (DataSnapshot iter : dataSnapshot.getChildren()) {
+                    if (uID.equals(iter.getKey())) {
                         // 존재함.
                         isExist = true;
                     }
                 }
 
-                if(isExist){
+                if (isExist) {
                     ToMainActivity();
-                }else{
+                } else {
                     Additional_data.ExternUploadDefaulUserData();
                     ToAdditionalRegister();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         // 어센티케이션에서 메일 있는지 확인할 것.
 //        if(CheckSameID(acct.getEmail()))
 //            return;
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
+                        if (!task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "인증 실패", Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             Toast.makeText(LoginActivity.this, "구글 로그인 인증 성공", Toast.LENGTH_SHORT).show();
                             CheckExistUser();
                         }
@@ -209,25 +208,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // 구글 이메일 덮어쓰기 방지
-    private boolean CheckSameID(String ID){
+    private boolean CheckSameID(String ID) {
         // db 에 e-mail 도 등록시킬 것.
         String name = FirebaseAuth.getInstance().getCurrentUser().toString();
 
         DatabaseReference curData_ref = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().toString());
         DatabaseReference eMail_ref = curData_ref.child("eMail");
 
-        if(eMail_ref.toString().equals(ID))
-        {
+        if (eMail_ref.toString().equals(ID)) {
             Toast.makeText(LoginActivity.this, "같은 이메일이 존재합니다.", Toast.LENGTH_SHORT).show();
             return true;
-        }
-        else
+        } else
             return false;
     }
 
-    private void userLogin(String email, String password){
+    private void userLogin(String email, String password) {
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this,"값을 입력해주세요.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "값을 입력해주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -242,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             login_progress.setVisibility(View.GONE);
                             CheckExistUser();
                         }
@@ -262,14 +259,13 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void ToMainActivity(){
+    private void ToMainActivity() {
         Intent menuIntent = new Intent(LoginActivity.this, MainActivity.class);
         finish();
         LoginActivity.this.startActivity(menuIntent);
     }
 
-    private void ToAdditionalRegister()
-    {
+    private void ToAdditionalRegister() {
         Intent intent = new Intent(LoginActivity.this, Additional_data.class);
         intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_LOGIN.getValue());
         startActivity(intent);

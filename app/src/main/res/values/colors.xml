@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#2e1a49</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#FDBF01</color>
     <color name="cursorColor">#2e1a49</color>
     <color name="nomalColor">#2e1a49</color>
     <color name="colorPurple">#7A3DBC</color>
