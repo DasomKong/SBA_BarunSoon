@@ -124,8 +124,14 @@ public class GameRoom {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 // start button
-                int a = 0;
-                boolean isActive = dataSnapshot.getValue(boolean.class);
+                final boolean isActive = dataSnapshot.getValue(boolean.class);
+
+                // start
+                if(isActive){
+
+                }else{
+                    // stop
+                }
             }
 
             @Override

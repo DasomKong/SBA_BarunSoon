@@ -6,15 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".GameRoomPkg.Game_Room_Frag">
 
-
-    <Button
-        android:id="@+id/btn_cam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Capture"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    
     <Button
         android:id="@+id/captain"
         android:layout_width="wrap_content"
