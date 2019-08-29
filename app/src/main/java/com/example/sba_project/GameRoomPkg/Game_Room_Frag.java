@@ -103,6 +103,9 @@ public class Game_Room_Frag extends Fragment {
     private static final int IMAGE_PICK_CAMERA_CODE = 100;
     private static final int CAMERA_REQUEST_CODE = 200;
 
+    // Host 용 버튼
+    private boolean isClicked = false;
+
     String cameraPermission[];
 
     // 디폴트는 Client
@@ -126,7 +129,13 @@ public class Game_Room_Frag extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserDataManager.getInstance().getCurGameRoomRef().child("CategoryName").setValue(true);
+                if(isClicked)
+                    isClicked = false;
+                else
+                    isClicked = true;
+
+                //view.setClickable(false);
+                UserDataManager.getInstance().getCurGameRoomRef().child("GameState").child("isRunning").setValue(isClicked);
             }
         });
 
