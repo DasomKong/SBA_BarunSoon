@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
+import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.History.History_main;
 import com.example.sba_project.LoginActivity;
@@ -256,7 +257,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_Room:
                 Intent intent = new Intent(MainActivity.this, GameRoomActivity.class);
-                intent.putExtra(GameRoomActivity.ROOM_PERMITION, GameRoomActivity.User_Permission.HOST);
+                intent.putExtra(Game_Room_Frag.ROOM_PERMITION, Game_Room_Frag.User_Permission.HOST);
                 startActivity(intent);
                 break;
         }

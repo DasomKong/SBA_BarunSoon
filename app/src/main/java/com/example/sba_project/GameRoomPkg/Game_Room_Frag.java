@@ -308,118 +308,28 @@ public class Game_Room_Frag extends Fragment {
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
     }
 
-//    private void requestCameraPermission() {
-//        ActivityCompat.requestPermissions(getActivity(), cameraPermission, CAMERA_REQUEST_CODE);
-//    }
-//
-//    private boolean checkCameraPermission() {
-//        boolean result = ContextCompat.checkSelfPermission(getActivity(),
-//                Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
-//        boolean result1 = ContextCompat.checkSelfPermission(getActivity(),
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-//        return result && result1;
-//    }
-
     private void InviteMessageToUser(final ExtendedMyUserData InvitedUser) {
         final InviteData inviteData = new InviteData(UserDataManager.getInstance().getGameRoom().getRoom_id(), FirebaseAuth.getInstance().getCurrentUser().getUid(), InvitedUser.uID, InviteData.EInviteFlag.INVITE);
         UtilValues.getInviteRef().push().setValue(inviteData);
     }
 
-
-    //        backPressCloseHandler = new BackPressCloseHandler(getActivity());
-//
-//
-//        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayList) {
-//            @SuppressLint("WrongViewCast")
-//            public View getView(int positon, View convertView, ViewGroup parent) {
-//                View v = super.getView(positon, convertView, parent);
-//                if (positon == getCount()) {
-////                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
-////                    ((TextView)v.findViewById(android.R.id.text2)).setHint(getItem(getCount()));
-//                    ((TextView) v.findViewById(R.id.gameSelect)).setText("");
-//                    ((TextView) v.findViewById(R.id.gameSelect)).setHint(getItem(getCount()));
-//
-//                }
-//                return v;
-//            }
-//
-//            public int getCount(int getcount) {
-//                return super.getCount() - 1;
-//            }
-//        };
-//        final DatabaseReference games_ref = FirebaseDatabase.getInstance().getReference("Game").child("title");
-//        games_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                arrayList.add("게임선택");
-//                for (DataSnapshot iter : dataSnapshot.getChildren()) {
-//                    /*NickName, Address, Age, eMail, PhotoUrl */
-//                    //ExtendedMyUserData tmpUser = UtilValues.GetUserDataFromDatabase(iter);
-//                    arrayList.add(iter.getKey());
-//                }
-////                arrayList.add("게임선택");
-//                arrayAdapter.notifyDataSetChanged();
-////                gameselc.setSelection(arrayAdapter.getCount()-1);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//        gameselc.setPrompt("게임선택");
-//        gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                final DatabaseReference tmpRef = UserDataManager.getInstance().getCurGameRoomRef();
-//
-//                if (tmpRef != null) {
-//                    tmpRef.child("CategoryName").setValue(arrayList.get(i).toString());
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-//        gameselc.setAdapter(arrayAdapter);
-//        gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                if (arrayList.get(i).equals("게임선택") == true) {
-//                    //Toast.makeText(getApplicationContext(),"게임선택해주세요!",Toast.LENGTH_SHORT).show();
-//                    arrayList.remove(0);
-//                } else
-//                    Toast.makeText(getApplicationContext(), arrayList.get(i) + "가 선택되었습니다.",
-//                            Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//            }
-//        });
-//
-//
-////        SetViews();
-//        // 게임 룸 컨트롤.
-//        SetGameRoom();
-//        // Inflate the layout for this fragment
-//
-//    }
-//}
-//
     private void SetGameRoom() {
         // 이미 게임 룸에 참여했었고, gameroom이 아직 존재하다면..
         final int _roomNum = UserDataManager.getInstance().getRoomNumber();
         if (_roomNum != -1) {
             // 초기화 후 방 살아있는지 확인.
-            UserDataManager.getInstance().setRoomNumber(-1);
-            FirebaseDatabase.getInstance().getReference().child("GameRoom").equalTo(_roomNum).addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference().child("GameRoom").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, _roomNum, PlayersList));
-                    UserDataManager.getInstance().setInGameRoom(true);
+                    for(DataSnapshot iter : dataSnapshot.getChildren()){
+                        if(iter.getKey().equals(Integer.toString(_roomNum))){
+                            UserDataManager.getInstance().setGameRoom(new GameRoom(host, master_pro_Image, getContext(),UserDataManager.getInstance().getCurUserData().NickName, _roomNum, PlayersList));
+                            return;
+                        }
+                    }
+                    UserDataManager.getInstance().setRoomNumber(-1);
+                    Toast.makeText(getContext(), "이전 방이 없습니다. 새로 만듭니다.", Toast.LENGTH_SHORT).show();
+                    SetGameRoomResult();
                 }
 
                 @Override
@@ -437,8 +347,8 @@ public class Game_Room_Frag extends Fragment {
         Intent permit = getActivity().getIntent();
         String Image_check = null;
 
-        if (permit.getSerializableExtra(GameRoomActivity.ROOM_PERMITION) != null)
-            userPermission = (User_Permission) permit.getSerializableExtra(GameRoomActivity.ROOM_PERMITION);
+        if (permit.getSerializableExtra(Game_Room_Frag.ROOM_PERMITION) != null)
+            userPermission = (User_Permission) permit.getSerializableExtra(Game_Room_Frag.ROOM_PERMITION);
 
         int RoomNumber = permit.getIntExtra(ROOM_NUMBER, -1);
         PlayersList.setPermission(userPermission);
@@ -447,138 +357,29 @@ public class Game_Room_Frag extends Fragment {
 
         switch (userPermission) {
             case HOST:
-                UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
                 // 호스트 이미지와 닉네임 받아오기
-
-                host.setText(UserDataManager.getInstance().getCurUserData().NickName);
                 Image_check = UserDataManager.getInstance().getCurUserData().PhotoUrl;
                 if (Image_check.equals(null) == true || Image_check.isEmpty()) {
 
                 } else {
-                    master_pro_Image.setImageURI(Uri.parse(UserDataManager.getInstance().getCurUserData().PhotoUrl));
+                    UserDataManager.getInstance().setGameRoom(new GameRoom(host, master_pro_Image, getContext(), UserDataManager.getInstance().getCurUserData().NickName, PlayersList));
                 }
                 break;
             case CLIENT:
                 if (RoomNumber == -1)
                     Toast.makeText(getActivity(), "잘못된 방 번호 " + RoomNumber + "입니다.", Toast.LENGTH_SHORT).show();
-                else
-                    UserDataManager.getInstance().setGameRoom(new GameRoom(UserDataManager.getInstance().getCurUserData().NickName, RoomNumber, PlayersList));
+                else{
+                    UserDataManager.getInstance().setGameRoom(new GameRoom(host, master_pro_Image, getContext(),UserDataManager.getInstance().getCurUserData().NickName, RoomNumber, PlayersList));
+                }
                 break;
         }
         UserDataManager.getInstance().setInGameRoom(true);
     }
 
-    public void onBackPressed() {
-        //super.onBackPressed();
-        backPressCloseHandler.onBackPressed();
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        UserDataManager.getInstance().setInGameRoom(false);
     }
-
-//    private void SetViews() {
-//        backPressCloseHandler = new BackPressCloseHandler(getActivity());
-//
-//        gameselc = (Spinner) getView().findViewById(R.id.gameSelect);
-//        captain = (TextView) getView().findViewById(R.id.captain);
-//        crew = (TextView) getView().findViewById(R.id.crew);
-//        master_pro_Image = (ImageView) getView().findViewById(R.id.profile_image2);
-//        add_team = (Button) getView().findViewById(R.id.addTeam);
-////        teamone_scroll = (ScrollView) findViewById(R.id.scrollView);
-//        exit_home = (Button) getView().findViewById(R.id.btn_exit);
-//
-
-//
-//        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayList) {
-//            @SuppressLint("WrongViewCast")
-//            public View getView(int positon, View convertView, ViewGroup parent) {
-//                View v = super.getView(positon, convertView, parent);
-//                if (positon == getCount()) {
-////                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
-////                    ((TextView)v.findViewById(android.R.id.text2)).setHint(getItem(getCount()));
-//                    ((TextView) v.findViewById(R.id.gameSelect)).setText("");
-//                    ((TextView) v.findViewById(R.id.gameSelect)).setHint(getItem(getCount()));
-//
-//                }
-//                return v;
-//            }
-//
-//            public int getCount(int getcount) {
-//                return super.getCount() - 1;
-//            }
-//        };
-//        final DatabaseReference games_ref = FirebaseDatabase.getInstance().getReference("Game").child("title");
-//        games_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                arrayList.add("게임선택");
-//                for (DataSnapshot iter : dataSnapshot.getChildren()) {
-//                    /*NickName, Address, Age, eMail, PhotoUrl */
-//                    //ExtendedMyUserData tmpUser = UtilValues.GetUserDataFromDatabase(iter);
-//                    arrayList.add(iter.getKey());
-//                }
-////                arrayList.add("게임선택");
-//                arrayAdapter.notifyDataSetChanged();
-////                gameselc.setSelection(arrayAdapter.getCount()-1);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//        gameselc.setPrompt("게임선택");
-//        gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                final DatabaseReference tmpRef = UserDataManager.getInstance().getCurGameRoomRef();
-//
-//                if (tmpRef != null) {
-//                    tmpRef.child("CategoryName").setValue(arrayList.get(i).toString());
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-//        gameselc.setAdapter(arrayAdapter);
-//        gameselc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                if (arrayList.get(i).equals("게임선택") == true) {
-//                    //Toast.makeText(getApplicationContext(),"게임선택해주세요!",Toast.LENGTH_SHORT).show();
-//                    arrayList.remove(0);
-//                } else
-//                    Toast.makeText(getApplicationContext(), arrayList.get(i) + "가 선택되었습니다.",
-//                            Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//            }
-//        });
-//        PlayerListView = getView().findViewById(R.id.crewList);
-//
-//        PlayersList = new PlayerItem();
-//        PlayersList.SetActivity(getActivity());
-//        PlayerListView.setAdapter(PlayersList);
-//        getView().findViewById(R.id.addTeam).setOnClickListener(new Button.OnClickListener()
-//                                                      {
-//                                                          @Override
-//                                                          public void onClick(View view) {
-//                                                              Intent intent = new Intent(getActivity(), GameRoomPopup.class);
-//                                                              startActivityForResult(intent, INVITE);
-//                                                          }
-//                                                      }
-//        );
-
-    //exit 버튼
-
 }
 
 
