@@ -1,7 +1,9 @@
 package com.example.sba_project.Register;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,47 +13,342 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.example.sba_project.Main.MainActivity;
 import com.example.sba_project.R;
+import com.example.sba_project.Userdata.UserDataManager;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Mypage extends AppCompatActivity {
+public class Mypage extends AppCompatActivity implements View.OnClickListener {
+    private TextView NickName;
+    private Spinner Age;
+    private Spinner Address;
+    private CircleImageView profileImage;
+    private DatabaseReference users_ref;
 
-    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private String ImgPath;
+
+    private String cameraPermission[];
+    private String storagePermission[];
 
     private static final int GET_FROM_GALLERY = 100;
+    private static final int STORAGE_REQUEST_CODE = 400;
 
-    TextView inputEmail;
-    TextView inputPassword;
-    CircleImageView profileCircleImageView;
-    CircleImageView editPhoto;
-    FirebaseAuth mAuth;
+    final ArrayList ageList = new ArrayList();
+    ArrayAdapter<String> ageListAdapter;
 
+    public enum KEY_WHERE{
+        FROM_LOGIN(0), FROM_MAIN(1);
+
+        private final int value;
+
+        private KEY_WHERE(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public static String FROM_KEY = "from_where";
+
+    // 0 : primary login, 1 : after login
+    private int activity_flag = -1;
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_page);
 
-        mAuth = FirebaseAuth.getInstance();
 
-        profileCircleImageView = findViewById(R.id.profile_image);
-        editPhoto = findViewById(R.id.editPhoto);
+        de.hdodenhof.circleimageview.CircleImageView profile;
+        profile = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.profile_image);
 
-        editPhoto.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                GetImageFromGallery();
-            }
-        });
+        if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
+            Glide.with(Mypage.this).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into(profile);
+        }
+
+        SetActivityFlag();
+
+        SetViews();
     }
 
-    @SuppressLint("IntentReset")
+    // 어디서 왔냐에 따라 다르게 처리
+    void SetActivityFlag(){
+        Intent intent = getIntent();
+
+        activity_flag = intent.getExtras().getInt(FROM_KEY);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fixed:
+                AdditionalRegister();
+                break;
+            case R.id.profile_image:
+                GetImageFromGallery();
+                break;
+        }
+    }
+
+    void SetViews() {
+        findViewById(R.id.fixed).setOnClickListener(this);
+//        findViewById(R.id.btn_searchaddress).setOnClickListener(this);
+        findViewById(R.id.profile_image).setOnClickListener(this);
+
+        profileImage = (CircleImageView) findViewById(R.id.profile_image);
+        NickName = findViewById(R.id.nickname);
+        Age = (Spinner)findViewById(R.id.age);
+        Address = (Spinner)findViewById(R.id.address);
+
+        //나이 스피너 정의하는 곳
+
+        ageList.add("선택");
+        for(int i = 1; i < 100; ++i){
+            ageList.add(i);
+
+        }
+
+        ageListAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, ageList){
+            @SuppressLint("WrongViewCast")
+            public View getView(int positon, View convertView, ViewGroup parent){
+                View v = super.getView(positon,convertView,parent);
+                if(positon==getCount()){
+                    ((TextView)v.findViewById(R.id.age)).setText("");
+                    ((TextView)v.findViewById(R.id.age)).setHint(getItem(getCount()));
+
+                }
+                return  v;
+            }
+            public int getCount(int getcount){
+                return super.getCount() -1;
+            }
+
+        };
+
+        Age.setAdapter(ageListAdapter);
+
+
+        //camera permission
+        cameraPermission = new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    }
+
+    private void AdditionalRegister() {
+        final String _nickname = NickName.getText().toString().trim();
+        final String _address = Address.getSelectedItem().toString().trim();
+        final String _age = Age.getSelectedItem().toString().trim();
+
+        if(_nickname.isEmpty() && _address.equals("선택") && _age.equals("선택") && ImgPath == null){
+
+                NickName.setError("닉네임 형식을 지켜주세요");
+                NickName.requestFocus();
+                ((TextView)Address.getSelectedView()).setError("거주지 선택해주세요");
+                ((TextView)Address.getSelectedView()).requestFocus();
+                ((TextView)Age.getSelectedView()).setError("나이 선택해주세요");
+                ((TextView)Age.getSelectedView()).requestFocus();
+
+                Toast.makeText(this, "이미지를 선택해주세요", Toast.LENGTH_SHORT).show();
+        }
+
+        else {
+
+            if(!_nickname.isEmpty()) {
+                if (CheckNickName(_nickname) == false) {
+                    NickName.setError("닉네임 형식을 지켜주세요");
+                    NickName.requestFocus();
+                    return;
+                }
+            }
+
+            if (users_ref == null) {
+                users_ref = FirebaseDatabase.getInstance().getReference().child("users");
+            }
+
+            users_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // mMyAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon), "name_" + i, "contents_" + i);
+                        String tmpStr = snapshot.child("NickName").getValue().toString();
+
+                        // 동일한 닉네임이 이미 존재한다면..
+                        if (!tmpStr.isEmpty() && tmpStr.equals(_nickname)) {
+                            Toast.makeText(getApplicationContext(), tmpStr + " already exists.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                    DoAddUserData(_nickname, _address, _age);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+    }
+
+    private void DoAddUserData(final String _nickname, final String _address, final String _age){
+        class tmpStr{
+            public String tmpString = "";
+        }
+        // 파이어베이스 유저 아이디 루트로 등록.
+        // Storage 에 프로필 사진 등록
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+        final StorageReference UserStorage_ref = FirebaseStorage.getInstance().getReference(curUser.getUid()).child("profile.jpg");
+
+        if(ImgPath == null){
+            if (_age != "선택")
+                UploadUserData(_nickname, _address, Integer.parseInt(_age), "");
+            else
+                UploadUserData(_nickname, _address, 0, "");
+        }
+        else{
+            UploadTask uploadTask = UserStorage_ref.putFile(Uri.fromFile(new File(ImgPath)));
+
+            final tmpStr urlRs = new tmpStr();
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    // Continue with the task to get the download URL
+                    return UserStorage_ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        urlRs.tmpString = task.getResult().toString();
+                        if(_age != "선택")
+                            UploadUserData(_nickname,_address, Integer.parseInt(_age), urlRs.tmpString);
+                        else
+                            UploadUserData(_nickname,_address, 0, urlRs.tmpString);
+                    } else {
+                        // Handle failures
+                        // ...
+                        Toast.makeText(Mypage.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+    public static void ExternUploadDefaulUserData(){
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference().child("users");
+
+        // 데이터 문제로 하나씩 적용
+        user_ref.child(curUser.getUid()).child("Address").setValue("");
+        user_ref.child(curUser.getUid()).child("Age").setValue(0);
+        user_ref.child(curUser.getUid()).child("NickName").setValue("닉네임#" + curUser.getUid());
+        user_ref.child(curUser.getUid()).child("PhotoUrl").setValue("");
+
+        if (null != curUser.getEmail())
+            user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
+        else
+            user_ref.child(curUser.getUid()).child("eMail").setValue("");
+    }
+
+    private void UploadUserData(String _nickname, String _address, int _age, String photourl){
+        FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference user_ref = FirebaseDatabase.getInstance().getReference().child("users");
+
+        // 데이터 문제로 하나씩 적용
+        if(_address != "선택")
+            user_ref.child(curUser.getUid()).child("Address").setValue(_address);
+
+        if(_age != 0)
+            user_ref.child(curUser.getUid()).child("Age").setValue(_age);
+
+        if(!_nickname.isEmpty())
+            user_ref.child(curUser.getUid()).child("NickName").setValue(_nickname);
+
+        if(ImgPath != null)
+            user_ref.child(curUser.getUid()).child("PhotoUrl").setValue(photourl);
+
+
+
+
+        if(curUser.getEmail() != null)
+            user_ref.child(curUser.getUid()).child("eMail").setValue(curUser.getEmail());
+
+        // 로긴 창으로 돌아가자.
+        Toast.makeText(this, "등록 성공", Toast.LENGTH_SHORT).show();
+
+        // 로그인에서 넘어왔는데, 데이터가 없어서 채워주는 경우
+        if(activity_flag == Additional_data.KEY_WHERE.FROM_LOGIN.getValue())
+        {
+            Intent intent = new Intent(Mypage.this, MainActivity.class);
+            startActivity(intent);
+        }
+        finish();
+    }
+
+    // nickname 검사
+    private boolean CheckNickName(final String newNickName) {
+        // 닉네임 정규식
+        final Pattern VALID_NICKNAME_REGEX_ALPHA_NUM =
+                Pattern.compile("^[A-Za-z0-9가-힣]{4,6}$"
+                ); // 특수문자제외 4-6문자
+        Matcher matcher = VALID_NICKNAME_REGEX_ALPHA_NUM.matcher(newNickName);
+        return matcher.matches();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    // 주소 검색 후 반환.
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        switch (requestCode) {
+            case GET_FROM_GALLERY: {
+                sendPicture(intent.getData()); //갤러리에서 가져오기
+            }
+            break;
+        }
+    }
+
     private void GetImageFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -68,22 +365,11 @@ public class Mypage extends AppCompatActivity {
                 IOException e) {
             e.printStackTrace();
         }
-        assert exif != null;
         int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         int exifDegree = exifOrientationToDegrees(exifOrientation);
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath); //경로를 통해 비트맵으로 전환
-        profileCircleImageView.setImageBitmap(rotate(bitmap, exifDegree));
-//        ImgPath = imagePath;
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        switch (requestCode) {
-            case GET_FROM_GALLERY: {
-                sendPicture(intent.getData()); //갤러리에서 가져오기
-            }
-            break;
-        }
+        profileImage.setImageBitmap(rotate(bitmap, exifDegree));
+        ImgPath = imagePath;
     }
 
     private int exifOrientationToDegrees(int exifOrientation) {
@@ -117,4 +403,13 @@ public class Mypage extends AppCompatActivity {
         return cursor.getString(column_index);
     }
 
+    private void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean result = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
 }

@@ -127,22 +127,13 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/btn_purple"
         android:text="입력완료"
-        android:textSize="20dp"
         android:textColor="@color/fontWhite"
-        app:layout_constraintEnd_toStartOf="@id/guidelineVerticalCenter"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ageLinear" />
 
-    <Button
-        android:id="@+id/nextTime"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/btn_purple"
-        android:text="다음에"
-        android:textSize="20dp"
-        android:textColor="@color/fontWhite"
-        app:layout_constraintStart_toEndOf="@id/guidelineVerticalCenter"
-        app:layout_constraintTop_toBottomOf="@+id/ageLinear" />
+
 
     <!--guide percent로 중간지정-->
 

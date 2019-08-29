@@ -18,11 +18,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.sba_project.GameRoomPkg.GameRoomActivity;
+import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
 import com.example.sba_project.Game_Description.Gameplus;
 import com.example.sba_project.History.History_main;
 import com.example.sba_project.LoginActivity;
 import com.example.sba_project.R;
 import com.example.sba_project.Register.Additional_data;
+import com.example.sba_project.Register.Mypage;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.BackPressCloseHandler;
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity
                 final FirebaseUser curUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(curUser != null)
                 {
-                    Intent addregi_intent = new Intent(MainActivity.this, Additional_data.class);
+                    Intent addregi_intent = new Intent(MainActivity.this, Mypage.class);
                     addregi_intent.putExtra(Additional_data.FROM_KEY, Additional_data.KEY_WHERE.FROM_MAIN.getValue());
                     startActivity(addregi_intent);
                 }
@@ -256,7 +258,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_Room:
                 Intent intent = new Intent(MainActivity.this, GameRoomActivity.class);
-                intent.putExtra(GameRoomActivity.ROOM_PERMITION, GameRoomActivity.User_Permission.HOST);
+                intent.putExtra(Game_Room_Frag.ROOM_PERMITION, Game_Room_Frag.User_Permission.HOST);
                 startActivity(intent);
                 break;
         }

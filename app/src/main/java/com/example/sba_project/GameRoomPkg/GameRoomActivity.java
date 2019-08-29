@@ -1,29 +1,14 @@
 package com.example.sba_project.GameRoomPkg;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.sba_project.R;
-
-import java.util.ArrayList;
+import com.example.sba_project.Userdata.UserDataManager;
 
 public class GameRoomActivity extends AppCompatActivity {
-    public enum User_Permission {
-        HOST(0), CLIENT(1);
-
-        private final int value;
-
-        private User_Permission(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 //
 //    private Spinner gameselc;
 //    private TextView captain;
@@ -37,30 +22,6 @@ public class GameRoomActivity extends AppCompatActivity {
 //    private ListView PlayerListView;
 //    PlayerItem PlayersList = null;
 //
-    final ArrayList arrayList = new ArrayList<>(); // 파이널 달린거 주의
-    ArrayAdapter<String> arrayAdapter;
-
-    // Request Code
-    static final int INVITE = 1000;
-    static final int TEXT_DETEC = 1001;
-
-    // Result Code
-    static final int INVITE_RESULT_OK = 2000;
-    static final int INVITE_RESULT_FAIL = 2001;
-
-    public static final int TEXT_DETEC_RESULT_OK = 3000;
-    // Tag
-    public static final String USER_DATA = "UserData";
-    public static final String ROOM_PERMITION = "Room_Permition";
-    public static final String ROOM_NUMBER = "Room_Number";
-
-    private static final int IMAGE_PICK_CAMERA_CODE = 100;
-    private static final int CAMERA_REQUEST_CODE = 200;
-
-    String cameraPermission[];
-
-    // 디폴트는 Client
-    User_Permission userPermission = User_Permission.CLIENT;
 
 //    private BackPressCloseHandler backPressCloseHandler;
 //    Uri image_uri = null;
@@ -161,6 +122,13 @@ public class GameRoomActivity extends AppCompatActivity {
 //    }
 
     @Override
+    public void onBackPressed() {
+        UserDataManager.getInstance().getGameRoom().ExitRoom();
+
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_room);
@@ -227,11 +195,6 @@ public class GameRoomActivity extends AppCompatActivity {
 //        UserDataManager.getInstance().setInGameRoom(true);
 //    }
 //
-//    @Override
-//    public void onBackPressed() {
-//        //super.onBackPressed();
-//        backPressCloseHandler.onBackPressed();
-//    }
 //
 //    @Override
 //    protected void onDestroy() {

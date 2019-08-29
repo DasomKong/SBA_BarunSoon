@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class PlayerItem extends BaseAdapter {
@@ -114,8 +113,5 @@ public class PlayerItem extends BaseAdapter {
 
     public void removeItem(final int i) {
         UserList.remove(i);
-    }
-
-    public void setPermission(Serializable userPermission) {
     }
 }

@@ -118,17 +118,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
             case R.id.addInfo:
                 AdditionalRegister();
                 break;
-            case R.id.nextTime:
-                switch (activity_flag)
-                {
-                    case 0:
-                        Intent intent = new Intent(Additional_data.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-                    case 1: finish(); break;
-                }
-                break;
             case R.id.additional_profile_image:
                 GetImageFromGallery();
                 break;
@@ -137,7 +126,6 @@ public class Additional_data extends AppCompatActivity implements View.OnClickLi
 
     void SetViews() {
         findViewById(R.id.addInfo).setOnClickListener(this);
-        findViewById(R.id.nextTime).setOnClickListener(this);
 //        findViewById(R.id.btn_searchaddress).setOnClickListener(this);
         findViewById(R.id.additional_profile_image).setOnClickListener(this);
 
