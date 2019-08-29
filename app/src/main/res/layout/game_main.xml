@@ -12,8 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:text="HOT"
+        android:textColor="#ffff0000"
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="10dp"/>
 
     <LinearLayout
         android:id="@+id/game_hot"
@@ -25,6 +28,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/game_hot1"
             android:layout_width="250dp"
             android:layout_height="100dp"
             android:layout_weight="1"
@@ -32,6 +36,7 @@
             android:src="@drawable/newton1"/>
 
         <ImageView
+            android:id="@+id/game_hot2"
             android:layout_width="250dp"
             android:layout_height="100dp"
             android:layout_weight="1"
@@ -39,6 +44,7 @@
             android:src="@drawable/rele1"/>
 
         <ImageView
+            android:id="@+id/game_hot3"
             android:layout_width="250dp"
             android:layout_height="100dp"
             android:scaleType="fitXY"

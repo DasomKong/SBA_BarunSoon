@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.sba_project.R;
@@ -19,6 +17,7 @@ import com.example.sba_project.R;
 public class Gameplus extends Fragment {
 
     String title;
+    ImageView hot;
 
 
     public Gameplus() {
@@ -37,6 +36,39 @@ public class Gameplus extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.game_main, container,false);
+
+        // HOT 부분 인텐트
+        hot = rootView.findViewById(R.id.game_hot1);
+        hot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), Gameintroduction.class);
+                intent.putExtra("title","NEWTON");
+                startActivity(intent);
+            }
+        });
+
+        hot = rootView.findViewById(R.id.game_hot2);
+        hot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), Gameintroduction.class);
+                intent.putExtra("title","RELE");
+                startActivity(intent);
+            }
+        });
+
+        hot = rootView.findViewById(R.id.game_hot3);
+        hot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), Gameintroduction.class);
+                intent.putExtra("title", "JAM");
+                startActivity(intent);
+            }
+        });
+
+        //그리드부분 인텐트
 
         final GridView gridView;
 
