@@ -12,6 +12,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,10 +77,10 @@ public class Game_Play_Frag extends Fragment
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_game__play_, container, false);
 //        return inflater.inflate(R.layout.fragment_game__play_, container, false);
 
-        calories = (TextView)rootView.findViewById(R.id.calorie);
-        sensorManager = (SensorManager)getActivity().getSystemService(Context.SENSOR_SERVICE);
+        calories = (TextView) rootView.findViewById(R.id.calorie);
+        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        if(stepCountSensor == null) {
+        if (stepCountSensor == null) {
             Toast.makeText(getContext(), "No Step Detect Sensor", Toast.LENGTH_SHORT).show();
         }
 
@@ -99,47 +100,50 @@ public class Game_Play_Frag extends Fragment
 
         rootView.findViewById(R.id.profile_image2);
 
-        Glide.with(getActivity()).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into((ImageView)rootView.findViewById(R.id.profile_image2));
+        if (!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty())
+            Glide.with(getActivity()).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into((ImageView) rootView.findViewById(R.id.profile_image2));
 
-        nickname = rootView.findViewById(R.id.nickname2);
+        ((TextView) rootView.findViewById(R.id.nickname2)).setText(UserDataManager.getInstance().getCurUserData().NickName);
 
         scoreView = rootView.findViewById(R.id.score);
 
-        chronometer = (Chronometer)rootView.findViewById(R.id.chronometer);
+        chronometer = (Chronometer) rootView.findViewById(R.id.chronometer);
         chronometer.stop();
 
         return rootView;
     }
 
-    private void UpdateUserData(){
-        class GamePlayData{
+    private void UpdateUserData() {
+        class GamePlayData {
             public int kcal = 0;
             public int score = 0;
-            public GamePlayData(){}
-            public GamePlayData(int kcal, int score){
+
+            public GamePlayData() {
+            }
+
+            public GamePlayData(int kcal, int score) {
                 this.kcal = kcal;
                 this.score = score;
             }
         }
 
-        GamePlayData newData = new GamePlayData(Math.round(kcal) ,Integer.parseInt(scoreView.getText().toString().trim()));
+        GamePlayData newData = new GamePlayData(Math.round(kcal), Integer.parseInt(scoreView.getText().toString().trim()));
 
         String date[] = _GameUser.Date.split(" ");
 
-        FirebaseDatabase.getInstance().getReference().child("Game").child("uid").child(UserDataManager.getInstance().getCurUserData().uID).child(_CategoryName ).child(date[0]).child(date[1]).setValue(newData);
+        FirebaseDatabase.getInstance().getReference().child("Game").child("uid").child(UserDataManager.getInstance().getCurUserData().uID).child(_CategoryName).child(date[0]).child(date[1]).setValue(newData);
     }
 
-    public void StartPlay(final GameUser _user, final String CategoryName){
+    public void StartPlay(final GameUser _user, final String CategoryName) {
         _GameUser = _user;
-
-        nickname.setText(_GameUser.nickName);
         _CategoryName = CategoryName;
         isRunning = true;
         calories.setText("0kcal");
 
+        chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.start();
 
-        if(tmpEvent != null){
+        if (tmpEvent != null) {
             Minus = tmpEvent.values[0];
         }
     }
@@ -160,7 +164,7 @@ public class Game_Play_Frag extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case TEXT_DETEC:
-                if(resultCode == TEXT_DETEC_RESULT_OK){
+                if (resultCode == TEXT_DETEC_RESULT_OK) {
                     String resultStr = data.getStringExtra("Result");
                     scoreView.setText(resultStr);
                     //UserDataManager.getInstance().getGameRoom().UpdateUserScore(Integer.parseInt(resultStr));
@@ -192,8 +196,8 @@ public class Game_Play_Frag extends Fragment
 
     @Override
     public void onDestroy() {
+        chronometer.stop();
         super.onDestroy();
-        UpdateUserData();
     }
 
     @Override
@@ -201,6 +205,7 @@ public class Game_Play_Frag extends Fragment
         super.onPause();
         sensorManager.unregisterListener(this);
     }
+
 
     @Override
     public void onResume() {
@@ -210,11 +215,11 @@ public class Game_Play_Frag extends Fragment
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(event.sensor.getType()==Sensor.TYPE_STEP_COUNTER && isRunning == true){
-            if(tmpEvent == null)
+        if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER && isRunning == true) {
+            if (tmpEvent == null)
                 tmpEvent = event;
-            kcal = (int)(event.values[0] - Minus)/30;
-            calories.setText(String.valueOf((int)kcal+"kcal"));
+            kcal = (int) (event.values[0] - Minus) / 30;
+            calories.setText(String.valueOf((int) kcal + "kcal"));
         }
     }
 

@@ -77,8 +77,8 @@ public class GameRoom {
                 imgView = _imgView;
                 setContext(_context);
                 PlayerAdapter_Ref = _playerItem;
-                UpdateRoomHost();
                 CreateRoom(i);
+                UpdateRoomHost();
                 CreateUser(_nickname);
             }
 
@@ -131,22 +131,21 @@ public class GameRoom {
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 // start button
-                switch (dataSnapshot.getKey()){
+                switch (dataSnapshot.getKey()) {
                     case "CategoryName":
                         String tmpStr = dataSnapshot.getValue(String.class);
-                        if(tmpStr != null && !tmpStr.isEmpty()){
+                        if (tmpStr != null && !tmpStr.isEmpty()) {
                             newRoomState.CategoryName = tmpStr;
                         }
                         break;
                     case "isRunning":
-                        if(newRoomState.CategoryName.equals("")){
-                            Toast.makeText(context,"Category 이름을 정해주세요", Toast.LENGTH_SHORT).show();
+                        if (newRoomState.CategoryName.equals("")) {
+                            Toast.makeText(context, "Category 이름을 정해주세요", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         boolean tmpBool = dataSnapshot.getValue(boolean.class);
-                        if(tmpBool)
-                        {
+                        if (tmpBool) {
                             UserDataManager.getInstance().getGamePlayFrag().StartPlay(OwnUser, newRoomState.CategoryName);
                         }
                         break;
@@ -257,16 +256,21 @@ public class GameRoom {
     }
 
     private void ResetHostData() {
-        getcurRoomRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        getcurRoomRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 HostData tmpData = dataSnapshot.child(HostData.OWNER).getValue(HostData.class);
 
-                if(tmpData != null){
+                if (tmpData != null) {
                     txtView.setText(tmpData.NickName);
-                    Glide.with(context)
-                            .load(tmpData.imgUrl)
-                            .into(imgView);
+
+                    if (!tmpData.imgUrl.isEmpty())
+                        Glide.with(context)
+                                .load(tmpData.imgUrl)
+                                .into(imgView);
+
+                    PlayerAdapter_Ref.setOwnerNickName(tmpData.NickName);
+                    PlayerAdapter_Ref.notifyDataSetChanged();
                 }
             }
 
