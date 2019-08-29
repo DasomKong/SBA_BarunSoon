@@ -46,7 +46,7 @@
         android:layout_marginStart="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text1"
-        android:src="@drawable/jg" />
+        android:src="@drawable/lu" />
     <TextView
         android:id="@+id/nickname2"
         android:layout_width="wrap_content"

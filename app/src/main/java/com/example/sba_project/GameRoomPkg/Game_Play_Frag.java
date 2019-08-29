@@ -18,12 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.sba_project.R;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.UserDataManager;
@@ -56,6 +58,7 @@ public class Game_Play_Frag extends Fragment
     private GameUser _GameUser;
     private String _CategoryName = "";
     TextView calories;
+    TextView nickname;
     boolean isRunning;
     float kcal;
     SensorEvent tmpEvent = null;
@@ -94,9 +97,16 @@ public class Game_Play_Frag extends Fragment
             }
         });
 
+        rootView.findViewById(R.id.profile_image2);
+
+        Glide.with(getActivity()).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into((ImageView)rootView.findViewById(R.id.profile_image2));
+
+        nickname = rootView.findViewById(R.id.nickname2);
+
         scoreView = rootView.findViewById(R.id.score);
 
         chronometer = (Chronometer)rootView.findViewById(R.id.chronometer);
+        chronometer.stop();
 
         return rootView;
     }
@@ -121,6 +131,8 @@ public class Game_Play_Frag extends Fragment
 
     public void StartPlay(final GameUser _user, final String CategoryName){
         _GameUser = _user;
+
+        nickname.setText(_GameUser.nickName);
         _CategoryName = CategoryName;
         isRunning = true;
         calories.setText("0kcal");
