@@ -142,7 +142,7 @@
         android:text="방나가기"
         android:textColor="@color/fontWhite"
         android:textSize="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

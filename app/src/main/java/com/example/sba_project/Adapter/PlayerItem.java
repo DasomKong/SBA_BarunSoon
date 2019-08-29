@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,11 @@ public class PlayerItem extends BaseAdapter {
     private ArrayList<ExtendedMyUserData> UserList = new ArrayList<>();
     private Activity activity;
     private Game_Room_Frag.User_Permission permission;
+    private String OwnerNick;
+
+    public void setOwnerNickName(final String _nickname){
+        OwnerNick = _nickname;
+    }
 
     public void setPermission(Game_Room_Frag.User_Permission permission) {
         this.permission = permission;
@@ -65,11 +72,21 @@ public class PlayerItem extends BaseAdapter {
         /* 각 위젯에 세팅된 아이템을 뿌려준다 */
         ((TextView)view.findViewById(R.id.NickName)).setText(newUser.NickName);
 
+        String tmpStr;
+
+        if(newUser.NickName.equals(OwnerNick))
+            tmpStr = "방장";
+        else
+            tmpStr = "구성원";
+
+        ((Button)view.findViewById(R.id.button_chu)).setText(tmpStr);
+
         if(!newUser.PhotoUrl.isEmpty())
             Glide.with(activity).load(newUser.PhotoUrl).into((ImageView)view.findViewById(R.id.profile));
 
         if(permission == Game_Room_Frag.User_Permission.CLIENT){
-            view.findViewById(R.id.button_chu).setVisibility(View.GONE);
+            view.findViewById(R.id.NickName).setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 4.f));
+            //view.findViewById(R.id.button_chu).setVisibility(View.GONE);
             view.findViewById(R.id.button_exit).setVisibility(View.GONE);
         }else{
             view.findViewById(R.id.button_exit).setOnClickListener(new View.OnClickListener() {

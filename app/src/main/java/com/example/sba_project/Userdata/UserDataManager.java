@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.sba_project.GameRoomPkg.GameRoom;
+import com.example.sba_project.GameRoomPkg.GameRoomActivity;
 import com.example.sba_project.GameRoomPkg.GameUser;
 import com.example.sba_project.GameRoomPkg.Game_Play_Frag;
 import com.example.sba_project.GameRoomPkg.Game_Room_Frag;
@@ -145,7 +146,7 @@ public class UserDataManager {
                 final int RoomNumber = dataSnapshot.child("RoomNumber").getValue(Integer.class);
                 UtilValues.CreateSimpleDialogue(_context,
                         "초대를 수락하시겠습니까?", "네", "아니오", "게임 초대",
-                        new UtilValues().new moveWithIntFunc(_context, Game_Room_Frag.class, Game_Room_Frag.ROOM_NUMBER, RoomNumber));
+                        new UtilValues().new moveWithIntFunc(_context, GameRoomActivity.class, Game_Room_Frag.ROOM_NUMBER, RoomNumber));
 
                 // 확인했으니 지움.
                 dataSnapshot.getRef().setValue(null);
