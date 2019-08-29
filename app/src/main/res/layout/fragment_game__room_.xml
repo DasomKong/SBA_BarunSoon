@@ -76,14 +76,6 @@
         android:layout_marginStart="30dp"
         app:layout_constraintTop_toBottomOf="@id/nickname2"
         app:layout_constraintStart_toStartOf="parent" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="n명"
-        android:textSize="25dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/crewList"/>
 
     <ListView
         android:id="@+id/crewList"
