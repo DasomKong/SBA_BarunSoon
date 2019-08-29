@@ -1,11 +1,9 @@
 package com.example.sba_project.GameRoomPkg;
 
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,7 +14,6 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,16 +21,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.sba_project.R;
-import com.example.sba_project.Userdata.ExtendedMyUserData;
 import com.example.sba_project.Userdata.UserDataManager;
 import com.example.sba_project.Util.Text_detec;
 import com.google.firebase.database.FirebaseDatabase;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -60,6 +54,8 @@ public class Game_Play_Frag extends Fragment
     float kcal;
     SensorEvent tmpEvent = null;
     public static float Minus = 0.f;
+    private de.hdodenhof.circleimageview.CircleImageView profile;
+    private TextView nickname;
 
     public Game_Play_Frag() {
         // Required empty public constructor
@@ -72,6 +68,17 @@ public class Game_Play_Frag extends Fragment
         // Inflate the layout for this fragment
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_game__play_, container, false);
 //        return inflater.inflate(R.layout.fragment_game__play_, container, false);
+
+        nickname = rootView.findViewById(R.id.nickname2);
+
+        nickname.setText(UserDataManager.getInstance().getCurUserData().NickName);
+
+        // 프로필사진 불러오기
+        profile = rootView.findViewById(R.id.profile_image2);
+
+        if(!UserDataManager.getInstance().getCurUserData().PhotoUrl.isEmpty()){
+            Glide.with(getActivity()).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into(profile);
+        }
 
         calories = (TextView)rootView.findViewById(R.id.calorie);
         sensorManager = (SensorManager)getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -178,8 +185,8 @@ public class Game_Play_Frag extends Fragment
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         UpdateUserData();
+        super.onDestroy();
     }
 
     @Override

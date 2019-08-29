@@ -4,7 +4,6 @@ package com.example.sba_project.GameRoomPkg;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.autofill.UserData;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.sba_project.Adapter.PlayerItem;
 import com.example.sba_project.R;
 import com.example.sba_project.Userdata.ExtendedMyUserData;
@@ -66,6 +66,8 @@ public class Game_Room_Frag extends Fragment {
     private TextView host;
     private TextView crew;
     private ImageView master_pro_Image;
+    private de.hdodenhof.circleimageview.CircleImageView profile;
+
 
     //    private ScrollView teamone_scroll;
     private ListView crewList;
@@ -104,7 +106,13 @@ public class Game_Room_Frag extends Fragment {
 //        return inflater.inflate(R.layout.fragment_game__room_, container, false);
 
         host = rootView.findViewById(R.id.nickname2);
+
         master_pro_Image = rootView.findViewById(R.id.profile_image2);
+
+        profile = rootView.findViewById(R.id.profile_image2);
+
+
+        Glide.with(getActivity()).load(UserDataManager.getInstance().getCurUserData().PhotoUrl).into(profile);
 
 
         //start button
@@ -168,9 +176,7 @@ public class Game_Room_Frag extends Fragment {
                     //ExtendedMyUserData tmpUser = UtilValues.GetUserDataFromDatabase(iter);
                     arrayList.add(iter.getKey());
                 }
-//                arrayList.add("게임선택");
                 arrayAdapter.notifyDataSetChanged();
-//                gameselc.setSelection(arrayAdapter.getCount()-1);
             }
 
             @Override
