@@ -100,6 +100,11 @@ public class History_calorie extends Fragment implements View.OnClickListener, D
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(gname == null || selectday == null){
+                    Toast.makeText(getContext(),"값을 입력해주세요!",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 mDatabase.child("Game").child("uid").child(UserDataManager.getInstance().getCurUserData().uID)
                         .child(gname).child(selectday).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -269,6 +274,7 @@ public class History_calorie extends Fragment implements View.OnClickListener, D
                     Toast.makeText(getApplicationContext(), arrayList.get(i) + "가 선택되었습니다.",
                             Toast.LENGTH_SHORT).show();
                     gname = (String) arrayList.get(i);
+                    ((TextView)adapterView.getChildAt(0)).setTextColor(Color.WHITE);
 
                 }
             }

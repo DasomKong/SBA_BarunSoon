@@ -1,76 +1,89 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/lu_splash"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".History.History_calorie">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <!--    <TextView-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:gravity="center"-->
+    <!--        android:text="First Screen" />-->
+
+    <Button
+        android:id="@+id/date"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="50dp"
+        android:background="@drawable/btn_purple"
+        android:text="날짜 선택"
+        android:textColor="@color/fontWhite"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/gameName"
+        android:layout_width="140dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:textColor="@color/fontWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gamename" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="114dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:text="날짜"
+        android:textColor="@color/fontWhite"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@id/date"
+        app:layout_constraintEnd_toEndOf="@id/date"
+        app:layout_constraintTop_toBottomOf="@id/date" />
+
+    <Button
+        android:id="@+id/gamename"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="게임이름"
+        android:layout_marginEnd="50dp"
+        android:textColor="@color/fontWhite"
+        android:background="@drawable/btn_purple"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btns"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="50dp"
+        android:text="검색"
+        android:textColor="@color/fontWhite"
+        android:textSize="20dp"
+        android:background="@drawable/btn_yellow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.861" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="360dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/fontWhite"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/btns"
+        tools:layout_editor_absoluteX="0dp" />
 
-        <Button
-            android:id="@+id/date"
-            android:layout_width="102dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="28dp"
-            android:text="날짜 선택"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Spinner
-            android:id="@+id/gameName"
-            android:layout_width="133dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="100dp"
-            app:layout_constraintStart_toEndOf="@id/date"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="114dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="날짜"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.138"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date" />
-
-        <TextView
-            android:id="@+id/gamename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="게임이름"
-            app:layout_constraintEnd_toEndOf="@id/gameName"
-            app:layout_constraintTop_toBottomOf="@id/gameName" />
-
-        <Button
-            android:id="@+id/btns"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="search"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.861" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="401dp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/btns"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="0dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

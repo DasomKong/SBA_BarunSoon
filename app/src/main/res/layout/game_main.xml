@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="#ffffff"
+    android:background="#FAF3BB"
     tools:context=".Game_Description.Gameplus">
 
     <TextView
@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:text="HOT"
-        android:textColor="#ffff0000"
+        android:textColor="@color/colorPurple"
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_marginStart="10dp"

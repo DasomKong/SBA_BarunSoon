@@ -58,14 +58,14 @@ public class History_score extends Fragment implements View.OnClickListener, Dat
     private Button search;
     private Button date;
     private String today;
-    private String gname;
+    private String gname = null;
     private int ryear;
     private int rmonth;
     private int rday;
     final ArrayList arrayList = new ArrayList<>(); // 파이널 달린거 주의
     ArrayAdapter<String> arrayAdapter;
     private Spinner gameselc;
-    private String selectday;
+    private String selectday = null;
 
 
 
@@ -105,6 +105,11 @@ public class History_score extends Fragment implements View.OnClickListener, Dat
         search.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                if(gname == null || selectday == null){
+                    Toast.makeText(getContext(),"값을 입력해주세요!",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 mDatabase.child("Game").child("uid").child(UserDataManager.getInstance().getCurUserData().uID)
                         .child(gname).child(selectday).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -265,6 +270,7 @@ public class History_score extends Fragment implements View.OnClickListener, Dat
 
                 if (tmpRef != null) {
                     tmpRef.child("CategoryName").setValue(arrayList.get(i).toString());
+
                 }
             }
 
@@ -284,6 +290,7 @@ public class History_score extends Fragment implements View.OnClickListener, Dat
                     Toast.makeText(getApplicationContext(), arrayList.get(i) + "가 선택되었습니다.",
                             Toast.LENGTH_SHORT).show();
                     gname = (String) arrayList.get(i);
+                    ((TextView)adapterView.getChildAt(0)).setTextColor(Color.WHITE);
 
                 }
             }

@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity
         tr.replace(R.id.content_layout, home);
         tr.addToBackStack(null);
         tr.commit();
-        setTitle("Home");
+        setTitle("");
 
     }
 
@@ -246,15 +246,15 @@ public class MainActivity extends AppCompatActivity
         switch (itemId) {
             case R.id.nav_home:
                 tr.replace(R.id.content_layout, home);
-                setTitle("Home");
+                setTitle("");
                 break;
             case R.id.nav_history:
                 tr.replace(R.id.content_layout, history_main);
-                setTitle("내 이용기록");
+                setTitle("");
                 break;
             case R.id.nav_game:
                 tr.replace(R.id.content_layout, gameplus);
-                setTitle("전체게임");
+                setTitle("");
                 break;
             case R.id.nav_Room:
                 Intent intent = new Intent(MainActivity.this, GameRoomActivity.class);
